@@ -1,0 +1,8 @@
+Homepage editable elements:
+- Text: index.html, each slide .caption h1 and p, each .tile-copy h3 and p.
+- Hero photographs: assets/ files referenced by slide-photo.
+- First slide logo: assets/farming-simulator-guide-logo.png, separate transparent PNG.
+- Four feature photos: assets files referenced by tile .pic img.
+- Fonts, spacing and colours: style.css.
+- Six slide captions and four feature cards are actual HTML text.
+- Sixth banner uses a temporary existing clean farm photograph until a replacement is approved; no text is embedded.

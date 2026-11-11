@@ -1,0 +1,62 @@
+
+:root{--green:#123721;--gold:#d8b35c}*{box-sizing:border-box}body{margin:0;background:#f2f1eb;color:#1e3526;font-family:Arial,Helvetica,sans-serif}.brand{background:#10351f;color:white;text-align:center;min-height:clamp(105px,13vw,170px);padding:0}.brand strong{display:block;font-size:clamp(24px,3.4vw,43px);font-weight:900;letter-spacing:.06em;text-shadow:0 2px 2px #0008}.brand strong span{color:#b8c7bf}.brand small{display:block;color:#e1c37a;letter-spacing:.24em;font-size:11px;margin-top:5px}.nav{background:#204c30;display:flex;justify-content:center;gap:3px;flex-wrap:wrap;padding:8px}.nav a{color:white;text-decoration:none;font-size:14px;font-weight:700;padding:10px 15px}.nav a:hover{background:#3b6846}.slider{position:relative;height:clamp(290px,38vw,490px);overflow:hidden;background:#172d1d}.slide{position:absolute;inset:0;opacity:0;transition:opacity 1s ease;pointer-events:none}.slide.active{opacity:1;pointer-events:auto}.slide img{width:100%;height:100%;object-fit:cover;object-position:center}.slide:after{content:"";position:absolute;inset:40% 0 0;background:linear-gradient(transparent,rgba(5,21,10,.88))}.caption{position:absolute;z-index:2;bottom:42px;left:max(5%,calc((100vw - 1160px)/2));right:8%;color:white;text-shadow:0 2px 7px #000c}.caption h1{font-size:clamp(25px,3.4vw,47px);margin:0 0 7px;letter-spacing:.035em;line-height:1.08}.caption h1 em{font-style:normal;color:var(--gold)}.caption p{font-size:clamp(14px,1.6vw,20px);margin:0;color:#f2f2e9}.dots{position:absolute;z-index:3;bottom:12px;left:0;right:0;display:flex;justify-content:center;gap:10px}.dots button{border:1px solid white;background:#ffffff77;border-radius:50%;width:10px;height:10px;padding:0;cursor:pointer}.dots button.active{background:var(--gold);border-color:var(--gold)}main{max-width:1180px;margin:auto;padding:34px 20px 55px}.intro{text-align:center;margin-bottom:30px}.intro h2{font-size:clamp(24px,3vw,34px);margin:0 0 10px;color:#173e26}.intro p{color:#536457;margin:0;font-size:16px;line-height:1.5}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}.tile{border:2px solid #bfa15a;border-radius:8px;overflow:hidden;background:#183d27;box-shadow:0 5px 16px #0002;text-decoration:none;color:white}.tile .pic{height:180px;position:relative;overflow:hidden}.pic img{width:100%;height:100%;object-fit:cover;transition:transform .3s}.tile:hover img{transform:scale(1.04)}.pic:after{content:"";position:absolute;inset:0;background:linear-gradient(#0002,#081a0c9c)}.overlay{position:absolute;z-index:1;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;padding:12px}.overlay svg{width:50px;height:50px;fill:none;stroke:white;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 2px 3px #0008)}.overlay h3{font-size:clamp(16px,1.65vw,23px);text-shadow:0 2px 6px #000;margin:0}.tile p{margin:0;min-height:70px;padding:13px 10px;text-align:center;font-size:13px;line-height:1.5;color:#e4eadd}.note{text-align:center;color:#677168;font-size:12px;line-height:1.6;margin-top:24px}footer{background:#102c1b;color:#e2e9df;padding:25px;text-align:center;font-size:13px}@media(max-width:650px){.brand strong{letter-spacing:0}.brand small{letter-spacing:.12em}.nav a{padding:9px;font-size:12px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.slider{height:340px}.caption{bottom:43px;left:20px;right:20px}.tile .pic{height:190px}}
+@media(max-width:430px){.grid{grid-template-columns:1fr}} .intro{display:none}main{padding-top:22px}
+.brand{display:flex;justify-content:center;align-items:center;padding:10px 20px}.brand img{height:clamp(85px,11vw,148px);max-width:min(85%,550px);object-fit:contain;background:#fff;border-radius:4px}.nav a[aria-current="page"]{color:#e9c574;border-bottom:2px solid #e9c574}.inner{max-width:950px;margin:35px auto 75px;padding:0 22px;min-height:45vh}.inner h1{color:#173e26}.inner p{line-height:1.65}.inner a{color:#145b32}.coming{background:white;border-left:4px solid #d8b35c;padding:22px;border-radius:5px}.home-link{display:inline-block;margin-top:15px}.nav{gap:2px}.nav a{padding:10px 12px}@media(max-width:700px){.brand img{max-width:95%}}
+/* Approved dark green and gold homepage branding */
+.brand{min-height:0;padding:14px 15px 10px;background:linear-gradient(110deg,#062817,#10432a 50%,#062817);border-bottom:1px solid #b78c2c}.brand a{display:flex;align-items:center;justify-content:center;gap:20px;text-decoration:none}.brand-title{font-family:Georgia,serif;font-weight:900;letter-spacing:.045em;font-size:clamp(21px,3.3vw,53px);line-height:1.15;color:#f3c858;text-shadow:0 1px #fff3,0 3px 1px #765013,0 5px 8px #000b}.brand-line{color:#d9ae4e;font-size:clamp(12px,2vw,28px);white-space:nowrap}.nav{background:#092d1b;border-bottom:3px solid #d6aa49;gap:5px;align-items:center}.nav a,.nav-toggle{font:700 clamp(12px,1.15vw,17px) Arial,sans-serif;color:#fff;padding:13px 17px;border:0;background:none;cursor:pointer;text-decoration:none}.nav a:hover,.nav-toggle:hover{background:#1c5234;color:#f6d577}.nav>a:first-child{background:linear-gradient(#f8d576,#bc841d);color:#152c1a;border-radius:5px}.nav-menu{position:relative}.nav-dropdown{display:none;position:absolute;top:100%;left:0;z-index:20;background:#0d3521;min-width:215px;box-shadow:0 7px 15px #0008}.nav-dropdown a{display:block;font-size:14px}.nav-menu:hover .nav-dropdown,.nav-menu:focus-within .nav-dropdown,.nav-toggle[aria-expanded="true"]+.nav-dropdown{display:block}.slider{height:clamp(300px,32vw,530px)}.slide:first-child:after{display:none}.slide:first-child img{object-position:center}.slide-arrow{position:absolute;z-index:5;top:50%;transform:translateY(-50%);background:#081e15b8;border:1px solid #fff9;border-radius:50%;color:white;font-size:40px;width:52px;height:52px;line-height:35px;cursor:pointer}.slide-arrow.previous{left:16px}.slide-arrow.next{right:16px}.slider.showing-first .slide-arrow{opacity:0;}.slider.showing-first .slide-arrow:focus-visible,.slider.showing-first .slide-arrow:hover{opacity:1}.slider.showing-first .dots{opacity:0}.slider.showing-first .dots:hover,.slider.showing-first .dots:focus-within{opacity:1}.caption h1{font-family:Georgia,serif;text-shadow:0 3px 5px #000e}.caption h1 em{color:#f3c85b}.tile{border-color:#c9a23f;border-radius:16px;box-shadow:0 4px 0 #977520,0 10px 20px #0002}.tile .pic{height:190px}.tile p{background:linear-gradient(#104827,#082d18);font-size:15px;min-height:78px}.overlay svg{width:60px;height:60px;stroke-width:2.4}.overlay h3{font-size:clamp(18px,1.6vw,25px)}main{max-width:1550px;padding:23px 24px 52px}.grid{gap:18px}.note{margin-top:28px}@media(max-width:700px){.brand-line{display:none}.nav a,.nav-toggle{padding:10px 9px}.slider{height:340px}.slide:first-child img{object-fit:cover;object-position:center}.slide-arrow{width:40px;height:40px;font-size:30px}.tile .pic{height:160px}}
+
+
+/* First banner: clean photograph, real HTML logo and identical caption styles. */
+.first-slide::after{display:block!important;inset:35% 0 0;background:linear-gradient(transparent,rgba(5,21,10,.80))}
+.first-slide .caption{bottom:42px}
+.hero-logo{position:absolute;z-index:2;top:8%;right:7%;display:flex;flex-direction:column;align-items:center;filter:drop-shadow(0 3px 4px #000a);pointer-events:none}
+.hero-logo span{font-family:Arial,Helvetica,sans-serif;font-size:clamp(23px,3.3vw,52px);font-weight:1000;font-style:italic;letter-spacing:-.07em;line-height:1.05;color:#f6f7f5;-webkit-text-stroke:1.5px #13251b;text-shadow:2px 3px 1px #000}
+.hero-logo strong{font:italic 900 clamp(15px,1.8vw,29px) Arial,Helvetica,sans-serif;color:#153b21;background:linear-gradient(#f9d77b,#d6a33d);border:2px solid #e8c56c;border-radius:7px;padding:3px 28px;box-shadow:0 3px 5px #0009}
+@media(max-width:700px){.hero-logo{top:9%;right:5%}.hero-logo span{font-size:clamp(18px,5vw,28px)}.hero-logo strong{font-size:15px;padding:2px 18px}}
+
+/* Hero assets are independent: background photograph, transparent logo, HTML copy. */
+.first-slide .hero-logo{top:7%;right:5%;width:min(46%,660px);display:flex;align-items:center;gap:0;filter:drop-shadow(0 3px 4px #000a)}
+.first-slide .hero-logo img{display:block;width:100%;height:auto;object-fit:contain;max-width:none;background:none;border:0}
+.first-slide .hero-logo strong{font:italic 900 clamp(17px,2.7vw,40px) Arial,sans-serif;letter-spacing:.06em;padding:4px 40px;transform:skew(-9deg);border-radius:10px;background:linear-gradient(#ffe69a,#e3ad32 65%,#a86b0a);border:2px solid #ffe18a;color:#13381d;box-shadow:0 4px 7px #0009;margin-top:-10px}
+.first-slide .caption{left:6%;bottom:46px;right:20%}
+.first-slide .caption h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(23px,3.2vw,48px)}
+@media(max-width:700px){.first-slide .hero-logo{width:55%;right:4%;top:7%}.first-slide .hero-logo strong{font-size:15px;padding:3px 20px}.first-slide .caption{left:5%;right:5%;bottom:40px}}
+
+/* Homepage: photographs, logo and all copy are independent elements. */
+.slider .slide .slide-photo{width:100%;height:100%;object-fit:cover;display:block}
+.hero-logo-image{position:absolute;z-index:3;top:6%;right:5%;width:min(47%,680px);height:auto!important;object-fit:contain!important;filter:drop-shadow(0 3px 5px #0009)}
+.slide .caption{left:5%;right:4%;bottom:42px;max-width:1100px}
+.slide .caption h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(24px,3.2vw,49px);font-weight:700;letter-spacing:.005em;color:#fff}
+.slide .caption h1 em{font-style:normal;color:#f3c85b}
+.slide .caption p{font:400 clamp(15px,1.45vw,21px) Arial,sans-serif;color:white}
+.slide:after,.first-slide:after{content:'';display:block!important;position:absolute;inset:45% 0 0;background:linear-gradient(transparent,rgba(0,0,0,.65));pointer-events:none}
+/* Remove old green ribbons and decorative striped borders from all slides. */
+.slider,.slide,.slide-photo{border:0!important;box-shadow:none!important}
+.slider .dots{opacity:1!important}
+.slider .slide-arrow{opacity:1!important}
+.tile{border:2px solid #c9a23f;border-radius:13px;background:#0c301d;overflow:hidden}
+.tile .pic{height:clamp(145px,13vw,205px)}
+.tile .pic:after{display:none}
+.tile .pic img{object-fit:cover}
+.tile-copy{background:linear-gradient(180deg,#104129,#092c1b);padding:13px 12px 17px;min-height:125px;text-align:center}
+.tile-copy h3{font:700 clamp(17px,1.6vw,24px) Georgia,serif;color:#f0c358;margin:0 0 7px}
+.tile-copy p{background:none;min-height:0;padding:0;font-size:clamp(12px,1vw,15px);line-height:1.4;color:#fff;margin:0}
+@media(max-width:700px){.hero-logo-image{width:55%;right:4%;top:6%}.slide .caption{bottom:40px;left:5%;right:5%}.tile-copy{min-height:115px}}
+
+
+/* APPROVED HOMEPAGE BANNERS: separate photo, logo and editable captions. */
+.slider{border:0!important;box-shadow:none!important;background:#092818}
+.slider .slide{border:0!important;box-shadow:none!important}
+.slider .slide-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;}
+.slider .slide::before{content:none!important}
+.slider .slide::after{content:""!important;display:block!important;position:absolute;inset:42% 0 0;background:linear-gradient(transparent,rgba(0,0,0,.70));pointer-events:none}
+.slider .caption{position:absolute;z-index:3;bottom:43px;left:3.6%;right:4%;max-width:none;text-shadow:1px 3px 5px #000e}
+.slider .caption h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(25px,3.5vw,61px);font-weight:700;letter-spacing:.005em;line-height:1.05;margin:0 0 5px;color:#fff}
+.slider .caption h1 em{font-style:normal;color:#f5c955}
+.slider .caption p{font-family:Arial,Helvetica,sans-serif;font-size:clamp(14px,1.7vw,24px);font-weight:400;color:#fff;margin:0}
+.slider .hero-logo-image{position:absolute;z-index:4;top:4%;right:3.5%;width:min(39%,660px);height:auto!important;object-fit:contain!important;filter:drop-shadow(0 3px 5px #000a)}
+.slider .dots,.slider .slide-arrow{opacity:1!important}
+@media(max-width:700px){.slider .hero-logo-image{width:52%;top:5%;right:3%}.slider .caption{left:5%;bottom:43px;right:4%}.slider .caption h1{font-size:clamp(22px,5vw,34px)}.slider .caption p{font-size:clamp(13px,3vw,17px)}}
+
+/* First banner only: preserve natural image proportions, no stretching. */
+.slider .first-slide .slide-photo{object-fit:cover!important;object-position:center center!important;}

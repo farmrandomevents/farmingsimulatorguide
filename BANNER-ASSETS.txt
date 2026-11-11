@@ -1,0 +1,6 @@
+FIRST BANNER - THREE SEPARATE ELEMENTS
+1. Photograph: assets/first-banner-clean.webp (replaceable image)
+2. Logo: assets/hero-logo-transparent.png (transparent PNG, with separate editable GUIDE badge in CSS)
+3. Headline and subtitle: editable text in index.html inside .first-slide .caption
+Positions and fonts: style.css, bottom section.
+Other slides are unchanged.

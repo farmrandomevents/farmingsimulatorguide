@@ -1,0 +1,1 @@
+FIRST BANNER REBUILT: clean image with no embedded lettering or curved borders. The logo and caption are separate HTML text. All five slides share the exact same .caption h1 and .caption p CSS rules. Open index.html after extracting. Not yet uploaded to GitHub.

@@ -1,0 +1,6 @@
+BANNERS: The six banner titles and subtitles are editable text in index.html, inside <div class="caption">.
+The first banner logo is a separate transparent PNG at assets/farming-simulator-guide-logo.png.
+The six banner photos are independent images referenced by the slide-photo img tags.
+All green striped borders have been disabled.
+IMPORTANT: Sixth banner uses a temporary clean countryside photo until a text-free version of the approved hay-bale trailer scene is available.
+The four feature cards are unchanged from the supplied homepage ZIP.

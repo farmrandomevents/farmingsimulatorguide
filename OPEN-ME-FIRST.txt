@@ -1,0 +1,5 @@
+OPEN THIS FOLDER'S index.html AFTER EXTRACTING ALL.
+Look at the FIRST banner: YOUR FARM. YOUR STORY.
+Its heading uses the exact same .caption h1 / em styling as EXPECT THE UNEXPECTED.
+The first slide background contains old baked-in lettering, which is concealed by a dark gradient until we replace the source artwork with a text-free version.
+Your live website is unchanged.
