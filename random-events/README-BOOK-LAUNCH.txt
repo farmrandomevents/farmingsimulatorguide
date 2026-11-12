@@ -1,0 +1,1 @@
+Book-first launch edition: 287 events from Chapter 8 (pages 132-155), with veterinary and animal dealer events included in Animals. One category illustration per category. Extract ZIP and open index.html, or upload contents to GitHub Pages. Existing local farm settings are preserved.

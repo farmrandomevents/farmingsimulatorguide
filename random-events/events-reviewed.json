@@ -1,0 +1,469 @@
+{
+  "rules": {
+    "days": "Random day durations capped by calendar days per month (1-28)",
+    "months": "Month-based restrictions can cross months and years",
+    "non_applicable": "If no matching crop/field/river, event has no effect; never force regeneration",
+    "completion": "Timed events expire automatically; actionable jobs use Mark as Completed",
+    "payment": "Payment alternatives are occasional, not mandatory on every event",
+    "seasonal": "Crop events only in appropriate planting, growing or harvest months; exact official calendar mapping pending verification",
+    "balance": "Include positive and neutral events, but only when straightforward to carry out in FS25",
+    "images": "Match title/description to tagged images, fallback to category"
+  },
+  "events": [
+    {
+      "id": "weather-flooded-field",
+      "category": "Weather",
+      "title": "Flooded Field",
+      "description": "Your largest field is flooded. Do not work it for 1–2 months.",
+      "duration": {
+        "unit": "months",
+        "min": 1,
+        "max": 2
+      },
+      "type": "timed",
+      "source": "book-adapted"
+    },
+    {
+      "id": "weather-minor-flooding",
+      "category": "Weather",
+      "title": "Minor Flooding",
+      "description": "Do not plant on your smallest field for 1 month.",
+      "duration": {
+        "unit": "months",
+        "min": 1,
+        "max": 1
+      },
+      "type": "timed",
+      "source": "book"
+    },
+    {
+      "id": "weather-waterlogged-field",
+      "category": "Weather",
+      "title": "Waterlogged Field",
+      "description": "Do not use machinery on your largest field for 1–7 days.",
+      "duration": {
+        "unit": "days",
+        "min": 1,
+        "max": 7
+      },
+      "type": "timed",
+      "source": "book-adapted"
+    },
+    {
+      "id": "weather-heavy-rain",
+      "category": "Weather",
+      "title": "Heavy Rain",
+      "description": "Stop all fieldwork for 1–3 days.",
+      "duration": {
+        "unit": "days",
+        "min": 1,
+        "max": 3
+      },
+      "type": "timed",
+      "source": "book-adapted"
+    },
+    {
+      "id": "weather-persistent-rain",
+      "category": "Weather",
+      "title": "Persistent Rain",
+      "description": "No harvesting for 1–5 days.",
+      "duration": {
+        "unit": "days",
+        "min": 1,
+        "max": 5
+      },
+      "type": "timed",
+      "source": "book-adapted"
+    },
+    {
+      "id": "weather-flash-flood",
+      "category": "Weather",
+      "title": "Flash Flood",
+      "description": "No work on your smallest field for 1–2 months.",
+      "duration": {
+        "unit": "months",
+        "min": 1,
+        "max": 2
+      },
+      "type": "timed",
+      "source": "book-adapted"
+    },
+    {
+      "id": "weather-wet-harvest",
+      "category": "Weather",
+      "title": "Wet Harvest",
+      "description": "Delay harvesting your largest field for 1–5 days.",
+      "duration": {
+        "unit": "days",
+        "min": 1,
+        "max": 5
+      },
+      "type": "timed",
+      "source": "book-adapted"
+    },
+    {
+      "id": "weather-river-flooding",
+      "category": "Weather",
+      "title": "Weather Warning — River Flooding",
+      "description": "Any fields adjacent to rivers are flooded and cannot be worked for 1–7 days. If none apply, the event has no effect.",
+      "duration": {
+        "unit": "days",
+        "min": 1,
+        "max": 7
+      },
+      "type": "timed",
+      "source": "new-reviewed"
+    },
+    {
+      "id": "weather-fallen-tree",
+      "category": "Weather",
+      "title": "Fallen Tree",
+      "description": "Remove one tree yourself or pay £500 to have it removed.",
+      "duration": null,
+      "type": "action",
+      "source": "book"
+    },
+    {
+      "id": "weather-storm-damage",
+      "category": "Weather",
+      "title": "Storm Damage",
+      "description": "Pay £1,000 for farm repairs.",
+      "duration": null,
+      "type": "action",
+      "source": "book"
+    },
+    {
+      "id": "weather-lightning-strike",
+      "category": "Weather",
+      "title": "Lightning Strike",
+      "description": "Pay £500 for repairs.",
+      "duration": null,
+      "type": "action",
+      "source": "book"
+    },
+    {
+      "id": "weather-windstorm",
+      "category": "Weather",
+      "title": "Windstorm",
+      "description": "No spraying for 1–3 days.",
+      "duration": {
+        "unit": "days",
+        "min": 1,
+        "max": 3
+      },
+      "type": "timed",
+      "source": "book-adapted"
+    },
+    {
+      "id": "weather-severe-windstorm",
+      "category": "Weather",
+      "title": "Severe Windstorm",
+      "description": "No spraying or spreading for 1–5 days.",
+      "duration": {
+        "unit": "days",
+        "min": 1,
+        "max": 5
+      },
+      "type": "timed",
+      "source": "book-adapted"
+    },
+    {
+      "id": "weather-gale-warning",
+      "category": "Weather",
+      "title": "Gale Warning",
+      "description": "No fieldwork for 1–3 days.",
+      "duration": {
+        "unit": "days",
+        "min": 1,
+        "max": 3
+      },
+      "type": "timed",
+      "source": "book-adapted"
+    },
+    {
+      "id": "weather-dust-storm",
+      "category": "Weather",
+      "title": "Dust Storm",
+      "description": "No harvesting for 1–3 days.",
+      "duration": {
+        "unit": "days",
+        "min": 1,
+        "max": 3
+      },
+      "type": "timed",
+      "source": "book-adapted"
+    },
+    {
+      "id": "weather-late-frost",
+      "category": "Weather",
+      "title": "Late Frost",
+      "description": "No planting for 1–5 days.",
+      "duration": {
+        "unit": "days",
+        "min": 1,
+        "max": 5
+      },
+      "type": "timed",
+      "source": "book-adapted"
+    },
+    {
+      "id": "weather-cold-snap",
+      "category": "Weather",
+      "title": "Cold Snap",
+      "description": "No planting for 1–7 days.",
+      "duration": {
+        "unit": "days",
+        "min": 1,
+        "max": 7
+      },
+      "type": "timed",
+      "source": "book-adapted"
+    },
+    {
+      "id": "weather-heatwave",
+      "category": "Weather",
+      "title": "Heatwave",
+      "description": "No fieldwork between 12pm and 3pm for 1–7 days.",
+      "duration": {
+        "unit": "days",
+        "min": 1,
+        "max": 7
+      },
+      "type": "timed",
+      "source": "book-adapted"
+    },
+    {
+      "id": "weather-drought",
+      "category": "Weather",
+      "title": "Drought",
+      "description": "No fertiliser on your largest field this month.",
+      "duration": {
+        "unit": "months",
+        "min": 1,
+        "max": 1
+      },
+      "type": "timed",
+      "source": "book"
+    },
+    {
+      "id": "weather-early-frost",
+      "category": "Weather",
+      "title": "Early Frost",
+      "description": "Harvest your smallest ready field within 1–5 days, if you have one.",
+      "duration": {
+        "unit": "days",
+        "min": 1,
+        "max": 5
+      },
+      "type": "action-deadline",
+      "source": "book-adapted"
+    },
+    {
+      "id": "weather-dry-spell",
+      "category": "Weather",
+      "title": "Dry Spell",
+      "description": "No grass mowing for 1 month.",
+      "duration": {
+        "unit": "months",
+        "min": 1,
+        "max": 1
+      },
+      "type": "timed",
+      "source": "book"
+    },
+    {
+      "id": "weather-severe-heat",
+      "category": "Weather",
+      "title": "Severe Heat",
+      "description": "Finish all fieldwork by midday for 1–7 days.",
+      "duration": {
+        "unit": "days",
+        "min": 1,
+        "max": 7
+      },
+      "type": "timed",
+      "source": "book-adapted"
+    },
+    {
+      "id": "weather-power-outage",
+      "category": "Weather",
+      "title": "Power Outage",
+      "description": "Pause all production buildings for 1–3 days.",
+      "duration": {
+        "unit": "days",
+        "min": 1,
+        "max": 3
+      },
+      "type": "timed",
+      "source": "book-adapted"
+    },
+    {
+      "id": "field-storm-damaged-soil",
+      "category": "Crops & Fields",
+      "title": "Storm-Damaged Soil",
+      "description": "Plough your smallest field before planting again.",
+      "duration": null,
+      "type": "action",
+      "source": "new-reviewed"
+    },
+    {
+      "id": "field-blocked-drainage",
+      "category": "Crops & Fields",
+      "title": "Blocked Drainage Ditch",
+      "description": "Remove one tree near your largest field, or wait 1 month. If no suitable tree exists, simply wait.",
+      "duration": {
+        "unit": "months",
+        "min": 1,
+        "max": 1
+      },
+      "type": "choice",
+      "source": "new-reviewed"
+    },
+    {
+      "id": "field-emergency-drainage",
+      "category": "Crops & Fields",
+      "title": "Emergency Field Repairs",
+      "description": "Your smallest field is flooded. Wait 1 month or pay £1,000 for emergency drainage to restore access early.",
+      "duration": {
+        "unit": "months",
+        "min": 1,
+        "max": 1
+      },
+      "type": "choice",
+      "source": "new-reviewed"
+    },
+    {
+      "id": "field-access-track",
+      "category": "Crops & Fields",
+      "title": "Flooded Access Track",
+      "description": "Your largest field cannot be accessed for 1–7 days.",
+      "duration": {
+        "unit": "days",
+        "min": 1,
+        "max": 7
+      },
+      "type": "timed",
+      "source": "new-reviewed"
+    },
+    {
+      "id": "field-drainage-contractor",
+      "category": "Crops & Fields",
+      "title": "Drainage Contractor",
+      "description": "Your largest field is flooded. Wait 1–2 months or pay £2,000 to restore access immediately.",
+      "duration": {
+        "unit": "months",
+        "min": 1,
+        "max": 2
+      },
+      "type": "choice",
+      "source": "new-reviewed"
+    },
+    {
+      "id": "field-reviewed-0",
+      "category": "Crops & Fields",
+      "title": "Pest Infestation — Largest Field",
+      "description": "Plough an 8m strip around the headland of your largest field.",
+      "duration": null,
+      "type": "action",
+      "source": "reviewed"
+    },
+    {
+      "id": "field-reviewed-1",
+      "category": "Crops & Fields",
+      "title": "Slug Damage",
+      "description": "Cultivate your smallest planted field and re-seed it.",
+      "duration": null,
+      "type": "action",
+      "source": "reviewed"
+    },
+    {
+      "id": "field-reviewed-2",
+      "category": "Crops & Fields",
+      "title": "Bird Damage",
+      "description": "Pay £500 to represent crop losses.",
+      "duration": null,
+      "type": "action",
+      "source": "reviewed"
+    },
+    {
+      "id": "field-reviewed-3",
+      "category": "Crops & Fields",
+      "title": "Wheat Disease",
+      "description": "Cultivate your smallest wheat field and re-seed it, if you grow wheat.",
+      "duration": null,
+      "type": "action",
+      "source": "reviewed"
+    },
+    {
+      "id": "field-reviewed-4",
+      "category": "Crops & Fields",
+      "title": "Barley Pest",
+      "description": "Skip the next fertiliser stage on your largest barley field, if applicable.",
+      "duration": null,
+      "type": "action",
+      "source": "reviewed"
+    },
+    {
+      "id": "field-reviewed-5",
+      "category": "Crops & Fields",
+      "title": "Poor Germination",
+      "description": "Re-seed your smallest newly planted field.",
+      "duration": null,
+      "type": "action",
+      "source": "reviewed"
+    },
+    {
+      "id": "field-reviewed-6",
+      "category": "Crops & Fields",
+      "title": "Compacted Soil",
+      "description": "Subsoil your largest field before planting.",
+      "duration": null,
+      "type": "action",
+      "source": "reviewed"
+    },
+    {
+      "id": "field-reviewed-7",
+      "category": "Crops & Fields",
+      "title": "Drainage Problem",
+      "description": "Leave your smallest field unused for 1–2 months.",
+      "duration": {
+        "unit": "months",
+        "min": 1,
+        "max": 2
+      },
+      "type": "timed",
+      "source": "reviewed"
+    },
+    {
+      "id": "field-reviewed-8",
+      "category": "Crops & Fields",
+      "title": "Failed Crop",
+      "description": "Cultivate your smallest growing field and re-seed it.",
+      "duration": null,
+      "type": "action",
+      "source": "reviewed"
+    },
+    {
+      "id": "field-reviewed-9",
+      "category": "Crops & Fields",
+      "title": "Soil Test Failure",
+      "description": "Apply lime to your largest field.",
+      "duration": null,
+      "type": "action",
+      "source": "reviewed"
+    },
+    {
+      "id": "field-reviewed-10",
+      "category": "Crops & Fields",
+      "title": "Poor Field Access",
+      "description": "No machinery enters your largest field for 1–7 days.",
+      "duration": {
+        "unit": "days",
+        "min": 1,
+        "max": 7
+      },
+      "type": "timed",
+      "source": "reviewed"
+    }
+  ]
+}

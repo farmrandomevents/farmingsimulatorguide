@@ -1,0 +1,1 @@
+Calendar fix: pending dealership offers and unfinished actions no longer prevent advancing days or months. They remain saved in Pending Offers & Actions until used/completed. Existing browser saved farm data is preserved.

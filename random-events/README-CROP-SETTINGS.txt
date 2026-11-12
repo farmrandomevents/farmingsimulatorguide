@@ -1,0 +1,1 @@
+Test build: Farm Settings includes Your Crops. Crop-specific test events filtered by selected crops. E02-024 removed. Reset keeps crop selections. Layout and images unchanged. Seasonal filtering and full approved event library pending.

@@ -1,0 +1,1 @@
+Additive console calculator test. Each quick-price button adds to the existing total; repeated presses accumulate. Clear total resets to £0. Exact price entry remains available. Percentages remain 5% steps. Other website design unchanged.

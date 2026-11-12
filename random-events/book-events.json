@@ -1,0 +1,3161 @@
+[
+  {
+    "id": "book-00-001",
+    "c": 0,
+    "t": "Flooded Field",
+    "template": "No planting on your largest field for {duration}.",
+    "p": "category-0",
+    "duration": "months",
+    "minMonths": 1,
+    "maxMonths": 1,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-00-002",
+    "c": 0,
+    "t": "Minor Flooding",
+    "template": "No planting on your smallest field for {duration}.",
+    "p": "category-0",
+    "duration": "months",
+    "minMonths": 1,
+    "maxMonths": 1,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-00-003",
+    "c": 0,
+    "t": "Waterlogged Field",
+    "template": "No machinery on your largest field for {duration}.",
+    "p": "category-0",
+    "duration": "days",
+    "minDays": 3,
+    "maxDays": 3,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-00-004",
+    "c": 0,
+    "t": "Heavy Rain",
+    "template": "Stop all fieldwork for {duration}.",
+    "p": "category-0",
+    "duration": "days",
+    "minDays": 1,
+    "maxDays": 1,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-00-005",
+    "c": 0,
+    "t": "Persistent Rain",
+    "template": "No harvesting for {duration}.",
+    "p": "category-0",
+    "duration": "days",
+    "minDays": 2,
+    "maxDays": 2,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-00-006",
+    "c": 0,
+    "t": "Flash Flood",
+    "template": "No work on your smallest field for {duration}.",
+    "p": "category-0",
+    "duration": "months",
+    "minMonths": 1,
+    "maxMonths": 1,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-00-007",
+    "c": 0,
+    "t": "Wet Harvest",
+    "template": "Delay harvesting your largest field for {duration}.",
+    "p": "category-0",
+    "duration": "days",
+    "minDays": 2,
+    "maxDays": 2,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-00-008",
+    "c": 0,
+    "t": "Windstorm",
+    "template": "No spraying for {duration}.",
+    "p": "category-0",
+    "duration": "days",
+    "minDays": 1,
+    "maxDays": 1,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-00-009",
+    "c": 0,
+    "t": "Severe Windstorm",
+    "template": "No spraying or spreading for {duration}.",
+    "p": "category-0",
+    "duration": "days",
+    "minDays": 1,
+    "maxDays": 1,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-00-010",
+    "c": 0,
+    "t": "Lightning Strike",
+    "template": "Pay £500 for repairs.",
+    "p": "category-0",
+    "eventType": "action"
+  },
+  {
+    "id": "book-00-011",
+    "c": 0,
+    "t": "Storm Damage",
+    "template": "Pay £1,000 for farm repairs.",
+    "p": "category-0",
+    "eventType": "action"
+  },
+  {
+    "id": "book-00-012",
+    "c": 0,
+    "t": "Fallen Tree",
+    "template": "Remove one tree yourself or pay £500.",
+    "p": "category-0",
+    "eventType": "action"
+  },
+  {
+    "id": "book-00-013",
+    "c": 0,
+    "t": "Gale Warning",
+    "template": "No fieldwork for {duration}.",
+    "p": "category-0",
+    "duration": "days",
+    "minDays": 1,
+    "maxDays": 1,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-00-014",
+    "c": 0,
+    "t": "Power Outage",
+    "template": "Pause all production buildings for {duration}.",
+    "p": "category-0",
+    "duration": "days",
+    "minDays": 1,
+    "maxDays": 1,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-00-015",
+    "c": 0,
+    "t": "Dust Storm",
+    "template": "No harvesting for {duration}.",
+    "p": "category-0",
+    "duration": "days",
+    "minDays": 1,
+    "maxDays": 1,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-00-016",
+    "c": 0,
+    "t": "Heatwave",
+    "template": "No fieldwork between 12pm and 3pm for {duration}.",
+    "p": "category-0",
+    "duration": "days",
+    "minDays": 2,
+    "maxDays": 2,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-00-017",
+    "c": 0,
+    "t": "Drought",
+    "template": "No fertiliser on your largest field this month.",
+    "p": "category-0",
+    "eventType": "action"
+  },
+  {
+    "id": "book-00-018",
+    "c": 0,
+    "t": "Late Frost",
+    "template": "Delay planting for {duration}.",
+    "p": "category-0",
+    "duration": "days",
+    "minDays": 2,
+    "maxDays": 2,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-00-019",
+    "c": 0,
+    "t": "Early Frost",
+    "template": "Harvest your smallest ready field within 2 days.",
+    "p": "category-0",
+    "eventType": "action"
+  },
+  {
+    "id": "book-00-020",
+    "c": 0,
+    "t": "Cold Snap",
+    "template": "No planting for {duration}.",
+    "p": "category-0",
+    "duration": "days",
+    "minDays": 3,
+    "maxDays": 3,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-00-021",
+    "c": 0,
+    "t": "Dry Spell",
+    "template": "No grass mowing for {duration}.",
+    "p": "category-0",
+    "duration": "months",
+    "minMonths": 1,
+    "maxMonths": 1,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-00-022",
+    "c": 0,
+    "t": "Severe Heat",
+    "template": "Finish all fieldwork by midday for {duration}.",
+    "p": "category-0",
+    "duration": "days",
+    "minDays": 2,
+    "maxDays": 2,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-01-023",
+    "c": 1,
+    "t": "Pest Infestation",
+    "template": "Largest Field — Plough 8m of headland.",
+    "p": "category-1",
+    "eventType": "action"
+  },
+  {
+    "id": "book-01-024",
+    "c": 1,
+    "t": "Pest Infestation",
+    "template": "Smallest Field — Cultivate 6m of headland.",
+    "p": "category-1",
+    "eventType": "action"
+  },
+  {
+    "id": "book-01-025",
+    "c": 1,
+    "t": "Pest Infestation",
+    "template": "All fields under 10 acres — Cultivate 4m of headland.",
+    "p": "category-1",
+    "eventType": "action"
+  },
+  {
+    "id": "book-01-026",
+    "c": 1,
+    "t": "Slug Damage",
+    "template": "Cultivate your smallest planted field and re-seed it.",
+    "p": "category-1",
+    "eventType": "action"
+  },
+  {
+    "id": "book-01-027",
+    "c": 1,
+    "t": "Bird Damage",
+    "template": "Lose £500 to represent damaged crops.",
+    "p": "category-1",
+    "eventType": "action"
+  },
+  {
+    "id": "book-01-028",
+    "c": 1,
+    "t": "Severe Pest Outbreak",
+    "template": "Plough your smallest growing field.",
+    "p": "category-1",
+    "eventType": "action"
+  },
+  {
+    "id": "book-01-029",
+    "c": 1,
+    "t": "Headland Infestation",
+    "template": "Cultivate 6m headland around all planted fields.",
+    "p": "category-1",
+    "eventType": "action"
+  },
+  {
+    "id": "book-01-030",
+    "c": 1,
+    "t": "Cereal Disease",
+    "template": "No more fertiliser on wheat, barley or oat fields.",
+    "p": "category-1",
+    "eventType": "action"
+  },
+  {
+    "id": "book-01-031",
+    "c": 1,
+    "t": "Wheat Disease",
+    "template": "Cultivate your smallest wheat field and re-seed it.",
+    "p": "category-1",
+    "eventType": "action"
+  },
+  {
+    "id": "book-01-032",
+    "c": 1,
+    "t": "Barley Pest",
+    "template": "Skip the next fertiliser stage on your largest barley field.",
+    "p": "category-1",
+    "eventType": "action"
+  },
+  {
+    "id": "book-01-033",
+    "c": 1,
+    "t": "Oat Infestation",
+    "template": "Cultivate 6m of headland on your largest oat field.",
+    "p": "category-1",
+    "eventType": "action"
+  },
+  {
+    "id": "book-01-034",
+    "c": 1,
+    "t": "Maize Disease",
+    "template": "No fertiliser on your largest maize field.",
+    "p": "category-1",
+    "eventType": "action"
+  },
+  {
+    "id": "book-01-035",
+    "c": 1,
+    "t": "Oilseed Disease",
+    "template": "No more fertiliser on canola or sunflower fields.",
+    "p": "category-1",
+    "eventType": "action"
+  },
+  {
+    "id": "book-01-036",
+    "c": 1,
+    "t": "Root Crop Pest",
+    "template": "Cultivate your smallest potato and sugar beet field.",
+    "p": "category-1",
+    "eventType": "action"
+  },
+  {
+    "id": "book-01-037",
+    "c": 1,
+    "t": "Poor Germination",
+    "template": "Re-seed your smallest newly planted field.",
+    "p": "category-1",
+    "eventType": "action"
+  },
+  {
+    "id": "book-01-038",
+    "c": 1,
+    "t": "Soil Damage",
+    "template": "Plough your largest field before its next crop.",
+    "p": "category-1",
+    "eventType": "action"
+  },
+  {
+    "id": "book-01-039",
+    "c": 1,
+    "t": "Waterlogged Ground",
+    "template": "No work on your smallest field for {duration}.",
+    "p": "category-1",
+    "duration": "days",
+    "minDays": 3,
+    "maxDays": 3,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-01-040",
+    "c": 1,
+    "t": "Compacted Soil",
+    "template": "Subsoil your largest field before planting.",
+    "p": "category-1",
+    "eventType": "action"
+  },
+  {
+    "id": "book-01-041",
+    "c": 1,
+    "t": "Damaged Headland",
+    "template": "Cultivate 6m around your largest planted field.",
+    "p": "category-1",
+    "eventType": "action"
+  },
+  {
+    "id": "book-01-042",
+    "c": 1,
+    "t": "Drainage Problem",
+    "template": "Leave your smallest field unused for {duration}.",
+    "p": "category-1",
+    "duration": "months",
+    "minMonths": 1,
+    "maxMonths": 1,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-01-043",
+    "c": 1,
+    "t": "Uneven Seedbed",
+    "template": "Cultivate your smallest prepared field again.",
+    "p": "category-1",
+    "eventType": "action"
+  },
+  {
+    "id": "book-01-044",
+    "c": 1,
+    "t": "Failed Crop",
+    "template": "Cultivate your smallest growing field and re-seed it.",
+    "p": "category-1",
+    "eventType": "action"
+  },
+  {
+    "id": "book-01-045",
+    "c": 1,
+    "t": "Soil Test Failure",
+    "template": "Apply lime to your largest field.",
+    "p": "category-1",
+    "eventType": "action"
+  },
+  {
+    "id": "book-01-046",
+    "c": 1,
+    "t": "Poor Field Access",
+    "template": "No machinery enters your largest field for {duration}.",
+    "p": "category-1",
+    "duration": "days",
+    "minDays": 2,
+    "maxDays": 2,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-02-047",
+    "c": 2,
+    "t": "Broken Axle",
+    "template": "Largest Tractor. Unusable for {duration}; lease a replacement.",
+    "p": "category-2",
+    "duration": "days",
+    "minDays": 2,
+    "maxDays": 2,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-02-048",
+    "c": 2,
+    "t": "Dead Battery",
+    "template": "Largest Tractor. Unavailable until the next morning.",
+    "p": "category-2",
+    "eventType": "action"
+  },
+  {
+    "id": "book-02-049",
+    "c": 2,
+    "t": "Transmission Failure",
+    "template": "Oldest Tractor. Unusable for {duration}; pay £2,000.",
+    "p": "category-2",
+    "duration": "days",
+    "minDays": 2,
+    "maxDays": 2,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-02-050",
+    "c": 2,
+    "t": "Hydraulic Failure",
+    "template": "Oldest Tractor. Unusable for {duration}; pay £750.",
+    "p": "category-2",
+    "duration": "days",
+    "minDays": 1,
+    "maxDays": 1,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-02-051",
+    "c": 2,
+    "t": "Engine Trouble",
+    "template": "Largest Tractor. Unusable for {duration}; pay £1,000.",
+    "p": "category-2",
+    "duration": "days",
+    "minDays": 1,
+    "maxDays": 1,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-02-052",
+    "c": 2,
+    "t": "Puncture",
+    "template": "Newest Tractor. Pay £400 before using it again.",
+    "p": "category-2",
+    "eventType": "action"
+  },
+  {
+    "id": "book-02-053",
+    "c": 2,
+    "t": "Starter Motor Failure",
+    "template": "Oldest Tractor. Unavailable until tomorrow.",
+    "p": "category-2",
+    "eventType": "action"
+  },
+  {
+    "id": "book-02-054",
+    "c": 2,
+    "t": "Overheating",
+    "template": "Largest Tractor. Park it for the rest of the day.",
+    "p": "category-2",
+    "eventType": "action"
+  },
+  {
+    "id": "book-02-055",
+    "c": 2,
+    "t": "Harvester Breakdown",
+    "template": "Harvester unavailable for {duration}; pay £2,000.",
+    "p": "category-2",
+    "duration": "days",
+    "minDays": 2,
+    "maxDays": 2,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-02-056",
+    "c": 2,
+    "t": "Seeder Breakdown",
+    "template": "Seeder unavailable for {duration}; pay £750.",
+    "p": "category-2",
+    "duration": "days",
+    "minDays": 1,
+    "maxDays": 1,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-02-057",
+    "c": 2,
+    "t": "Baler Breakdown",
+    "template": "Baler unavailable for {duration}; pay £500.",
+    "p": "category-2",
+    "duration": "days",
+    "minDays": 1,
+    "maxDays": 1,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-02-058",
+    "c": 2,
+    "t": "Sprayer Failure",
+    "template": "No spraying for {duration}.",
+    "p": "category-2",
+    "duration": "days",
+    "minDays": 2,
+    "maxDays": 2,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-02-059",
+    "c": 2,
+    "t": "Mower Damage",
+    "template": "Mower unavailable for {duration}; pay £500.",
+    "p": "category-2",
+    "duration": "days",
+    "minDays": 1,
+    "maxDays": 1,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-02-060",
+    "c": 2,
+    "t": "Trailer Damage",
+    "template": "Largest trailer unavailable for {duration}.",
+    "p": "category-2",
+    "duration": "days",
+    "minDays": 2,
+    "maxDays": 2,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-02-061",
+    "c": 2,
+    "t": "Tractor Tyre Damage",
+    "template": "Pay £300 to repair tyres.",
+    "p": "category-2",
+    "eventType": "action"
+  },
+  {
+    "id": "book-02-062",
+    "c": 2,
+    "t": "PTO Failure",
+    "template": "Seeder and Planter cannot be used for {duration}.",
+    "p": "category-2",
+    "duration": "days",
+    "minDays": 1,
+    "maxDays": 1,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-02-063",
+    "c": 2,
+    "t": "Manufacturer Recall",
+    "template": "Newest Tractor. Remove from use for {duration}; receive £3,000 from dealer.",
+    "p": "category-2",
+    "duration": "months",
+    "minMonths": 1,
+    "maxMonths": 1,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-02-064",
+    "c": 2,
+    "t": "Software Update Glitch",
+    "template": "No GPS or Steering Assist for {duration}.",
+    "p": "category-2",
+    "duration": "days",
+    "minDays": 2,
+    "maxDays": 2,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-02-065",
+    "c": 2,
+    "t": "Fuel Leak",
+    "template": "Lose 200L of fuel, pay £250 repairs.",
+    "p": "category-2",
+    "eventType": "action"
+  },
+  {
+    "id": "book-02-066",
+    "c": 2,
+    "t": "Electrical Fault",
+    "template": "Smallest tractor unavailable until the next morning.",
+    "p": "category-2",
+    "eventType": "action"
+  },
+  {
+    "id": "book-02-067",
+    "c": 2,
+    "t": "Workshop Delay",
+    "template": "Extend your next machinery breakdown by 1 day.",
+    "p": "category-2",
+    "eventType": "action"
+  },
+  {
+    "id": "book-02-068",
+    "c": 2,
+    "t": "Parts Shortage",
+    "template": "Broken machinery remains unavailable for 2 extra days.",
+    "p": "category-2",
+    "eventType": "action"
+  },
+  {
+    "id": "book-02-069",
+    "c": 2,
+    "t": "Service Overdue",
+    "template": "Service your oldest vehicle before using it again.",
+    "p": "category-2",
+    "eventType": "action"
+  },
+  {
+    "id": "book-02-070",
+    "c": 2,
+    "t": "Warning Light",
+    "template": "Stop using your newest tractor for the rest of the day.",
+    "p": "category-2",
+    "eventType": "action"
+  },
+  {
+    "id": "book-03-071",
+    "c": 3,
+    "t": "Escaped Animal",
+    "template": "Sell the youngest animal from your largest pen.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-072",
+    "c": 3,
+    "t": "Escaped Animal",
+    "template": "Sell the oldest animal from your largest pen.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-073",
+    "c": 3,
+    "t": "Broken Fence",
+    "template": "Pay £300 for repairs.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-074",
+    "c": 3,
+    "t": "Gate Left Open",
+    "template": "Sell one animal from your largest pen.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-075",
+    "c": 3,
+    "t": "Damaged Pasture Fence",
+    "template": "Pay £500 before using the pasture again.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-076",
+    "c": 3,
+    "t": "Livestock Escape",
+    "template": "Sell two animals from your largest pen.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-077",
+    "c": 3,
+    "t": "Missing Animal",
+    "template": "Sell one animal from your smallest pen.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-078",
+    "c": 3,
+    "t": "Fence Inspection",
+    "template": "Pay £250 for maintenance.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-079",
+    "c": 3,
+    "t": "Birthrate Surge",
+    "template": "Add 2 newborn animals to every pen.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-080",
+    "c": 3,
+    "t": "Successful Breeding",
+    "template": "Add 2 newborns to your largest pen.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-081",
+    "c": 3,
+    "t": "Twin Births",
+    "template": "Add 2 newborn animals to smallest pen.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-082",
+    "c": 3,
+    "t": "Breeding Stock Needed",
+    "template": "Buy 1 adult animal to improve breeding.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-083",
+    "c": 3,
+    "t": "Unexpected Birth",
+    "template": "Add 1 newborn to your smallest pen.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-084",
+    "c": 3,
+    "t": "Strong Breeding Season",
+    "template": "Add 1 newborn to every pen.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-085",
+    "c": 3,
+    "t": "New Livestock",
+    "template": "Buy 2 newborn animals to the same pen.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-086",
+    "c": 3,
+    "t": "Overcrowding",
+    "template": "Sell 2 animals from your fullest pen.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-087",
+    "c": 3,
+    "t": "Farm Inspection",
+    "template": "Pay £500 if any pen has under 5,000L of feed.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-088",
+    "c": 3,
+    "t": "Water Problem",
+    "template": "No new animals can be bought for {duration}.",
+    "p": "category-3",
+    "duration": "months",
+    "minMonths": 2,
+    "maxMonths": 2,
+    "eventType": "timed",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-089",
+    "c": 3,
+    "t": "Bedding Shortage",
+    "template": "Buy 2 straw bales.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-090",
+    "c": 3,
+    "t": "Pasture Damage",
+    "template": "Move or sell 2 animals from your largest pasture.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-091",
+    "c": 3,
+    "t": "Handling Accident",
+    "template": "Pay £500 in additional farm costs.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-092",
+    "c": 3,
+    "t": "Animal Transport Delay",
+    "template": "No buying or selling animals for {duration}.",
+    "p": "category-3",
+    "duration": "months",
+    "minMonths": 1,
+    "maxMonths": 1,
+    "eventType": "timed",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-093",
+    "c": 3,
+    "t": "Livestock Trailer Damage",
+    "template": "Trailer unavailable for {duration}; pay £500.",
+    "p": "category-3",
+    "duration": "days",
+    "minDays": 2,
+    "maxDays": 2,
+    "eventType": "timed",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-094",
+    "c": 3,
+    "t": "Pen Repairs",
+    "template": "Pay £750 for repairs to your largest animal pen.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-04-095",
+    "c": 4,
+    "t": "Rat Infestation",
+    "template": "Buy 4 hay bales, 4 pig food bags and 4 wheat bags.",
+    "p": "category-4",
+    "eventType": "action"
+  },
+  {
+    "id": "book-04-096",
+    "c": 4,
+    "t": "Spoiled Hay",
+    "template": "Replace 2 hay bales.",
+    "p": "category-4",
+    "eventType": "action"
+  },
+  {
+    "id": "book-04-097",
+    "c": 4,
+    "t": "Spoiled Silage",
+    "template": "Replace 2 silage bales.",
+    "p": "category-4",
+    "eventType": "action"
+  },
+  {
+    "id": "book-04-098",
+    "c": 4,
+    "t": "Damaged Feed Store",
+    "template": "Lose 25% of one stored animal feed.",
+    "p": "category-4",
+    "eventType": "action"
+  },
+  {
+    "id": "book-04-099",
+    "c": 4,
+    "t": "Feed Shortage",
+    "template": "Buy enough feed for your largest animal pen.",
+    "p": "category-4",
+    "eventType": "action"
+  },
+  {
+    "id": "book-04-100",
+    "c": 4,
+    "t": "Hay Shortage",
+    "template": "Buy 4 hay bales before feeding cattle or sheep.",
+    "p": "category-4",
+    "eventType": "action"
+  },
+  {
+    "id": "book-04-101",
+    "c": 4,
+    "t": "Pig Food Shortage",
+    "template": "Buy 4 bags of pig food.",
+    "p": "category-4",
+    "eventType": "action"
+  },
+  {
+    "id": "book-04-102",
+    "c": 4,
+    "t": "Straw Shortage",
+    "template": "Buy 4 straw bales for your animals.",
+    "p": "category-4",
+    "eventType": "action"
+  },
+  {
+    "id": "book-04-103",
+    "c": 4,
+    "t": "Seed Shortage",
+    "template": "No planting for {duration}.",
+    "p": "category-4",
+    "duration": "days",
+    "minDays": 2,
+    "maxDays": 2,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-04-104",
+    "c": 4,
+    "t": "Seed Contamination",
+    "template": "Lose £500 worth of seed.",
+    "p": "category-4",
+    "eventType": "action"
+  },
+  {
+    "id": "book-04-105",
+    "c": 4,
+    "t": "Fertiliser Spill",
+    "template": "Lose 1,000L fertiliser and pay £400 cleanup.",
+    "p": "category-4",
+    "eventType": "action"
+  },
+  {
+    "id": "book-04-106",
+    "c": 4,
+    "t": "Fertiliser Shortage",
+    "template": "No fertilising for {duration}.",
+    "p": "category-4",
+    "duration": "days",
+    "minDays": 3,
+    "maxDays": 3,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-04-107",
+    "c": 4,
+    "t": "Herbicide Shortage",
+    "template": "No herbicide use for {duration}.",
+    "p": "category-4",
+    "duration": "months",
+    "minMonths": 1,
+    "maxMonths": 1,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-04-108",
+    "c": 4,
+    "t": "Lime Shortage",
+    "template": "Delay your next lime application for {duration}.",
+    "p": "category-4",
+    "duration": "months",
+    "minMonths": 1,
+    "maxMonths": 1,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-04-109",
+    "c": 4,
+    "t": "Delayed Delivery",
+    "template": "No buying farm supplies until tomorrow.",
+    "p": "category-4",
+    "eventType": "action"
+  },
+  {
+    "id": "book-04-110",
+    "c": 4,
+    "t": "Supply Price Increase",
+    "template": "Pay an extra £500 on your next supply purchase.",
+    "p": "category-4",
+    "eventType": "action"
+  },
+  {
+    "id": "book-04-111",
+    "c": 4,
+    "t": "Grain Silo Contaminated",
+    "template": "Sell all stored grain this month.",
+    "p": "category-4",
+    "eventType": "action"
+  },
+  {
+    "id": "book-04-112",
+    "c": 4,
+    "t": "Silo Damage",
+    "template": "Pay £1,000 for repairs.",
+    "p": "category-4",
+    "eventType": "action"
+  },
+  {
+    "id": "book-04-113",
+    "c": 4,
+    "t": "Grain Spoilage",
+    "template": "Sell 25% of your stored grain immediately.",
+    "p": "category-4",
+    "eventType": "action"
+  },
+  {
+    "id": "book-04-114",
+    "c": 4,
+    "t": "Storage Leak",
+    "template": "Lose 5,000L from your largest stored crop.",
+    "p": "category-4",
+    "eventType": "action"
+  },
+  {
+    "id": "book-04-115",
+    "c": 4,
+    "t": "Bale Damage",
+    "template": "Remove 2 bales from your stock.",
+    "p": "category-4",
+    "eventType": "action"
+  },
+  {
+    "id": "book-04-116",
+    "c": 4,
+    "t": "Straw Spoilage",
+    "template": "Remove 4 straw bales from storage.",
+    "p": "category-4",
+    "eventType": "action"
+  },
+  {
+    "id": "book-04-117",
+    "c": 4,
+    "t": "Storage Inspection",
+    "template": "Pay £500 if any storage area is over 90% full.",
+    "p": "category-4",
+    "eventType": "action"
+  },
+  {
+    "id": "book-04-118",
+    "c": 4,
+    "t": "Silo Maintenance",
+    "template": "No grain can enter your silo for {duration}.",
+    "p": "category-4",
+    "duration": "days",
+    "minDays": 2,
+    "maxDays": 2,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-05-119",
+    "c": 5,
+    "t": "Tax Bill",
+    "template": "Pay £3,000.",
+    "p": "category-5"
+  },
+  {
+    "id": "book-05-120",
+    "c": 5,
+    "t": "Insurance Renewal",
+    "template": "Pay £1,000 annual premium.",
+    "p": "category-5"
+  },
+  {
+    "id": "book-05-121",
+    "c": 5,
+    "t": "Property Repairs",
+    "template": "Pay £1,500 for damage to a farm building.",
+    "p": "category-5"
+  },
+  {
+    "id": "book-05-122",
+    "c": 5,
+    "t": "Land Rates",
+    "template": "Pay £500 for each field you own.",
+    "p": "category-5"
+  },
+  {
+    "id": "book-05-123",
+    "c": 5,
+    "t": "Utility Bill",
+    "template": "Pay £750 for electricity and water.",
+    "p": "category-5"
+  },
+  {
+    "id": "book-05-124",
+    "c": 5,
+    "t": "Waste Collection",
+    "template": "Pay £500 for farm waste removal.",
+    "p": "category-5"
+  },
+  {
+    "id": "book-05-125",
+    "c": 5,
+    "t": "Accountancy Fees",
+    "template": "Pay £750 for annual accounts.",
+    "p": "category-5"
+  },
+  {
+    "id": "book-05-126",
+    "c": 5,
+    "t": "Safety Inspection",
+    "template": "Pay £500 for required improvements.",
+    "p": "category-5"
+  },
+  {
+    "id": "book-05-127",
+    "c": 5,
+    "t": "Insurance Increase",
+    "template": "Pay an additional £1,000.",
+    "p": "category-5"
+  },
+  {
+    "id": "book-05-128",
+    "c": 5,
+    "t": "Late Payment Fee",
+    "template": "Pay £500 for a missed payment.",
+    "p": "category-5"
+  },
+  {
+    "id": "book-05-129",
+    "c": 5,
+    "t": "Legal Fees",
+    "template": "Pay £1,500 following a land dispute.",
+    "p": "category-5"
+  },
+  {
+    "id": "book-05-130",
+    "c": 5,
+    "t": "Insurance Excess",
+    "template": "Pay £750 following a minor farm claim.",
+    "p": "category-5"
+  },
+  {
+    "id": "book-05-131",
+    "c": 5,
+    "t": "Property Damage",
+    "template": "Pay £2,000 for unexpected building repairs.",
+    "p": "category-5"
+  },
+  {
+    "id": "book-05-132",
+    "c": 5,
+    "t": "Equipment Insurance Excess",
+    "template": "Pay £1,000 following machinery damage.",
+    "p": "category-5"
+  },
+  {
+    "id": "book-05-133",
+    "c": 5,
+    "t": "Boundary Dispute",
+    "template": "Pay £1,500 for surveying and legal costs.",
+    "p": "category-5"
+  },
+  {
+    "id": "book-05-134",
+    "c": 5,
+    "t": "Environmental Fine",
+    "template": "Pay £1,000 for a failed farm inspection.",
+    "p": "category-5"
+  },
+  {
+    "id": "book-05-135",
+    "c": 5,
+    "t": "Government Subsidy",
+    "template": "Receive £2,000.",
+    "p": "category-5"
+  },
+  {
+    "id": "book-05-136",
+    "c": 5,
+    "t": "Environmental Grant",
+    "template": "Receive £3,000.",
+    "p": "category-5"
+  },
+  {
+    "id": "book-05-137",
+    "c": 5,
+    "t": "Farm Support Payment",
+    "template": "Receive £1,500.",
+    "p": "category-5"
+  },
+  {
+    "id": "book-05-138",
+    "c": 5,
+    "t": "Tax Refund",
+    "template": "Receive £1,000.",
+    "p": "category-5"
+  },
+  {
+    "id": "book-05-139",
+    "c": 5,
+    "t": "Insurance Refund",
+    "template": "Receive £750.",
+    "p": "category-5"
+  },
+  {
+    "id": "book-05-140",
+    "c": 5,
+    "t": "Local Farming Grant",
+    "template": "Receive £2,500.",
+    "p": "category-5"
+  },
+  {
+    "id": "book-05-141",
+    "c": 5,
+    "t": "Successful Application",
+    "template": "Receive £3,000 towards farm improvements.",
+    "p": "category-5"
+  },
+  {
+    "id": "book-05-142",
+    "c": 5,
+    "t": "Unexpected Refund",
+    "template": "Receive £500.",
+    "p": "category-5"
+  },
+  {
+    "id": "book-05-143",
+    "c": 5,
+    "t": "Loyalty Bonus",
+    "template": "Receive £1,000 from a local buyer.",
+    "p": "category-5"
+  },
+  {
+    "id": "book-03-144",
+    "c": 3,
+    "t": "Sick Animal",
+    "template": "Pay £500 for treatment.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-145",
+    "c": 3,
+    "t": "Serious Illness",
+    "template": "Pay £1,000 for treatment.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-146",
+    "c": 3,
+    "t": "Injured Animal",
+    "template": "Pay £750 for veterinary care.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-147",
+    "c": 3,
+    "t": "Young Animal Illness",
+    "template": "Pay £500 to treat your youngest animal.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-148",
+    "c": 3,
+    "t": "Hoof Problem",
+    "template": "Pay £400 for treatment.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-149",
+    "c": 3,
+    "t": "Birthing Complication",
+    "template": "Pay £750 for an emergency vet visit.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-150",
+    "c": 3,
+    "t": "Emergency Call-Out",
+    "template": "Pay £1,000 for urgent treatment.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-151",
+    "c": 3,
+    "t": "Multiple Sick Animals",
+    "template": "Treat 5 animals at £50 each.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-152",
+    "c": 3,
+    "t": "Vaccination Required",
+    "template": "Vaccinate 5 animals at £25 each.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-153",
+    "c": 3,
+    "t": "Emergency Vaccination",
+    "template": "Vaccinate 10 animals at £50 each.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-154",
+    "c": 3,
+    "t": "Pen Infection",
+    "template": "Treat 6 animals at £50 each.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-155",
+    "c": 3,
+    "t": "Disease Outbreak",
+    "template": "No buying or selling animals for {duration}.",
+    "p": "category-3",
+    "duration": "months",
+    "minMonths": 6,
+    "maxMonths": 6,
+    "eventType": "timed",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-156",
+    "c": 3,
+    "t": "Feed-Borne Illness",
+    "template": "Replace all feed in your largest pen.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-157",
+    "c": 3,
+    "t": "Contaminated Water",
+    "template": "Pay £750 for treatment and cleaning.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-158",
+    "c": 3,
+    "t": "Breeding Restriction",
+    "template": "No new animals in your largest pen for {duration}.",
+    "p": "category-3",
+    "duration": "months",
+    "minMonths": 3,
+    "maxMonths": 3,
+    "eventType": "timed",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-159",
+    "c": 3,
+    "t": "Parasite Outbreak",
+    "template": "Treat 8 animals at £25 each.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-160",
+    "c": 3,
+    "t": "Youngstock Virus",
+    "template": "Sell 2 animals under 6 months old.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-161",
+    "c": 3,
+    "t": "Adult Animal Virus",
+    "template": "Sell 2 animals over 6 months old.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-162",
+    "c": 3,
+    "t": "Senior Animal Illness",
+    "template": "Sell your 2 oldest animals.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-163",
+    "c": 3,
+    "t": "Youngstock Infection",
+    "template": "Treat 5 animals under 6 months at £50 each.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-164",
+    "c": 3,
+    "t": "Adult Vaccination",
+    "template": "Vaccinate 8 animals over 6 months at £25 each.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-165",
+    "c": 3,
+    "t": "Age-Related Illness",
+    "template": "Sell the oldest animal from your largest pen.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-166",
+    "c": 3,
+    "t": "Breeding Stock Illness",
+    "template": "Sell 1 adult animal from your largest pen.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-167",
+    "c": 3,
+    "t": "Herd Health Check",
+    "template": "Check 10 animals at £25 each.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-168",
+    "c": 3,
+    "t": "Calf Promotion",
+    "template": "Buy 6 calves; receive 2 six-month-olds free.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-169",
+    "c": 3,
+    "t": "Sheep Promotion",
+    "template": "Buy 6 lambs; receive 2 adults free.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Sheep"
+    ]
+  },
+  {
+    "id": "book-03-170",
+    "c": 3,
+    "t": "Pig Promotion",
+    "template": "Buy 8 piglets; receive 2 six-month-olds free.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Pigs"
+    ]
+  },
+  {
+    "id": "book-03-171",
+    "c": 3,
+    "t": "Bulk Cattle Deal",
+    "template": "Buy 10 cattle; receive 2 calves free.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle"
+    ]
+  },
+  {
+    "id": "book-03-172",
+    "c": 3,
+    "t": "Breeding Stock Offer",
+    "template": "Buy 2 adults; receive 2 newborns free.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-173",
+    "c": 3,
+    "t": "Youngstock Deal",
+    "template": "Buy 5 young animals; receive the sixth free.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-174",
+    "c": 3,
+    "t": "Dealer Clearance",
+    "template": "Buy 4 animals; receive £1,000 cashback.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-175",
+    "c": 3,
+    "t": "New Breed Offer",
+    "template": "Buy 4 new animals not owned; receive 2 free.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-176",
+    "c": 3,
+    "t": "Hay Shortage",
+    "template": "Sell 4 hay bales; receive 2 adult animals.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-177",
+    "c": 3,
+    "t": "Silage Shortage",
+    "template": "Sell 4 silage bales; receive a £2,000 bonus.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-178",
+    "c": 3,
+    "t": "Straw Shortage",
+    "template": "Sell 6 straw bales; receive 2 young animals.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-179",
+    "c": 3,
+    "t": "Pig Food Request",
+    "template": "Sell 4 pig food bags; receive a £1,500 bonus.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Pigs"
+    ]
+  },
+  {
+    "id": "book-03-180",
+    "c": 3,
+    "t": "Large Hay Order",
+    "template": "Sell 8 hay bales; receive a £3,000 bonus.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-181",
+    "c": 3,
+    "t": "Large Silage Order",
+    "template": "Sell 8 silage bales; receive 3 young animals.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-182",
+    "c": 3,
+    "t": "Straw Emergency",
+    "template": "Sell 8 straw bales; receive a £2,500 bonus.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-183",
+    "c": 3,
+    "t": "Feed Supply Deal",
+    "template": "Sell 4 hay + 4 silage bales; receive 2 adults.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-184",
+    "c": 3,
+    "t": "Cattle Wanted",
+    "template": "Sell 2 adult cattle; receive a £2,000 bonus.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle"
+    ]
+  },
+  {
+    "id": "book-03-185",
+    "c": 3,
+    "t": "Sheep Wanted",
+    "template": "Sell 4 adult sheep; receive a £1,500 bonus.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Sheep"
+    ]
+  },
+  {
+    "id": "book-03-186",
+    "c": 3,
+    "t": "Pig Shortage",
+    "template": "Sell 4 adult pigs; receive a £2,000 bonus.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Pigs"
+    ]
+  },
+  {
+    "id": "book-03-187",
+    "c": 3,
+    "t": "Youngstock Wanted",
+    "template": "Sell 4 young animals; receive a £1,000 bonus.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-188",
+    "c": 3,
+    "t": "Breeding Stock Wanted",
+    "template": "Sell 2 adults; receive a £1,500 bonus.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-189",
+    "c": 3,
+    "t": "Large Livestock Order",
+    "template": "Sell 6 animals; receive a £3,000 bonus.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-190",
+    "c": 3,
+    "t": "Older Animals Wanted",
+    "template": "Sell your 2 oldest animals; receive £1,000.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-03-191",
+    "c": 3,
+    "t": "Mixed Livestock Order",
+    "template": "Sell 2 from different pens; receive £2,500.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Cattle",
+      "Sheep",
+      "Pigs",
+      "Chickens",
+      "Goats",
+      "Horses",
+      "Water Buffalo",
+      "Bees",
+      "Alpacas"
+    ]
+  },
+  {
+    "id": "book-06-192",
+    "c": 6,
+    "t": "Hay Needed",
+    "template": "Deliver 4 spare hay bales.",
+    "p": "category-6",
+    "eventType": "action"
+  },
+  {
+    "id": "book-06-193",
+    "c": 6,
+    "t": "Straw Needed",
+    "template": "Deliver 4 spare straw bales.",
+    "p": "category-6",
+    "eventType": "action"
+  },
+  {
+    "id": "book-06-194",
+    "c": 6,
+    "t": "Silage Needed",
+    "template": "Deliver 4 spare silage bales.",
+    "p": "category-6",
+    "eventType": "action"
+  },
+  {
+    "id": "book-06-195",
+    "c": 6,
+    "t": "Bale Shortage",
+    "template": "Deliver 4 bales of your choice.",
+    "p": "category-6",
+    "eventType": "action"
+  },
+  {
+    "id": "book-06-196",
+    "c": 6,
+    "t": "Small Bale Request",
+    "template": "Deliver 2 spare bales.",
+    "p": "category-6",
+    "eventType": "action"
+  },
+  {
+    "id": "book-06-197",
+    "c": 6,
+    "t": "Large Bale Request",
+    "template": "Deliver 6 spare bales.",
+    "p": "category-6",
+    "eventType": "action"
+  },
+  {
+    "id": "book-06-198",
+    "c": 6,
+    "t": "Surplus Crop",
+    "template": "Deliver 5,000L of any stored crop.",
+    "p": "category-6",
+    "eventType": "action"
+  },
+  {
+    "id": "book-06-199",
+    "c": 6,
+    "t": "Large Crop Request",
+    "template": "Deliver 10,000L of any stored crop.",
+    "p": "category-6",
+    "eventType": "action"
+  },
+  {
+    "id": "book-06-200",
+    "c": 6,
+    "t": "Wheat Contract",
+    "template": "Deliver 10,000L; receive £1,000 delivery fee.",
+    "p": "category-6",
+    "eventType": "action"
+  },
+  {
+    "id": "book-06-201",
+    "c": 6,
+    "t": "Barley Contract",
+    "template": "Deliver 12,000L; receive £1,000 delivery fee.",
+    "p": "category-6",
+    "eventType": "action"
+  },
+  {
+    "id": "book-06-202",
+    "c": 6,
+    "t": "Oat Contract",
+    "template": "Deliver 8,000L; receive £750 delivery fee.",
+    "p": "category-6",
+    "eventType": "action"
+  },
+  {
+    "id": "book-06-203",
+    "c": 6,
+    "t": "Maize Contract",
+    "template": "Deliver 15,000L; receive £1,250 delivery fee.",
+    "p": "category-6",
+    "eventType": "action"
+  },
+  {
+    "id": "book-06-204",
+    "c": 6,
+    "t": "Canola Contract",
+    "template": "Deliver 10,000L; receive £1,000 delivery fee.",
+    "p": "category-6",
+    "eventType": "action"
+  },
+  {
+    "id": "book-06-205",
+    "c": 6,
+    "t": "Sunflower Contract",
+    "template": "Deliver 10,000L; receive £1,000 delivery fee.",
+    "p": "category-6",
+    "eventType": "action"
+  },
+  {
+    "id": "book-06-206",
+    "c": 6,
+    "t": "Potato Contract",
+    "template": "Deliver 20,000L; receive £1,500 delivery fee.",
+    "p": "category-6",
+    "eventType": "action"
+  },
+  {
+    "id": "book-06-207",
+    "c": 6,
+    "t": "Sugar Beet Contract",
+    "template": "Deliver 20,000L; receive £1,500 delivery fee.",
+    "p": "category-6",
+    "eventType": "action"
+  },
+  {
+    "id": "book-06-208",
+    "c": 6,
+    "t": "Seed Delivery",
+    "template": "Deliver 4 seed pallets; receive £750 delivery fee.",
+    "p": "category-6",
+    "eventType": "action"
+  },
+  {
+    "id": "book-06-209",
+    "c": 6,
+    "t": "Fertiliser Delivery",
+    "template": "Deliver 4 fertiliser pallets; receive £750 delivery fee.",
+    "p": "category-6",
+    "eventType": "action"
+  },
+  {
+    "id": "book-06-210",
+    "c": 6,
+    "t": "Liquid Fertiliser",
+    "template": "Deliver 4 pallets; receive £750 delivery fee.",
+    "p": "category-6",
+    "eventType": "action"
+  },
+  {
+    "id": "book-06-211",
+    "c": 6,
+    "t": "Herbicide Delivery",
+    "template": "Deliver 4 pallets; receive £750 delivery fee.",
+    "p": "category-6",
+    "eventType": "action"
+  },
+  {
+    "id": "book-06-212",
+    "c": 6,
+    "t": "Pig Food Delivery",
+    "template": "Deliver 4 pallets; receive £750 delivery fee.",
+    "p": "category-6",
+    "eventType": "action"
+  },
+  {
+    "id": "book-06-213",
+    "c": 6,
+    "t": "Lime Delivery",
+    "template": "Deliver one full trailer; receive £1,000 delivery fee.",
+    "p": "category-6",
+    "eventType": "action"
+  },
+  {
+    "id": "book-06-214",
+    "c": 6,
+    "t": "Large Seed Order",
+    "template": "Deliver 8 seed pallets; receive £1,250 delivery fee.",
+    "p": "category-6",
+    "eventType": "action"
+  },
+  {
+    "id": "book-06-215",
+    "c": 6,
+    "t": "Large Fertiliser Order",
+    "template": "Deliver 8 pallets; receive £1,250 delivery fee collect the requested crops and supplies without using your own farm stock. sold elsewhere.",
+    "p": "category-6",
+    "eventType": "action"
+  },
+  {
+    "id": "book-07-216",
+    "c": 7,
+    "t": "Test Drive",
+    "template": "Use any tractor up to 250hp free for {duration}.",
+    "p": "category-7",
+    "duration": "days",
+    "minDays": 1,
+    "maxDays": 1,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-07-217",
+    "c": 7,
+    "t": "Demo Machine",
+    "template": "Lease one implement free for {duration}.",
+    "p": "category-7",
+    "duration": "days",
+    "minDays": 2,
+    "maxDays": 2,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-07-218",
+    "c": 7,
+    "t": "Tractor Demo",
+    "template": "Lease one tractor free for {duration}.",
+    "p": "category-7",
+    "duration": "days",
+    "minDays": 2,
+    "maxDays": 2,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-07-219",
+    "c": 7,
+    "t": "Harvest Demo",
+    "template": "Lease one harvester free for {duration}.",
+    "p": "category-7",
+    "duration": "days",
+    "minDays": 1,
+    "maxDays": 1,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-07-220",
+    "c": 7,
+    "t": "Trade-In Bonus",
+    "template": "Receive £5,000 extra on your next vehicle sale.",
+    "p": "category-7"
+  },
+  {
+    "id": "book-07-221",
+    "c": 7,
+    "t": "Used Machinery Deal",
+    "template": "Receive £5,000 towards one used machine.",
+    "p": "category-7"
+  },
+  {
+    "id": "book-07-222",
+    "c": 7,
+    "t": "Attachment Offer",
+    "template": "Receive £2,000 towards your next implement.",
+    "p": "category-7"
+  },
+  {
+    "id": "book-07-223",
+    "c": 7,
+    "t": "Dealer Discount",
+    "template": "Receive £5,000 towards any purchase.",
+    "p": "category-7"
+  },
+  {
+    "id": "book-07-224",
+    "c": 7,
+    "t": "Free Repair",
+    "template": "Repair one vehicle at no cost.",
+    "p": "category-7"
+  },
+  {
+    "id": "book-07-225",
+    "c": 7,
+    "t": "Free Fuel",
+    "template": "Fill your largest tractor for free.",
+    "p": "category-7"
+  },
+  {
+    "id": "book-07-226",
+    "c": 7,
+    "t": "Fuel Voucher",
+    "template": "Receive £500 towards fuel.",
+    "p": "category-7"
+  },
+  {
+    "id": "book-07-227",
+    "c": 7,
+    "t": "Free Tune-Up",
+    "template": "One vehicle upgrade up to £15,000.",
+    "p": "category-7"
+  },
+  {
+    "id": "book-07-228",
+    "c": 7,
+    "t": "Tyre Upgrade",
+    "template": "Change one tractor's tyres free.",
+    "p": "category-7"
+  },
+  {
+    "id": "book-07-229",
+    "c": 7,
+    "t": "Engine Upgrade",
+    "template": "£10,000 towards one engine upgrade.",
+    "p": "category-7"
+  },
+  {
+    "id": "book-07-230",
+    "c": 7,
+    "t": "Free Repaint",
+    "template": "Repaint one vehicle at no cost.",
+    "p": "category-7"
+  },
+  {
+    "id": "book-07-231",
+    "c": 7,
+    "t": "Implement Repair",
+    "template": "Repair one implement free.",
+    "p": "category-7"
+  },
+  {
+    "id": "book-07-232",
+    "c": 7,
+    "t": "Vintage Tractor Draw",
+    "template": "Receive £35,000 towards a vintage tractor.",
+    "p": "category-7"
+  },
+  {
+    "id": "book-07-233",
+    "c": 7,
+    "t": "Cash Prize",
+    "template": "Won £5,000.",
+    "p": "category-7"
+  },
+  {
+    "id": "book-07-234",
+    "c": 7,
+    "t": "Customer Reward",
+    "template": "Receive £3,000 towards your next machine.",
+    "p": "category-7"
+  },
+  {
+    "id": "book-07-235",
+    "c": 7,
+    "t": "Free Implement",
+    "template": "Choose one implement worth up to £10,000.",
+    "p": "category-7"
+  },
+  {
+    "id": "book-07-236",
+    "c": 7,
+    "t": "Loyalty Reward",
+    "template": "Receive £5,000 towards your next tractor.",
+    "p": "category-7"
+  },
+  {
+    "id": "book-07-237",
+    "c": 7,
+    "t": "Open Day Prize",
+    "template": "Use one dealership machine free for {duration}.",
+    "p": "category-7",
+    "duration": "days",
+    "minDays": 3,
+    "maxDays": 3,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-07-238",
+    "c": 7,
+    "t": "Parts Voucher",
+    "template": "Receive £2,500 towards repairs or upgrades.",
+    "p": "category-7"
+  },
+  {
+    "id": "book-07-239",
+    "c": 7,
+    "t": "Seasonal Promotion",
+    "template": "Receive £5,000 towards one new machine.",
+    "p": "category-7"
+  },
+  {
+    "id": "book-08-240",
+    "c": 8,
+    "t": "One Tractor Day",
+    "template": "Use only one tractor for all jobs today.",
+    "p": "category-8",
+    "eventType": "action"
+  },
+  {
+    "id": "book-08-241",
+    "c": 8,
+    "t": "Old School Day",
+    "template": "Use your oldest machinery for the day.",
+    "p": "category-8",
+    "eventType": "action"
+  },
+  {
+    "id": "book-08-242",
+    "c": 8,
+    "t": "Smallest Tractor",
+    "template": "Use your smallest suitable tractor for the next job.",
+    "p": "category-8",
+    "eventType": "action"
+  },
+  {
+    "id": "book-08-243",
+    "c": 8,
+    "t": "Limited Fleet",
+    "template": "Choose 3 machines; use only these today.",
+    "p": "category-8",
+    "eventType": "action"
+  },
+  {
+    "id": "book-08-244",
+    "c": 8,
+    "t": "No Leasing",
+    "template": "No leased machinery for {duration}.",
+    "p": "category-8",
+    "duration": "months",
+    "minMonths": 1,
+    "maxMonths": 1,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-08-245",
+    "c": 8,
+    "t": "Oldest First",
+    "template": "Use your oldest tractor for the next 2 jobs.",
+    "p": "category-8",
+    "eventType": "action"
+  },
+  {
+    "id": "book-08-246",
+    "c": 8,
+    "t": "Small Equipment Day",
+    "template": "Use your smallest suitable equipment today.",
+    "p": "category-8",
+    "eventType": "action"
+  },
+  {
+    "id": "book-08-247",
+    "c": 8,
+    "t": "Trailer Limit",
+    "template": "Use only one trailer for your next job.",
+    "p": "category-8",
+    "eventType": "action"
+  },
+  {
+    "id": "book-08-248",
+    "c": 8,
+    "t": "No AI Day",
+    "template": "Complete all farm work yourself today.",
+    "p": "category-8",
+    "eventType": "action"
+  },
+  {
+    "id": "book-08-249",
+    "c": 8,
+    "t": "No GPS",
+    "template": "No steering assistance for the next field.",
+    "p": "category-8",
+    "eventType": "action"
+  },
+  {
+    "id": "book-08-250",
+    "c": 8,
+    "t": "Cab View Only",
+    "template": "Drive only from inside the cab today.",
+    "p": "category-8",
+    "eventType": "action"
+  },
+  {
+    "id": "book-08-251",
+    "c": 8,
+    "t": "No Teleporting",
+    "template": "Drive or walk everywhere today.",
+    "p": "category-8",
+    "eventType": "action"
+  },
+  {
+    "id": "book-08-252",
+    "c": 8,
+    "t": "No Shortcuts",
+    "template": "Use roads and gateways only today.",
+    "p": "category-8",
+    "eventType": "action"
+  },
+  {
+    "id": "book-08-253",
+    "c": 8,
+    "t": "Road Rules",
+    "template": "Follow road rules and speed limits today.",
+    "p": "category-8",
+    "eventType": "action"
+  },
+  {
+    "id": "book-08-254",
+    "c": 8,
+    "t": "No Buying Day",
+    "template": "Buy no supplies, machinery or animals today.",
+    "p": "category-8",
+    "eventType": "action"
+  },
+  {
+    "id": "book-08-255",
+    "c": 8,
+    "t": "Manual Challenge",
+    "template": "Complete your next 3 jobs without AI workers.",
+    "p": "category-8",
+    "eventType": "action"
+  },
+  {
+    "id": "book-08-256",
+    "c": 8,
+    "t": "One Brand Only",
+    "template": "Use machinery from one brand today.",
+    "p": "category-8",
+    "eventType": "action"
+  },
+  {
+    "id": "book-08-257",
+    "c": 8,
+    "t": "No Front Loader",
+    "template": "No front-loader use today.",
+    "p": "category-8",
+    "eventType": "action"
+  },
+  {
+    "id": "book-08-258",
+    "c": 8,
+    "t": "No Buying",
+    "template": "Use only machinery you already own for {duration}.",
+    "p": "category-8",
+    "duration": "months",
+    "minMonths": 1,
+    "maxMonths": 1,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-08-259",
+    "c": 8,
+    "t": "No Selling",
+    "template": "Store everything you produce for {duration}.",
+    "p": "category-8",
+    "duration": "months",
+    "minMonths": 3,
+    "maxMonths": 3,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-08-260",
+    "c": 8,
+    "t": "No Contracts",
+    "template": "Complete no external contracts for {duration}.",
+    "p": "category-8",
+    "duration": "months",
+    "minMonths": 1,
+    "maxMonths": 1,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-08-261",
+    "c": 8,
+    "t": "Late Start",
+    "template": "No fieldwork before 10 am.",
+    "p": "category-8",
+    "eventType": "action"
+  },
+  {
+    "id": "book-08-262",
+    "c": 8,
+    "t": "Early Finish",
+    "template": "Stop all fieldwork by 4 pm.",
+    "p": "category-8",
+    "eventType": "action"
+  },
+  {
+    "id": "book-08-263",
+    "c": 8,
+    "t": "One Field at a Time",
+    "template": "Finish one field before starting another.",
+    "p": "category-8",
+    "eventType": "action"
+  },
+  {
+    "id": "book-09-264",
+    "c": 9,
+    "t": "Summer Fete",
+    "template": "Sow one field with grass; leave it free for August.",
+    "p": "category-9",
+    "eventType": "action"
+  },
+  {
+    "id": "book-09-265",
+    "c": 9,
+    "t": "Road Closure",
+    "template": "Avoid one main road for 1 week.",
+    "p": "category-9",
+    "eventType": "action"
+  },
+  {
+    "id": "book-09-266",
+    "c": 9,
+    "t": "Charity Appeal",
+    "template": "Donate £1,000 to a local cause.",
+    "p": "category-9",
+    "eventType": "action"
+  },
+  {
+    "id": "book-09-267",
+    "c": 9,
+    "t": "Farm Open Day",
+    "template": "No fieldwork on your farm for {duration}.",
+    "p": "category-9",
+    "duration": "days",
+    "minDays": 1,
+    "maxDays": 1,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-09-268",
+    "c": 9,
+    "t": "Film Location",
+    "template": "Leave one field untouched for {duration}.",
+    "p": "category-9",
+    "duration": "months",
+    "minMonths": 1,
+    "maxMonths": 1,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-09-269",
+    "c": 9,
+    "t": "Local Emergency",
+    "template": "Provide one tractor for {duration}.",
+    "p": "category-9",
+    "duration": "days",
+    "minDays": 1,
+    "maxDays": 1,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-09-270",
+    "c": 9,
+    "t": "Community Project",
+    "template": "Donate £2,000 towards local improvements.",
+    "p": "category-9",
+    "eventType": "action"
+  },
+  {
+    "id": "book-09-271",
+    "c": 9,
+    "t": "Winter Road Help",
+    "template": "Use one tractor for community work for {duration}.",
+    "p": "category-9",
+    "duration": "days",
+    "minDays": 1,
+    "maxDays": 1,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-09-272",
+    "c": 9,
+    "t": "Fete Hog Roast",
+    "template": "Donate 1 adult pig.",
+    "p": "category-9",
+    "eventType": "action"
+  },
+  {
+    "id": "book-09-273",
+    "c": 9,
+    "t": "Local Barbecue",
+    "template": "Supply 1 adult cow.",
+    "p": "category-9",
+    "eventType": "action"
+  },
+  {
+    "id": "book-09-274",
+    "c": 9,
+    "t": "Village Feast",
+    "template": "Supply 2 adult animals.",
+    "p": "category-9",
+    "eventType": "action"
+  },
+  {
+    "id": "book-09-275",
+    "c": 9,
+    "t": "Christmas Market",
+    "template": "Sell one load of farm produce.",
+    "p": "category-9",
+    "eventType": "action"
+  },
+  {
+    "id": "book-09-276",
+    "c": 9,
+    "t": "Harvest Supper",
+    "template": "Donate 5,000L of stored crop.",
+    "p": "category-9",
+    "eventType": "action"
+  },
+  {
+    "id": "book-09-277",
+    "c": 9,
+    "t": "Local Bonfire",
+    "template": "Provide one trailer of wood.",
+    "p": "category-9",
+    "eventType": "action"
+  },
+  {
+    "id": "book-09-278",
+    "c": 9,
+    "t": "Charity Auction",
+    "template": "Donate 1 adult animal.",
+    "p": "category-9",
+    "eventType": "action"
+  },
+  {
+    "id": "book-09-279",
+    "c": 9,
+    "t": "Fete Raffle",
+    "template": "Donate one young animal as a prize.",
+    "p": "category-9",
+    "eventType": "action"
+  },
+  {
+    "id": "book-09-280",
+    "c": 9,
+    "t": "Tractor Rally",
+    "template": "Take your oldest tractor to a local meeting point.",
+    "p": "category-9",
+    "eventType": "action"
+  },
+  {
+    "id": "book-09-281",
+    "c": 9,
+    "t": "Charity Tractor Run",
+    "template": "Drive one tractor around the map.",
+    "p": "category-9",
+    "eventType": "action"
+  },
+  {
+    "id": "book-09-282",
+    "c": 9,
+    "t": "Village Show",
+    "template": "Take your best tractor to the local show.",
+    "p": "category-9",
+    "eventType": "action"
+  },
+  {
+    "id": "book-09-283",
+    "c": 9,
+    "t": "Vintage Show",
+    "template": "Take your oldest machine to a local event.",
+    "p": "category-9",
+    "eventType": "action"
+  },
+  {
+    "id": "book-09-284",
+    "c": 9,
+    "t": "School Visit",
+    "template": "Keep 3 machines at the farmyard for the visit.",
+    "p": "category-9",
+    "eventType": "action"
+  },
+  {
+    "id": "book-09-285",
+    "c": 9,
+    "t": "Community Help",
+    "template": "Lend one tractor for {duration}.",
+    "p": "category-9",
+    "duration": "days",
+    "minDays": 2,
+    "maxDays": 2,
+    "eventType": "timed"
+  },
+  {
+    "id": "book-09-286",
+    "c": 9,
+    "t": "Christmas Parade",
+    "template": "Drive a tractor through town in December.",
+    "p": "category-9",
+    "eventType": "action"
+  },
+  {
+    "id": "book-09-287",
+    "c": 9,
+    "t": "Farm Open Day",
+    "template": "No fieldwork between 10 a.m. and 4 p.m.",
+    "p": "category-9",
+    "eventType": "action"
+  }
+]

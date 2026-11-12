@@ -1,0 +1,1 @@
+New Farm Reset test: Farm Settings > Start New Farm / Reset Progress. Confirms before clearing events, event history, and calendar. Keeps categories, animal ownership, frequency and count preferences. Open index.html in browser. Live site unchanged.

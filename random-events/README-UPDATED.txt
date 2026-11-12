@@ -1,0 +1,1 @@
+Event banners replaced with photorealistic text-free scenes (category thumbnails unchanged). Dealership offers for future purchases are kept pending until Apply Offer When Used is clicked. No artificial expiry added.
