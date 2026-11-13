@@ -168,3 +168,17 @@ main.wrap #event .event-description .banner-complete{position:absolute!important
 
 .bulk-complete{display:block;width:max-content;max-width:100%;margin:-6px 0 7px auto;padding:11px 18px;border:1px solid #f6d57b;border-radius:7px;background:#e4b94f;color:#102f24;font-weight:800;box-shadow:0 2px 8px rgba(0,0,0,.22);cursor:pointer}.bulk-complete:hover{background:#f3d37a;color:#102f24}
 .actions-heading-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 8px;flex-wrap:wrap}.actions-heading-row .action-heading{margin:0!important}.actions-heading-row .bulk-complete{margin:0!important;flex-shrink:0;padding:9px 14px}.actions-heading-row+.required-card{margin-top:0!important}.actions-heading-row .bulk-complete:disabled{opacity:.6;cursor:default}@media(max-width:600px){.actions-heading-row{align-items:flex-start}.actions-heading-row .bulk-complete{margin-left:auto!important}}
+
+/* Controller-friendly calendar slider; existing site layout retained */
+.days-slider-wrap{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.days-slider-wrap input[type=range]{flex:1;min-width:115px;accent-color:#caa451;cursor:pointer}.days-slider-wrap output{font-weight:800;min-width:2ch;text-align:center}.days-slider-buttons{display:flex;gap:6px}.days-slider-buttons button{min-width:42px;min-height:38px;border:1px solid #b59b57;border-radius:7px;background:#173b2a;color:#fff;font-size:22px;cursor:pointer}.days-slider-buttons button:focus-visible,.days-slider-wrap input:focus-visible{outline:3px solid #e7c56e;outline-offset:2px}
+
+/* Matching green-and-gold modal dialogs; usable with keyboard and Xbox Edge focus. */
+.farm-dialog-overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:99999;display:flex;align-items:center;justify-content:center;padding:18px}
+.farm-dialog{width:min(100%,460px);background:#163b2b;color:#fff;border:2px solid #caa451;border-radius:15px;padding:26px;box-shadow:0 16px 55px #0009}
+.farm-dialog h2{color:#e8c36a;margin:0 0 14px;font-size:1.4rem}
+.farm-dialog p{margin:0 0 24px;line-height:1.6;color:#f4f2e8}
+.farm-dialog-actions{display:flex;flex-wrap:wrap;gap:12px;justify-content:flex-end}
+.farm-dialog-actions button{min-height:45px;padding:10px 16px;border-radius:8px;font:inherit;font-weight:700;cursor:pointer}
+.farm-dialog-cancel{background:#315943;border:1px solid #a2ae98;color:#fff}
+.farm-dialog-confirm{background:#d5ad57;border:1px solid #f1d58a;color:#173626}
+.farm-dialog-actions button:focus-visible,.farm-dialog-actions button:focus{outline:3px solid #fff;outline-offset:3px}

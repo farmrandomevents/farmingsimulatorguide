@@ -1,0 +1,1 @@
+Replaces white browser alerts and confirmations for unfinished events, Start New Farm, and Reset Farm Settings with themed, keyboard/controller-focusable dialogs. No other layout changes. Upload generator.js and random-events-style.css only into random-events/.

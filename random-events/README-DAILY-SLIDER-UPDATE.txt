@@ -1,0 +1,1 @@
+CORRECTED: Random Event Settings now shows Every in-game day and 1-10 events per draw. Calendar slider 1-28 with +/- buttons. Upload all files to random-events folder. Keep main homepage unchanged. Daily mode requires calendar tracking enabled.

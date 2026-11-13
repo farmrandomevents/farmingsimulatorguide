@@ -1,0 +1,1 @@
+When Advance Day moves to a new scheduled period, events are generated automatically. Daily mode draws each new day; monthly/3/6/12-month schedules draw only when due. Initial draw and manual mode still use Generate. Mandatory unfinished actions block advancement; saved offers do not. Replace only generator.js in random-events/ on GitHub.

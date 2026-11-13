@@ -1,3 +1,21 @@
+
+// Site-styled, keyboard/controller-friendly confirmation and warning dialogs.
+function farmDialog(message,{title='Please Confirm',confirm=false,confirmLabel='Confirm',onConfirm=()=>{}}={}){
+ const previous=document.activeElement;
+ const overlay=document.createElement('div');overlay.className='farm-dialog-overlay';
+ overlay.setAttribute('role','presentation');
+ const panel=document.createElement('div');panel.className='farm-dialog';panel.setAttribute('role','alertdialog');panel.setAttribute('aria-modal','true');
+ const heading=document.createElement('h2');heading.textContent=title;heading.id='farm-dialog-title';panel.setAttribute('aria-labelledby',heading.id);
+ const description=document.createElement('p');description.textContent=message;description.id='farm-dialog-description';panel.setAttribute('aria-describedby',description.id);
+ const actions=document.createElement('div');actions.className='farm-dialog-actions';
+ const close=()=>{overlay.remove();previous?.focus?.()};
+ const cancel=document.createElement('button');cancel.type='button';cancel.textContent=confirm?'Cancel':'OK';cancel.className='farm-dialog-cancel';cancel.onclick=close;
+ actions.append(cancel);
+ if(confirm){const yes=document.createElement('button');yes.type='button';yes.textContent=confirmLabel;yes.className='farm-dialog-confirm';yes.onclick=()=>{close();onConfirm()};actions.append(yes)}
+ panel.append(heading,description,actions);overlay.append(panel);document.body.append(overlay);
+ overlay.addEventListener('keydown',e=>{if(e.key==='Escape'||e.key==='Backspace'){e.preventDefault();close()}else if(e.key==='Tab'){const buttons=[...actions.querySelectorAll('button')];const i=buttons.indexOf(document.activeElement);if(e.shiftKey&&i===0){e.preventDefault();buttons.at(-1).focus()}else if(!e.shiftKey&&i===buttons.length-1){e.preventDefault();buttons[0].focus()}}});
+ cancel.focus();
+}
 const $=id=>document.getElementById(id);
 const categorySlugs=["weather", "crops-fields", "machinery", "animals", "supplies-storage", "finance", "contracts-neighbours", "dealership", "challenges", "community"];
 const cats=['Weather','Crops & Fields','Machinery','Animals','Supplies & Storage','Finance','Contracts & Neighbours','Dealership','Challenges','Community'];
@@ -32,7 +50,7 @@ function syncCalcPercentButtons(){Array.from(calcPercentOptions.children).forEac
 function persist(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
 function randomFrom(a){return a[Math.floor(Math.random()*a.length)]}
 function dateLabel(c){return c?`${months[c.month]}, Year ${(c.year||0)+1}, Day ${c.day}`:'No farm calendar'}
-function monthKey(){const c=state.calendar;return c?`${c.year||0}-${c.month}`:null}
+function monthKey(){const c=state.calendar;return c?`${c.year||0}-${c.month}${state.frequency==='daily'?'-'+c.day:''}`:null}
 function durationFor(e){
  if(!e.duration)return null;
  const dpm=state.calendar?.daysPerMonth||3;
@@ -53,7 +71,7 @@ function isPendingOffer(e){
  return /next (tractor|machine|vehicle|implement|purchase|repair|upgrade|used|new)|towards (your|one|a|any)|discount on (one|your|the next)|voucher|trade-in bonus|customer reward|loyalty reward|free (repair|repaint|tune-up|fuel)|tyre upgrade|engine upgrade|parts voucher|dealer discount|seasonal promotion|attachment offer|used machinery deal/.test(t);
 }
 function instantiate(e){const dur=isPendingOffer(e)?null:durationFor(e);const amount=e.amounts?randomFrom(e.amounts):null;return {id:`event-${Date.now()}-${++state.sequence}`,eventId:e.id,title:e.t,category:e.c,photo:e.p,description:e.template.replace('{duration}',dur?.label||'').replace('{amount}',amount===null?'':amount.toLocaleString('en-GB')),duration:dur,eventType:e.eventType||null,pendingOffer:isPendingOffer(e),completed:false,remaining:dur?.total||0,total:dur?.total||0,created:state.calendar?{...state.calendar}:null,finished:null};}
-function markSeen(e){if(!state.tracking)return;const key=monthKey();if(!key)return;const a=state.monthSeen[key]||[];if(!a.includes(e.id))a.push(e.id);state.monthSeen[key]=a;}
+function markSeen(e){if(!state.tracking||!state.calendar)return;const key=`${state.calendar.year||0}-${state.calendar.month}`;if(!key)return;const a=state.monthSeen[key]||[];if(!a.includes(e.id))a.push(e.id);state.monthSeen[key]=a;}
 function eligible(){return events.filter(e=>state.selected.includes(e.c)&&(e.c!==1||state.cropsOwned.length>0)&&(e.c!==3||state.animalsOwned.length>0)&&(!e.animals||e.animals.some(a=>state.animalsOwned.includes(a==='Cows'?'Cattle':a)))&&(!cropEventMap[e.id]||state.cropsOwned.includes(cropEventMap[e.id]))&&(!state.tracking||!state.active.some(a=>!a.completed&&a.eventId===e.id)))}
 function chooseUnique(pool,used){const a=pool.filter(e=>!used.includes(e.id));return a.length?randomFrom(a):null}
 function drawCats(){
@@ -114,8 +132,8 @@ function generate(){
  if(state.tracking&&state.calendar&&state.monthGenerated[monthKey()]){
    $('status').textContent='All events for this scheduled period have already been generated. Use the arrows to view them.';return;
  }
- const count=Math.min(5,Math.max(1,state.count==='random'?1+Math.floor(Math.random()*5):Number(state.count)||1));
- const pool=eligible();const seen=state.tracking&&state.calendar?(state.monthSeen[monthKey()]||[]):[];
+ const count=Math.min(10,Math.max(1,state.count==='random'?1+Math.floor(Math.random()*10):Number(state.count)||1));
+ const pool=eligible();const seen=state.tracking&&state.calendar?(state.monthSeen[`${state.calendar.year||0}-${state.calendar.month}`]||[]):[];
  // Monthly uniqueness applies within the current month, including events already generated.
  // An existing batch is never extended by another click in the same scheduled period.
  const chosen=[];
@@ -135,9 +153,11 @@ $('generate').onclick=mainGoldAction;$('sticky').onclick=()=>{mainGoldAction();$
 $('hideCats').onclick=()=>{state.categoriesOpen=!state.categoriesOpen;persist();drawCats()};
 $('all').onclick=()=>{state.selected=cats.map((_,i)=>i);persist();drawCats();renderSchedule()};
 function fillSelect(id,opts){const el=$(id);el.replaceChildren();opts.forEach(([v,t])=>{const o=document.createElement('option');o.value=v;o.textContent=t;el.append(o)})}
-fillSelect('startMonth',months.map((m,i)=>[i,m]));fillSelect('daysPerMonth',Array.from({length:28},(_,i)=>[i+1,`${i+1}`]));
-function refreshDays(){const n=Number($('daysPerMonth').value)||3;const old=Number($('startDay').value)||1;fillSelect('startDay',Array.from({length:n},(_,i)=>[i+1,'Day '+(i+1)]));$('startDay').value=String(Math.min(n,old))}
-$('daysPerMonth').onchange=refreshDays;
+fillSelect('startMonth',months.map((m,i)=>[i,m]));
+function refreshDays(){const n=Number($('daysPerMonth').value)||3;$('daysPerMonthValue').textContent=String(n);const old=Number($('startDay').value)||1;fillSelect('startDay',Array.from({length:n},(_,i)=>[i+1,'Day '+(i+1)]));$('startDay').value=String(Math.min(n,old))}
+$('daysPerMonth').oninput=refreshDays;
+$('daysMinus').onclick=()=>{$('daysPerMonth').value=String(Math.max(1,Number($('daysPerMonth').value)-1));refreshDays()};
+$('daysPlus').onclick=()=>{$('daysPerMonth').value=String(Math.min(28,Number($('daysPerMonth').value)+1));refreshDays()};
 function openSettings(){const c=state.calendar||{month:2,day:1,daysPerMonth:3};$('startMonth').value=String(c.month);$('daysPerMonth').value=String(c.daysPerMonth);refreshDays();$('startDay').value=String(c.day);$('calendarSettings').hidden=false}
 $('calendarEdit').onclick=openSettings;$('calendarCancel').onclick=()=>{if(state.calendar)$('calendarSettings').hidden=true};
 $('calendarSave').onclick=()=>{const prev=state.calendar;const next={month:Number($('startMonth').value),day:Number($('startDay').value),daysPerMonth:Number($('daysPerMonth').value),year:prev?.year||0};/* Changing settings must not silently advance the year. */next.day=Math.max(1,Math.min(next.day,next.daysPerMonth));state.calendar=next;if(prev&&(prev.month!==next.month||prev.year!==next.year))state.scheduleAnchor=next.year*12+next.month;if(state.scheduleAnchor===null)state.scheduleAnchor=next.year*12+next.month;$('calendarSettings').hidden=true;if(!prev||prev.month!==next.month||prev.year!==next.year){state.periodEvents=[];state.current=null;}persist();renderTracker();renderSchedule();syncCleanLayout()};
@@ -167,17 +187,29 @@ renderHistory();renderBannerCompletion();if(typeof syncCleanLayout==='function')
 function renderHistory(){const root=$('historyList');root.replaceChildren();$('historyPanel').hidden=!state.tracking;const completed=state.active.filter(e=>e.completed);if(!completed.length){const p=document.createElement('p');p.className='small-event-note';p.textContent='Completed events will appear here automatically.';root.append(p);return}
 const years=[...new Set(completed.map(e=>e.created?.year||0))].sort((a,b)=>b-a);years.forEach(y=>{const yd=document.createElement('details');yd.className='history-year';yd.open=y===years[0];const ys=document.createElement('summary');ys.textContent=`Year ${y+1}`;yd.append(ys);for(let m=0;m<12;m++){const list=completed.filter(e=>(e.created?.year||0)===y&&(e.created?.month||0)===m);if(!list.length)continue;const md=document.createElement('details');md.className='history-month';md.open=y===years[0];const ms=document.createElement('summary');ms.textContent=`${months[m]} (${list.length})`;md.append(ms);list.forEach(e=>{const r=document.createElement('div');r.className='history-row';const name=document.createElement('strong');name.textContent=e.title;const info=document.createElement('small');info.textContent=`${e.description} · Finished: ${dateLabel(e.finished)}`;r.append(name,info);md.append(r)});yd.append(md)}root.append(yd)})}
 function advance(){if(!state.tracking||!state.calendar)return;const c=state.calendar;
-// Pending offers and unfinished actions remain saved and never block calendar progression.
+// Only immediate mandatory actions block the calendar. Saved offers can be applied at any later date.
+const pending=state.active.filter(x=>x.actionRequired&&!x.completed&&!x.pendingOffer);
+if(pending.length){
+  const msg=`Complete ${pending.length} pending event action${pending.length===1?'':'s'} before advancing the calendar.`;
+  $('status').textContent=msg;
+  const notice=$('scheduleStatus');if(notice)notice.textContent=msg;
+  farmDialog('Please complete all required event actions before continuing to the next day or month. Saved offers can be used later.',{title:'Unfinished Events'});
+  return;
+}
 if(c.day>=c.daysPerMonth){c.day=1;c.month=(c.month+1)%12;if(c.month===0)c.year=(c.year||0)+1}else c.day++;
-if(c.day===1){state.periodEvents=[];state.periodKey=null;}state.active.forEach(x=>{if(!x.completed&&x.remaining>0){x.remaining=Math.max(0,x.remaining-1);if(x.remaining===0){x.completed=true;x.finished={...c}}}});persist();renderTracker();renderSchedule();syncCleanLayout()}
+if(c.day===1||state.frequency==='daily'){state.periodEvents=[];state.periodKey=null;state.current=null;}state.active.forEach(x=>{if(!x.completed&&x.remaining>0){x.remaining=Math.max(0,x.remaining-1);if(x.remaining===0){x.completed=true;x.finished={...c}}}});persist();renderTracker();renderSchedule();syncCleanLayout();
+// Automatically draw the new day's/month's scheduled events after advancing.
+// Manual mode stays manual; do not generate twice for an already drawn period.
+if(state.frequency!=='manual'&&dueForPeriod()&&!monthAlreadyGenerated())generate();
+}
 $('advanceDay').onclick=advance;
 $('activeToggle').onclick=()=>{toggleOngoing()};
 function updateTracking(){state.tracking=$('enableTracking').checked;$('activeToggle').hidden=true;$('calendarSettings').hidden=!state.tracking;if(state.tracking&&!state.calendar)openSettings();persist();renderTracker();renderSchedule();syncCleanLayout()}
 $('enableTracking').onchange=updateTracking;
-function periodId(){const c=state.calendar;if(!c||state.frequency==='manual')return null;const every=Number(state.frequency);const abs=(c.year||0)*12+c.month;return Math.floor((abs-(state.scheduleAnchor??abs))/every)}
-function dueForPeriod(){if(!state.calendar||state.frequency==='manual')return false;const c=state.calendar;const every=Number(state.frequency);const abs=(c.year||0)*12+c.month;return (abs-(state.scheduleAnchor??abs))%every===0}
-function renderSchedule(){const manual=state.frequency==='manual';$('countField').hidden=false;$('scheduleBox').hidden=true;$('frequency').value=state.frequency;$('eventCount').value=state.count;if(manual)return;const c=state.calendar;const status=$('scheduleStatus');const btn=$('revealDue');if(!state.tracking||!c){status.textContent='Enable Farm Calendar & Event Tracking and set your in-game date to schedule events.';btn.disabled=true;return}const period=periodId();if(!dueForPeriod()){const abs=(c.year||0)*12+c.month;const anchor=state.scheduleAnchor??abs;const next=abs+(Number(state.frequency)-((abs-anchor)%Number(state.frequency)));status.textContent=`Next scheduled events will be due in ${months[next%12]}, Year ${Math.floor(next/12)+1}.`;btn.disabled=true;return}if(state.periodKey!==`${state.frequency}:${period}`){state.periodKey=`${state.frequency}:${period}`;persist()}btn.disabled=state.periodEvents.length>0;status.textContent=state.periodEvents.length?`${state.periodEvents.length} different events generated for ${months[c.month]}. Select their photographs above to view each event.`:`Events are due for ${months[c.month]}. Generate them when you're ready.`;}
-$('frequency').onchange=()=>{state.frequency=$('frequency').value;if(state.calendar)state.scheduleAnchor=(state.calendar.year||0)*12+state.calendar.month;state.periodKey=null;persist();renderThumbnails();renderSchedule();syncCleanLayout()};
+function periodId(){const c=state.calendar;if(!c||state.frequency==='manual')return null;if(state.frequency==='daily')return `${c.year||0}-${c.month}-${c.day}`;const every=Number(state.frequency);const abs=(c.year||0)*12+c.month;return Math.floor((abs-(state.scheduleAnchor??abs))/every)}
+function dueForPeriod(){if(!state.calendar||state.frequency==='manual')return false;if(state.frequency==='daily')return true;const c=state.calendar;const every=Number(state.frequency);const abs=(c.year||0)*12+c.month;return (abs-(state.scheduleAnchor??abs))%every===0}
+function renderSchedule(){const manual=state.frequency==='manual';$('countField').hidden=false;$('scheduleBox').hidden=true;$('frequency').value=state.frequency;$('eventCount').value=state.count;if(manual)return;const c=state.calendar;const status=$('scheduleStatus');const btn=$('revealDue');if(!state.tracking||!c){status.textContent='Enable Farm Calendar & Event Tracking and set your in-game date to schedule events.';btn.disabled=true;return}const period=periodId();btn.textContent=state.frequency==='daily'?`Generate Events for ${months[c.month]} — Day ${c.day}`:`Generate Events for ${months[c.month]}`;if(!dueForPeriod()){const abs=(c.year||0)*12+c.month;const anchor=state.scheduleAnchor??abs;const next=abs+(Number(state.frequency)-((abs-anchor)%Number(state.frequency)));status.textContent=`Next scheduled events will be due in ${months[next%12]}, Year ${Math.floor(next/12)+1}.`;btn.disabled=true;return}if(state.periodKey!==`${state.frequency}:${period}`){state.periodKey=`${state.frequency}:${period}`;persist()}btn.disabled=state.periodEvents.length>0;status.textContent=state.periodEvents.length?`${state.periodEvents.length} different events generated for ${months[c.month]}${state.frequency==='daily'?' Day '+c.day:''}. Select their photographs above to view each event.`:`Events are due for ${months[c.month]}${state.frequency==='daily'?' Day '+c.day:''}. Generate them when you're ready.`;}
+$('frequency').onchange=()=>{state.frequency=$('frequency').value;if(state.calendar)state.scheduleAnchor=(state.calendar.year||0)*12+state.calendar.month;state.periodKey=null;state.periodEvents=[];state.current=null;persist();renderThumbnails();renderSchedule();syncCleanLayout()};
 $('eventCount').onchange=()=>{state.count=$('eventCount').value;persist();renderSchedule();syncCleanLayout()};
 $('revealDue').onclick=generate;
 
@@ -187,9 +219,9 @@ function updateGoldLabel(){
  if(!state.calendar||!state.tracking){b.disabled=false;sticky.disabled=false;b.textContent='⟳ GENERATE RANDOM EVENTS';sticky.textContent='⟳ Generate Events';return;}
  const c=state.calendar, month=months[c.month];
  let label;
- if(!monthAlreadyGenerated()&&(state.frequency==='manual'||dueForPeriod()))label=`Generate Events for ${month}`;
+ if(!monthAlreadyGenerated()&&(state.frequency==='manual'||dueForPeriod()))label=state.frequency==='daily'?`Generate Events for ${month} — Day ${c.day}`:`Generate Events for ${month}`;
  else if(c.day<c.daysPerMonth)label=`Advance to Day ${c.day+1}`;
- // Pending actions and offers do not block advancing to the next month.
+ // Completed actions are required; timed events may continue.
 
  else label=`Advance to ${months[(c.month+1)%12]}`;
  b.textContent='⟳  '+label.toUpperCase();sticky.textContent='⟳ '+label;
@@ -241,7 +273,7 @@ resetExplanation.className='calendar-note';
 resetExplanation.textContent='Clears this farm’s events, history and calendar. Keeps your category, animal, crop and event preferences.';
 $('farmSetup').append(resetExplanation);
 newFarmButton.addEventListener('click',()=>{
- if(!window.confirm('Start a new farm? This will permanently clear all active events, completed history and the farm calendar saved in this browser. Your event preferences will be kept.'))return;
+ farmDialog('Start a new farm? This will permanently clear all active events, completed history and the farm calendar saved in this browser. Your event preferences will be kept.',{title:'Start New Farm',confirm:true,confirmLabel:'Yes, Start New Farm',onConfirm:()=>{
  const fresh={
    selected:[...state.selected],current:null,used:[],active:[],categoriesOpen:state.categoriesOpen,
    tracking:state.tracking,calendar:null,frequency:state.frequency,count:state.count,
@@ -250,6 +282,7 @@ newFarmButton.addEventListener('click',()=>{
  };
  try{localStorage.setItem(KEY,JSON.stringify(fresh))}catch(e){}
  window.location.reload();
+}});
 });
 
 // Farm Settings: persist individual selections, with independent select-all controls.
@@ -298,10 +331,11 @@ resetFarmSettings.textContent='Reset Farm Settings';
 resetFarmSettings.style.cssText='margin:12px 0 16px;padding:9px 14px;';
 resetFarmSettings.title='Deselect every animal and crop; keep your existing farm events and calendar';
 resetFarmSettings.addEventListener('click',()=>{
- if(!window.confirm('Deselect all crops and animals? Your event history and calendar will be kept.'))return;
+ farmDialog('Deselect all crops and animals? Your event history and calendar will be kept.',{title:'Reset Farm Settings',confirm:true,confirmLabel:'Yes, Reset',onConfirm:()=>{
  state.animalsOwned=[];state.cropsOwned=[];
  [...animalSettings.checks,...cropSettings.checks].forEach(check=>{check.checked=false});
  animalSettings.syncAll();cropSettings.syncAll();persist();renderSchedule();
+}});
 });
 cropSettings.section.after(resetFarmSettings);
 // The calendar, tracking toggle, and frequency controls live in one setup panel.
