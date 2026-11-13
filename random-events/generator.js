@@ -1,4 +1,3 @@
-
 // Site-styled, keyboard/controller-friendly confirmation and warning dialogs.
 function farmDialog(message,{title='Please Confirm',confirm=false,confirmLabel='Confirm',onConfirm=()=>{}}={}){
  const previous=document.activeElement;
@@ -93,7 +92,13 @@ function drawCats(){
    $('categories').append(wrap);
  });
 }
-function showEvent(v){if(!v)return;state.current=v;$('cat').textContent=cats[v.category].toUpperCase()+' • RANDOM EVENT';$('title').textContent=v.title;$('desc').textContent=displayEventDescription(v);$('photo').src='images/'+categorySlugs[v.category]+'/event-'+v.category+'.webp';$('photo').alt=v.title+' farming scene';renderThumbnails();renderBannerCompletion();}
+function showEvent(v){if(!v)return;state.current=v;$('cat').textContent=cats[v.category].toUpperCase()+' • RANDOM EVENT';$('title').textContent=v.title;$('desc').textContent=displayEventDescription(v);// Load an individual event banner by title, falling back to the category banner.
+ const photo=$('photo');
+ const folder='images/'+categorySlugs[v.category]+'/';
+ const fallback=folder+'event-'+v.category+'.webp';
+ const slug=String(v.title||'').toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+ photo.onerror=()=>{photo.onerror=null;photo.src=fallback;};
+ photo.src=folder+slug+'.webp';$('photo').alt=v.title+' farming scene';renderThumbnails();renderBannerCompletion();}
 function findTracked(v){return state.active.find(x=>x.id===v?.id)}
 function completeAction(id){
  const item=state.active.find(x=>x.id===id);
