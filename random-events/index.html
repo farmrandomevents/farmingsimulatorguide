@@ -1,5 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#062b1e"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icons/icon-192.png"><title>Random Event Generator | Farming Simulator Guide</title><link rel="stylesheet" href="homepage-style.css"><link rel="stylesheet" href="random-events-style.css"><style id="install-app-styles">
 .install-app-area{display:flex;justify-content:center;margin:18px 0 24px}
+.install-app-area[hidden]{display:none}
 .install-app-button{background:linear-gradient(180deg,#f5d58a,#cba34f);border:1px solid #f9e5b1;border-radius:9px;color:#173622;font:700 16px inherit;padding:14px 30px;cursor:pointer;box-shadow:0 3px 12px #0003;font-family:inherit;font-size:16px;font-weight:800}
 .install-app-button:focus-visible{outline:3px solid #fff;outline-offset:3px}
 .install-help{position:fixed;inset:0;background:#000b;z-index:10000;display:flex;align-items:center;justify-content:center;padding:18px}
@@ -21,6 +22,13 @@
 (function(){
   let deferredInstallPrompt=null;
   const installButton=document.getElementById('installFreeApp');
+  const installArea=installButton.closest('.install-app-area');
+  const installedKey='fsg-app-installed';
+  const isStandalone=()=>window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;
+  const hideInstall=()=>{installArea.hidden=true;};
+  const showInstall=()=>{installArea.hidden=false;};
+  if(isStandalone()){hideInstall();}
+  else{try{if(localStorage.getItem(installedKey)==='yes')hideInstall();}catch(e){}}
   const dialog=document.getElementById('installHelp');
   const message=document.getElementById('installHelpMessage');
   const closeButton=document.getElementById('installHelpClose');
