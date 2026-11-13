@@ -1,5 +1,3 @@
-```
-
 
 // Site-styled, keyboard/controller-friendly confirmation and warning dialogs.
 function farmDialog(message,{title='Please Confirm',confirm=false,confirmLabel='Confirm',onConfirm=()=>{}}={}){
@@ -366,4 +364,3 @@ const hist=$('historyPanel');const summary=document.createElement('summary');sum
 if(!state.calendar){setupOpen=true;$('calendarSettings').hidden=!state.tracking}
 $('enableTracking').checked=state.tracking;drawCats();if(!state.current)state.current=instantiate(events[0]);showEvent(state.current);updateTracking();renderSchedule();syncCleanLayout();
 if(typeof IntersectionObserver!=='undefined'){const obs=new IntersectionObserver(es=>{$('sticky').classList.toggle('show',!es[0].isIntersecting)},{threshold:.2});obs.observe($('generate'))}
-```
