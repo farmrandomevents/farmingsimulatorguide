@@ -407,22 +407,27 @@ dashboardStyle.textContent=`
 #farmEventDashboard{margin:0 0 14px;color:#fff}
 .fsg-dash-heading{font-size:1.18rem;color:#f0c568;margin:0 0 12px;font-weight:700}
 .fsg-dash-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
-.fsg-dash-tab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;min-height:90px;padding:10px 5px;background:#174735;border:1px solid #547453;border-radius:10px;color:white;cursor:pointer;font:inherit;text-align:center}
-.fsg-dash-tab[aria-expanded="true"]{background:#2c6048;border-color:#f1c469}
+.fsg-dash-tab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;min-height:90px;padding:10px 5px;background:#0b3326;border:1px solid #b99043;border-radius:10px;color:white;cursor:pointer;font:inherit;text-align:center}
+.fsg-dash-tab[aria-expanded="true"]{background:#12402f;border-color:#f1c469}
 .fsg-dash-number{font-size:1.7rem;font-weight:800;color:#f1c469;line-height:1}
 .fsg-dash-label{font-size:.83rem;font-weight:650}
 .fsg-dash-arrow{color:#f1c469;font-size:.85rem}
 .fsg-dash-content{margin-top:12px;display:grid;gap:9px}
-.fsg-dash-row{background:#174735;border:1px solid #547453;border-radius:8px;padding:12px;display:grid;gap:7px}
+.fsg-dash-row{background:#0b3326;border:1px solid #b99043;border-radius:8px;padding:12px;display:grid;gap:7px}
 .fsg-dash-row strong{color:#fff}
 .fsg-dash-row p{margin:0;color:#d5e4da;font-size:.9rem;line-height:1.45}
 .fsg-dash-row small{color:#f1c469}
-.fsg-dash-done{justify-self:end;border:1px solid #6eb58b;background:#26774b;color:#fff;border-radius:7px;padding:8px 12px;font-weight:700;cursor:pointer}
+.fsg-dash-done{justify-self:end;border:1px solid #d9ad54;background:#0b3326;color:#f1c469;border-radius:7px;padding:8px 12px;font-weight:700;cursor:pointer}.fsg-dash-done:hover:not(:disabled){background:#194b37;border-color:#f1c469}
 .fsg-dash-done.is-completed{background:#d8ad51;border-color:#e2b85d;color:#173b29;cursor:default}
 .fsg-dash-progress{height:9px;border-radius:20px;overflow:hidden;background:#092f22;border:1px solid #426b52}
 .fsg-dash-progress-fill{height:100%;background:linear-gradient(90deg,#c99a38,#f1c469);transition:width .2s}
 .fsg-dash-row.is-completed{border-color:#a88b4b}
-.fsg-dash-empty{color:#d5e4da;margin:8px 0}
+.fsg-dash-tile{display:flex;flex-direction:column;align-items:stretch;min-width:0;background:#0b3326;border:1px solid #b99043;border-radius:10px;overflow:hidden}
+.fsg-dash-tile .fsg-dash-tab{border:0;border-radius:0;min-height:72px}
+.fsg-dash-tile:has(.fsg-dash-tab[aria-expanded="true"]){border-color:#f1c469}
+.fsg-dash-tile .fsg-dash-bulk{align-self:stretch;justify-self:stretch;margin:0 7px 8px;padding:7px 3px;font-size:.74rem;line-height:1.2}
+.fsg-dash-bulk:disabled{opacity:.65;cursor:default}
+.fsg-dash-empty{color:#d5e4da;margin:8px 0}.fsg-dash-bulk{justify-self:end;margin-top:5px;border:1px solid #d9ad54;background:#0b3326;color:#f1c469;border-radius:7px;padding:10px 14px;font:inherit;font-weight:700;cursor:pointer}.fsg-dash-bulk:hover{background:#194b37}
 @media(max-width:420px){.fsg-dash-grid{gap:5px}.fsg-dash-tab{min-height:82px;padding:8px 3px}.fsg-dash-label{font-size:.72rem}.fsg-dash-number{font-size:1.5rem}}
 `;
 document.head.append(dashboardStyle);
@@ -440,10 +445,24 @@ function renderFarmDashboard(){
  const heading=document.createElement('h2');heading.className='fsg-dash-heading';heading.textContent='Farm Event Dashboard';dashboard.append(heading);
  const grid=document.createElement('div');grid.className='fsg-dash-grid';
  [['actions','Actions'],['ongoing','In Progress'],['offers','Saved Offers']].forEach(([key,label])=>{
+  const tile=document.createElement('div');tile.className='fsg-dash-tile';
   const b=document.createElement('button');b.type='button';b.className='fsg-dash-tab';
   b.setAttribute('aria-expanded',String(dashboardOpen===key));
   b.innerHTML=`<span class="fsg-dash-number">${counts[key]}</span><span class="fsg-dash-label">${label}</span><span class="fsg-dash-arrow">${dashboardOpen===key?'▴':'▾'}</span>`;
-  b.onclick=()=>{dashboardOpen=dashboardOpen===key?'':key;renderFarmDashboard()};grid.append(b);
+  b.onclick=()=>{dashboardOpen=dashboardOpen===key?'':key;renderFarmDashboard()};tile.append(b);
+  if(key==='actions'){
+   const outstanding=actions.filter(x=>!x.completed);
+   const bulk=document.createElement('button');bulk.type='button';bulk.className='fsg-dash-bulk';
+   bulk.textContent=outstanding.length?'✓ Complete All':'✓ All Done';bulk.disabled=!outstanding.length;
+   bulk.title='Complete all outstanding actions; saved offers are excluded.';
+   bulk.onclick=()=>{
+    const now=state.calendar?{...state.calendar}:null;
+    outstanding.forEach(x=>{x.completed=true;x.actionRequired=false;x.finished=now?{...now}:null;});
+    persist();renderTracker();renderBannerCompletion();syncCleanLayout();
+   };
+   tile.append(bulk);
+  }
+  grid.append(tile);
  });dashboard.append(grid);
  if(!dashboardOpen)return;
  const content=document.createElement('div');content.className='fsg-dash-content';dashboard.append(content);
@@ -466,6 +485,7 @@ function renderFarmDashboard(){
   }
   content.append(card);
  });
+
 }
 
 $('tracker').querySelector('.calendar-box').hidden=true;
