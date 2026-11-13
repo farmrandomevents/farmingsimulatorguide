@@ -103,9 +103,19 @@ function completeAction(id){
 }
 function renderBannerCompletion(){
  const b=$('bannerComplete'), item=findTracked(state.current);
- b.hidden=!(item&&(item.completed||item.actionRequired||item.earlyChoice));
+ // A completed badge remains gold for the in-game day it was finished.
+ // After the player advances their farm calendar, it disappears from the banner;
+ // the completion itself remains saved in Farm Event History.
+ const finishedToday=!!(item?.completed && item.finished && state.calendar &&
+   item.finished.year===state.calendar.year &&
+   item.finished.month===state.calendar.month &&
+   item.finished.day===state.calendar.day);
+ // Without a farm calendar, retain the badge for the current generated batch.
+ const finishedWithoutCalendar=!!(item?.completed && !state.calendar);
+ const showCompleted=finishedToday || finishedWithoutCalendar;
+ b.hidden=!(item && (showCompleted || (!item.completed && (item.actionRequired || item.earlyChoice))));
  if(b.hidden)return;
- const done=!!item.completed;
+ const done=showCompleted;
  b.disabled=done;
  b.textContent=done?'✓ Completed':item.pendingOffer?'✓ Apply Offer When Used':item.earlyChoice?'✓ I chose the early solution':'✓ Mark as Completed';
  b.style.backgroundColor=done?'#D8AD51':'';
@@ -232,7 +242,7 @@ if(pending.length){
   return;
 }
 if(c.day>=c.daysPerMonth){c.day=1;c.month=(c.month+1)%12;if(c.month===0)c.year=(c.year||0)+1}else c.day++;
-if(c.day===1||state.frequency==='daily'){state.periodEvents=[];state.periodKey=null;state.current=null;}state.active.forEach(x=>{if(!x.completed&&x.remaining>0){x.remaining=Math.max(0,x.remaining-1);if(x.remaining===0){x.completed=true;x.finished={...c}}}});persist();renderTracker();renderSchedule();syncCleanLayout();
+if(c.day===1||state.frequency==='daily'){state.periodEvents=[];state.periodKey=null;state.current=null;}state.active.forEach(x=>{if(!x.completed&&x.remaining>0){x.remaining=Math.max(0,x.remaining-1);if(x.remaining===0){x.completed=true;x.finished={...c}}}});persist();renderTracker();renderSchedule();syncCleanLayout();renderBannerCompletion();
 // Automatically draw the new day's/month's scheduled events after advancing.
 // Manual mode stays manual; do not generate twice for an already drawn period.
 if(state.frequency!=='manual'&&dueForPeriod()&&!monthAlreadyGenerated())generate();
