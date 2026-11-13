@@ -132,6 +132,28 @@ function displayEventDescription(item){
 function renderThumbnails(){const list=state.periodEvents.length?state.periodEvents:(state.current?[state.current]:[]);const controls=$('carouselControls');controls.hidden=list.length<2;const index=Math.max(0,list.findIndex(e=>e.id===state.current?.id));$('eventPosition').textContent=`Event ${index+1} of ${list.length}`;}
 function shiftEvent(direction){const list=state.periodEvents;if(list.length<2)return;const index=Math.max(0,list.findIndex(e=>e.id===state.current?.id));showEvent(list[(index+direction+list.length)%list.length]);persist();}
 $('eventPrev').onclick=()=>shiftEvent(-1);$('eventNext').onclick=()=>shiftEvent(1);
+
+// Phone swipe navigation: only the event photograph is swipeable.
+// Uses the existing Previous/Next logic, preserving completion and farm progress.
+{
+ const photo=$('photo');
+ let startX=0,startY=0,trackingSwipe=false;
+ photo.addEventListener('touchstart',e=>{
+  if(e.touches.length!==1){trackingSwipe=false;return;}
+  startX=e.touches[0].clientX;startY=e.touches[0].clientY;trackingSwipe=true;
+ },{passive:true});
+ photo.addEventListener('touchend',e=>{
+  if(!trackingSwipe||!e.changedTouches.length)return;
+  trackingSwipe=false;
+  const dx=e.changedTouches[0].clientX-startX;
+  const dy=e.changedTouches[0].clientY-startY;
+  // Ignore taps and vertical page scrolling.
+  if(Math.abs(dx)<55||Math.abs(dx)<Math.abs(dy)*1.4)return;
+  shiftEvent(dx<0?1:-1);
+ },{passive:true});
+ photo.addEventListener('touchcancel',()=>{trackingSwipe=false;},{passive:true});
+}
+
 function autoTrack(v){if(!state.tracking||!state.calendar)return;const copy={...v,created:v.created||{...state.calendar}};
 // Immediate events have no ongoing duration and go straight into history.
 if(!copy.total){copy.actionRequired=true;copy.completed=false;}
