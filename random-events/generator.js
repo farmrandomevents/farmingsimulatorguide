@@ -28,7 +28,7 @@ const months=['January','February','March','April','May','June','July','August',
 const KEY='fsg-first-events-test-v1';
 let state={selected:cats.map((_,i)=>i),current:null,used:[],active:[],categoriesOpen:true,tracking:false,calendar:null,frequency:'manual',count:'1',periodKey:null,periodEvents:[],scheduleAnchor:null,monthSeen:{},lastGenerated:null,sequence:0,animalsOwned:[],cropsOwned:[],areaUnit:'acres'};
 try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&typeof s==='object')state={...state,...s}}catch(e){}
-if(!Array.isArray(state.selected)||!state.selected.length)state.selected=cats.map((_,i)=>i);
+if(!Array.isArray(state.selected))state.selected=cats.map((_,i)=>i);
 if(!Array.isArray(state.active))state.active=[];
 if(!Array.isArray(state.periodEvents))state.periodEvents=[];
 if(!Array.isArray(state.used))state.used=[];
@@ -79,6 +79,7 @@ function markSeen(e){if(!state.tracking||!state.calendar)return;const key=`${sta
 function eligible(){return events.filter(e=>state.selected.includes(e.c)&&(e.c!==1||state.cropsOwned.length>0)&&(e.c!==3||state.animalsOwned.length>0)&&(!e.requiresAnimals||state.animalsOwned.length>=e.requiresAnimals)&&(!e.animals||e.animals.some(a=>state.animalsOwned.includes(a==='Cows'?'Cattle':a)))&&(!cropEventMap[e.id]||state.cropsOwned.includes(cropEventMap[e.id]))&&(!state.tracking||!state.active.some(a=>!a.completed&&a.eventId===e.id)))}
 function chooseUnique(pool,used){const a=pool.filter(e=>!used.includes(e.id));return a.length?randomFrom(a):null}
 function drawCats(){
+ $('all').textContent=state.selected.length===cats.length?'✕ Deselect All':'✓ Select All';
  $('categories').hidden=!state.categoriesOpen;
  $('hideCats').textContent=state.categoriesOpen?'Hide Categories ▴':'Show Categories ▾';
  $('categories').replaceChildren();
@@ -87,7 +88,7 @@ function drawCats(){
    const b=document.createElement('button');b.className='category';b.type='button';
    b.setAttribute('aria-pressed',String(state.selected.includes(i)));
    b.innerHTML=`<span class="tick">✓</span><img src="images/${categorySlugs[i]}/cat-${i}.webp" alt=""><span class="name">${c}</span>`;
-   b.onclick=()=>{if(state.selected.includes(i)){if(state.selected.length===1)return;state.selected=state.selected.filter(x=>x!==i)}else state.selected.push(i);persist();drawCats();renderSchedule()};
+   b.onclick=()=>{if(state.selected.includes(i)){state.selected=state.selected.filter(x=>x!==i)}else state.selected.push(i);persist();drawCats();renderSchedule()};
    wrap.append(b);
    $('categories').append(wrap);
  });
@@ -158,7 +159,7 @@ function generate(){
 }
 $('generate').onclick=mainGoldAction;$('sticky').onclick=()=>{mainGoldAction();$('event').scrollIntoView({behavior:'smooth',block:'center'})};
 $('hideCats').onclick=()=>{state.categoriesOpen=!state.categoriesOpen;persist();drawCats()};
-$('all').onclick=()=>{state.selected=cats.map((_,i)=>i);persist();drawCats();renderSchedule()};
+$('all').onclick=()=>{state.selected=state.selected.length===cats.length?[]:cats.map((_,i)=>i);persist();drawCats();renderSchedule()};
 function fillSelect(id,opts){const el=$(id);el.replaceChildren();opts.forEach(([v,t])=>{const o=document.createElement('option');o.value=v;o.textContent=t;el.append(o)})}
 fillSelect('startMonth',months.map((m,i)=>[i,m]));
 function refreshDays(){const n=Number($('daysPerMonth').value)||3;$('daysPerMonthValue').textContent=String(n);const old=Number($('startDay').value)||1;fillSelect('startDay',Array.from({length:n},(_,i)=>[i+1,'Day '+(i+1)]));$('startDay').value=String(Math.min(n,old))}
