@@ -297,7 +297,7 @@ function syncCleanLayout(){
  $('ongoingCount').textContent=`${running} Ongoing · ${required} Action${required===1?'':'s'} Required`;
  if(hasFarm){const c=state.calendar;const nextMonth=months[(c.month+1)%12];$('farmDateTop').textContent=`${months[c.month]} — Year ${(c.year||0)+1} · Day ${c.day} of ${c.daysPerMonth}`;$('advanceTop').textContent=c.day>=c.daysPerMonth?`Advance to ${nextMonth}`:`Advance to Day ${c.day+1}`;}
  $('historyDetails').hidden=!hasFarm;
- $('compactFarmDate').parentElement.hidden=!hasFarm;
+ $('compactFarmDate').parentElement.hidden=true;
  $('compactFarmDate').textContent=hasFarm?`${months[state.calendar.month]} — Year ${(state.calendar.year||0)+1} · Day ${state.calendar.day} of ${state.calendar.daysPerMonth}`:'YOUR FARM · Set up your calendar';
  updateGoldLabel();
 }
@@ -417,7 +417,11 @@ dashboardStyle.textContent=`
 .fsg-dash-row strong{color:#fff}
 .fsg-dash-row p{margin:0;color:#d5e4da;font-size:.9rem;line-height:1.45}
 .fsg-dash-row small{color:#f1c469}
-.fsg-dash-done{justify-self:end;border:1px solid #e2b85d;background:#d8ad51;color:#173b29;border-radius:7px;padding:8px 12px;font-weight:700;cursor:pointer}
+.fsg-dash-done{justify-self:end;border:1px solid #6eb58b;background:#26774b;color:#fff;border-radius:7px;padding:8px 12px;font-weight:700;cursor:pointer}
+.fsg-dash-done.is-completed{background:#d8ad51;border-color:#e2b85d;color:#173b29;cursor:default}
+.fsg-dash-progress{height:9px;border-radius:20px;overflow:hidden;background:#092f22;border:1px solid #426b52}
+.fsg-dash-progress-fill{height:100%;background:linear-gradient(90deg,#c99a38,#f1c469);transition:width .2s}
+.fsg-dash-row.is-completed{border-color:#a88b4b}
 .fsg-dash-empty{color:#d5e4da;margin:8px 0}
 @media(max-width:420px){.fsg-dash-grid{gap:5px}.fsg-dash-tab{min-height:82px;padding:8px 3px}.fsg-dash-label{font-size:.72rem}.fsg-dash-number{font-size:1.5rem}}
 `;
@@ -427,8 +431,9 @@ $('tracker').prepend(dashboard);
 $('requiredActions').style.display='none';
 $('activeList').style.display='none';
 function renderFarmDashboard(){
- const actions=state.active.filter(x=>!x.completed&&x.actionRequired&&!x.pendingOffer);
- const offers=state.active.filter(x=>!x.completed&&x.pendingOffer);
+ const isFinishedToday=x=>x.completed && (!state.calendar || (x.finished && x.finished.year===state.calendar.year && x.finished.month===state.calendar.month && x.finished.day===state.calendar.day));
+ const actions=state.active.filter(x=>!x.pendingOffer && (x.actionRequired&&!x.completed || (isFinishedToday(x)&&!x.total)));
+ const offers=state.active.filter(x=>x.pendingOffer && (!x.completed || isFinishedToday(x)));
  const running=state.active.filter(x=>!x.completed&&!x.actionRequired);
  const counts={actions:actions.length,ongoing:running.length,offers:offers.length};
  dashboard.replaceChildren();
@@ -445,19 +450,27 @@ function renderFarmDashboard(){
  const items=dashboardOpen==='actions'?actions:dashboardOpen==='offers'?offers:running;
  if(!items.length){const p=document.createElement('p');p.className='fsg-dash-empty';p.textContent=dashboardOpen==='actions'?'No actions required.':dashboardOpen==='offers'?'No saved offers.':'No events in progress.';content.append(p);return;}
  items.forEach(item=>{
-  const card=document.createElement('div');card.className='fsg-dash-row';
+  const card=document.createElement('div');card.className='fsg-dash-row';if(item.completed)card.classList.add('is-completed');
   const title=document.createElement('strong');title.textContent=item.title;card.append(title);
-  if(dashboardOpen==='ongoing'){const rem=document.createElement('small');rem.textContent=item.duration?.unit==='months'?`${Math.ceil(item.remaining/(state.calendar?.daysPerMonth||3))} month(s) remaining`:displayDuration(item.remaining)+' remaining';card.append(rem)}
   const desc=document.createElement('p');desc.textContent=displayEventDescription(item);card.append(desc);
+  if(dashboardOpen==='ongoing'){
+   const progress=document.createElement('div');progress.className='fsg-dash-progress';progress.setAttribute('role','progressbar');
+   const percent=item.total?Math.max(0,Math.min(100,100*(item.total-item.remaining)/item.total)):0;progress.setAttribute('aria-valuenow',String(Math.round(percent)));progress.setAttribute('aria-valuemin','0');progress.setAttribute('aria-valuemax','100');
+   const fill=document.createElement('div');fill.className='fsg-dash-progress-fill';fill.style.width=percent+'%';progress.append(fill);card.append(progress);
+   const rem=document.createElement('small');rem.textContent=item.duration?.unit==='months'?`${Math.ceil(item.remaining/(state.calendar?.daysPerMonth||3))} month(s) remaining`:displayDuration(item.remaining)+' remaining';card.append(rem);
+  }
   if(dashboardOpen!=='ongoing'){
-   const btn=document.createElement('button');btn.type='button';btn.className='fsg-dash-done';btn.textContent=item.pendingOffer?'✓ Apply Offer When Used':'✓ Completed';
-   btn.onclick=()=>completeAction(item.id);card.append(btn);
+   const btn=document.createElement('button');btn.type='button';btn.className='fsg-dash-done';
+   btn.textContent=item.completed?'✓ Completed':item.pendingOffer?'✓ Apply Offer When Used':'✓ Mark as Completed';
+   if(item.completed){btn.classList.add('is-completed');btn.disabled=true;}else btn.onclick=()=>completeAction(item.id);card.append(btn);
   }
   content.append(card);
  });
 }
 
 $('tracker').querySelector('.calendar-box').hidden=true;
+// The farm date is already displayed above the advance button; avoid duplicating it inside the tracker.
+const duplicateFarmDate=$('compactFarmDate');if(duplicateFarmDate?.parentElement)duplicateFarmDate.parentElement.hidden=true;
 $('ongoingMount').append($('tracker'));
 $('historyPanel').hidden=false;
 const hist=$('historyPanel');const summary=document.createElement('summary');summary.textContent='Farm Event History — Show / Hide';const detail=document.createElement('details');detail.className=hist.className;detail.id='historyDetails';hist.parentNode.insertBefore(detail,hist);detail.append(summary,hist);hist.className='history-content';hist.style.cssText='margin-top:8px;border:0;padding:0;background:transparent';
