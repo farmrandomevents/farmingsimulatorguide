@@ -25,7 +25,7 @@ const cropNames=['Wheat', 'Barley', 'Oats', 'Canola', 'Soybeans', 'Corn', 'Sorgh
 const cropEventMap={"book-01-030":"Wheat","book-01-031":"Wheat","book-01-032":"Barley","book-01-033":"Oats","book-01-034":"Corn","book-01-035":"Canola","book-01-036":"Potatoes"};
 const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
 const KEY='fsg-first-events-test-v1';
-let state={selected:cats.map((_,i)=>i),current:null,used:[],active:[],categoriesOpen:true,tracking:false,calendar:null,frequency:'manual',count:'1',periodKey:null,periodEvents:[],scheduleAnchor:null,monthSeen:{},lastGenerated:null,sequence:0,animalsOwned:[],cropsOwned:[],areaUnit:'acres'};
+let state={selected:cats.map((_,i)=>i),current:null,used:[],active:[],categoriesOpen:true,tracking:false,calendar:null,frequency:'manual',count:'1',periodKey:null,periodEvents:[],scheduleAnchor:null,monthSeen:{},lastGenerated:null,sequence:0,animalsOwned:[],cropsOwned:[],areaUnit:'acres',currency:'GBP',minEvents:null,maxEvents:null};
 try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&typeof s==='object')state={...state,...s}}catch(e){}
 if(!Array.isArray(state.selected))state.selected=cats.map((_,i)=>i);
 if(!Array.isArray(state.active))state.active=[];
@@ -34,13 +34,23 @@ if(!Array.isArray(state.used))state.used=[];
 if(!Array.isArray(state.cropsOwned))state.cropsOwned=[];
 if(!Array.isArray(state.animalsOwned))state.animalsOwned=[];
 if(!['acres','hectares'].includes(state.areaUnit))state.areaUnit='acres';
+if(!['GBP','EUR','USD'].includes(state.currency))state.currency='GBP';
+// Existing farms retain their previous fixed event count as their initial range.
+if(state.minEvents===null||!Number.isFinite(Number(state.minEvents)))state.minEvents=state.count==='random'?1:Number(state.count)||1;
+if(state.maxEvents===null||!Number.isFinite(Number(state.maxEvents)))state.maxEvents=state.count==='random'?10:Number(state.count)||1;
+state.minEvents=Math.max(0,Math.min(10,Number(state.minEvents)));
+state.maxEvents=Math.max(state.minEvents,Math.min(10,Number(state.maxEvents)));
+const currencySymbols={GBP:'£',EUR:'€',USD:'$'};
+function currencySymbol(){return currencySymbols[state.currency]||'£'}
+function currencyText(value){return String(value??'').replace(/£/g,currencySymbol())}
+function money(n){return currencySymbol()+Math.round(n).toLocaleString('en-GB')}
 state.animalsOwned=[...new Set(state.animalsOwned.map(a=>a==='Cows'?'Cattle':a))];
 if(!state.monthGenerated||typeof state.monthGenerated!=='object')state.monthGenerated={};
 if(state.calendar){state.calendar.daysPerMonth=Math.max(1,Math.min(28,Number(state.calendar.daysPerMonth)||1));state.calendar.day=Math.max(1,Math.min(state.calendar.daysPerMonth,Number(state.calendar.day)||1));}
 if(!state.monthSeen||typeof state.monthSeen!=='object')state.monthSeen={};
-function updateCalculator(){const price=Math.max(0,Number($('calcPrice').value)||0);const pct=Math.min(100,Math.max(0,Number($('calcPercent').value)||0));const saving=price*pct/100;const money=n=>'£'+Math.round(n).toLocaleString('en-GB');const isDiscount=$('calcKind').value==='discount';$('calcResult').innerHTML=isDiscount?`<strong>Receive ${money(saving)} from your Payment Farm</strong><div>Final purchase cost: ${money(price-saving)}</div>`:`<strong>Receive ${money(saving)} from your Payment Farm</strong><div>Total sale value: ${money(price+saving)}</div>`;}
+function updateCalculator(){const price=Math.max(0,Number($('calcPrice').value)||0);const pct=Math.min(100,Math.max(0,Number($('calcPercent').value)||0));const saving=price*pct/100;const isDiscount=$('calcKind').value==='discount';$('calcResult').innerHTML=isDiscount?`<strong>Receive ${money(saving)} from your Payment Farm</strong><div>Final purchase cost: ${money(price-saving)}</div>`:`<strong>Receive ${money(saving)} from your Payment Farm</strong><div>Total sale value: ${money(price+saving)}</div>`;}
 const calcPriceOptions=$('calcPriceOptions');
-[1000,5000,10000,25000,50000,100000,250000,500000].forEach(price=>{const b=document.createElement('button');b.type='button';b.dataset.price=String(price);b.textContent='£'+price.toLocaleString('en-GB');b.addEventListener('click',()=>{$('calcPrice').value=String(Math.max(0,Number($('calcPrice').value)||0)+price);updateCalculator()});calcPriceOptions.append(b)});
+[1000,5000,10000,25000,50000,100000,250000,500000].forEach(price=>{const b=document.createElement('button');b.type='button';b.dataset.price=String(price);b.textContent=money(price);b.addEventListener('click',()=>{$('calcPrice').value=String(Math.max(0,Number($('calcPrice').value)||0)+price);updateCalculator()});calcPriceOptions.append(b)});
 
 $('calcClear').addEventListener('click',()=>{$('calcPrice').value='0';updateCalculator()});
 const calcPercentOptions=$('calcPercentOptions');
@@ -140,9 +150,9 @@ function formatAreaText(str){
 function displayEventDescription(item){
  if(!item)return '';
  const duration=item.duration;
- if(!duration)return formatAreaText(item.description);
+ if(!duration)return currencyText(formatAreaText(item.description));
  const label=duration.label|| (duration.unit==='months'?`${duration.amount} month${duration.amount===1?'':'s'}`:displayDuration(duration.amount));
- return formatAreaText(item.description.replace(duration.label,label));
+ return currencyText(formatAreaText(item.description.replace(duration.label,label)));
 }
 function renderThumbnails(){const list=state.periodEvents.length?state.periodEvents:(state.current?[state.current]:[]);const controls=$('carouselControls');controls.hidden=list.length<2;const index=Math.max(0,list.findIndex(e=>e.id===state.current?.id));$('eventPosition').textContent=`Event ${index+1} of ${list.length}`;}
 function shiftEvent(direction){const list=state.periodEvents;if(list.length<2)return;const index=Math.max(0,list.findIndex(e=>e.id===state.current?.id));showEvent(list[(index+direction+list.length)%list.length]);persist();}
@@ -182,7 +192,8 @@ function generate(){
  if(state.tracking&&state.calendar&&state.monthGenerated[monthKey()]){
    $('status').textContent='All events for this scheduled period have already been generated. Use the arrows to view them.';return;
  }
- const count=Math.min(10,Math.max(1,state.count==='random'?1+Math.floor(Math.random()*10):Number(state.count)||1));
+ const count=state.minEvents+Math.floor(Math.random()*(state.maxEvents-state.minEvents+1));
+  if(count===0){state.periodEvents=[];if(scheduled)state.periodKey=period;if(state.tracking&&state.calendar)state.monthGenerated[monthKey()]=true;persist();renderTracker();renderSchedule();syncCleanLayout();$('status').textContent='A quiet period on the farm — no random events this time.';return;}
  const pool=eligible();const seen=state.tracking&&state.calendar?(state.monthSeen[`${state.calendar.year||0}-${state.calendar.month}`]||[]):[];
  // Monthly uniqueness applies within the current month, including events already generated.
  // An existing batch is never extended by another click in the same scheduled period.
@@ -258,9 +269,11 @@ function updateTracking(){state.tracking=$('enableTracking').checked;$('activeTo
 $('enableTracking').onchange=updateTracking;
 function periodId(){const c=state.calendar;if(!c||state.frequency==='manual')return null;if(state.frequency==='daily')return `${c.year||0}-${c.month}-${c.day}`;const every=Number(state.frequency);const abs=(c.year||0)*12+c.month;return Math.floor((abs-(state.scheduleAnchor??abs))/every)}
 function dueForPeriod(){if(!state.calendar||state.frequency==='manual')return false;if(state.frequency==='daily')return true;const c=state.calendar;const every=Number(state.frequency);const abs=(c.year||0)*12+c.month;return (abs-(state.scheduleAnchor??abs))%every===0}
-function renderSchedule(){const manual=state.frequency==='manual';$('countField').hidden=false;$('scheduleBox').hidden=true;$('frequency').value=state.frequency;$('eventCount').value=state.count;if(manual)return;const c=state.calendar;const status=$('scheduleStatus');const btn=$('revealDue');if(!state.tracking||!c){status.textContent='Enable Farm Calendar & Event Tracking and set your in-game date to schedule events.';btn.disabled=true;return}const period=periodId();btn.textContent=state.frequency==='daily'?`Generate Events for ${months[c.month]} — Day ${c.day}`:`Generate Events for ${months[c.month]}`;if(!dueForPeriod()){const abs=(c.year||0)*12+c.month;const anchor=state.scheduleAnchor??abs;const next=abs+(Number(state.frequency)-((abs-anchor)%Number(state.frequency)));status.textContent=`Next scheduled events will be due in ${months[next%12]}, Year ${Math.floor(next/12)+1}.`;btn.disabled=true;return}if(state.periodKey!==`${state.frequency}:${period}`){state.periodKey=`${state.frequency}:${period}`;persist()}btn.disabled=state.periodEvents.length>0;status.textContent=state.periodEvents.length?`${state.periodEvents.length} different events generated for ${months[c.month]}${state.frequency==='daily'?' Day '+c.day:''}. Select their photographs above to view each event.`:`Events are due for ${months[c.month]}${state.frequency==='daily'?' Day '+c.day:''}. Generate them when you're ready.`;}
+function renderSchedule(){const manual=state.frequency==='manual';$('countField').hidden=false;$('scheduleBox').hidden=true;$('frequency').value=state.frequency;$('minEvents').value=String(state.minEvents);$('maxEvents').value=String(state.maxEvents);if(manual)return;const c=state.calendar;const status=$('scheduleStatus');const btn=$('revealDue');if(!state.tracking||!c){status.textContent='Enable Farm Calendar & Event Tracking and set your in-game date to schedule events.';btn.disabled=true;return}const period=periodId();btn.textContent=state.frequency==='daily'?`Generate Events for ${months[c.month]} — Day ${c.day}`:`Generate Events for ${months[c.month]}`;if(!dueForPeriod()){const abs=(c.year||0)*12+c.month;const anchor=state.scheduleAnchor??abs;const next=abs+(Number(state.frequency)-((abs-anchor)%Number(state.frequency)));status.textContent=`Next scheduled events will be due in ${months[next%12]}, Year ${Math.floor(next/12)+1}.`;btn.disabled=true;return}if(state.periodKey!==`${state.frequency}:${period}`){state.periodKey=`${state.frequency}:${period}`;persist()}btn.disabled=state.periodEvents.length>0;status.textContent=state.periodEvents.length?`${state.periodEvents.length} different events generated for ${months[c.month]}${state.frequency==='daily'?' Day '+c.day:''}. Select their photographs above to view each event.`:`Events are due for ${months[c.month]}${state.frequency==='daily'?' Day '+c.day:''}. Generate them when you're ready.`;}
 $('frequency').onchange=()=>{state.frequency=$('frequency').value;if(state.calendar)state.scheduleAnchor=(state.calendar.year||0)*12+state.calendar.month;state.periodKey=null;state.periodEvents=[];state.current=null;persist();renderThumbnails();renderSchedule();syncCleanLayout()};
-$('eventCount').onchange=()=>{state.count=$('eventCount').value;persist();renderSchedule();syncCleanLayout()};
+function updateEventRange(changed){let min=Number($('minEvents').value),max=Number($('maxEvents').value);if(min>max){if(changed==='min')max=min;else min=max;}state.minEvents=min;state.maxEvents=max;state.count=min===max?String(min):'random';persist();renderSchedule();syncCleanLayout();}
+$('minEvents').onchange=()=>updateEventRange('min');
+$('maxEvents').onchange=()=>updateEventRange('max');
 $('revealDue').onclick=generate;
 
 function monthAlreadyGenerated(){return !!(state.calendar&&state.monthGenerated[monthKey()]);}
@@ -326,7 +339,7 @@ newFarmButton.addEventListener('click',()=>{
  farmDialog('Start a new farm? This will permanently clear all active events, completed history and the farm calendar saved in this browser. Your event preferences will be kept.',{title:'Start New Farm',confirm:true,confirmLabel:'Yes, Start New Farm',onConfirm:()=>{
  const fresh={
    selected:[...state.selected],current:null,used:[],active:[],categoriesOpen:state.categoriesOpen,
-   tracking:state.tracking,calendar:null,frequency:state.frequency,count:state.count,
+   tracking:state.tracking,calendar:null,frequency:state.frequency,count:state.count,minEvents:state.minEvents,maxEvents:state.maxEvents,currency:state.currency,areaUnit:state.areaUnit,
    periodKey:null,periodEvents:[],scheduleAnchor:null,monthSeen:{},monthGenerated:{},
    lastGenerated:null,sequence:0,animalsOwned:[...state.animalsOwned],cropsOwned:[...state.cropsOwned],ongoingOpen:false
  };
@@ -378,7 +391,18 @@ const areaButtons=[...areaSection.querySelectorAll('button')];
 function syncAreaButtons(){areaButtons.forEach(b=>{const selected=b.dataset.unit===state.areaUnit;b.setAttribute('aria-pressed',String(selected));b.classList.toggle('selected',selected)})}
 areaButtons.forEach(b=>b.addEventListener('click',()=>{state.areaUnit=b.dataset.unit;syncAreaButtons();persist();if(state.current)showEvent(state.current);renderTracker();renderSchedule()}));
 syncAreaButtons();
-$('setupMount').prepend(areaSection);
+// Keep the existing field measurement buttons and their appearance unchanged.
+const currencySection=document.createElement('section');
+currencySection.className='crop-settings area-unit-settings';
+currencySection.innerHTML='<h3>Currency</h3><p>Choose the currency shown in random events.</p><div class="area-unit-options" role="group" aria-label="Currency"><button type="button" data-currency="GBP">£ Pound</button><button type="button" data-currency="EUR">€ Euro</button><button type="button" data-currency="USD">$ Dollar</button></div>';
+const currencyButtons=[...currencySection.querySelectorAll('button')];
+function syncCurrencyButtons(){currencyButtons.forEach(b=>{const selected=b.dataset.currency===state.currency;b.setAttribute('aria-pressed',String(selected));b.classList.toggle('selected',selected)})}
+function refreshCurrency(){syncCurrencyButtons();document.querySelector('label[for="calcPrice"]').textContent='Normal price ('+currencySymbol()+')';document.querySelectorAll('#calcPriceOptions button').forEach(b=>{b.textContent=money(Number(b.dataset.price))});updateCalculator();if(state.current)showEvent(state.current);renderTracker();renderHistory()}
+currencyButtons.forEach(b=>b.addEventListener('click',()=>{state.currency=b.dataset.currency;persist();refreshCurrency()}));
+const unitCurrencyRow=document.createElement('div');unitCurrencyRow.className='fsg-unit-currency-row';unitCurrencyRow.append(areaSection,currencySection);
+$('setupMount').prepend(unitCurrencyRow);
+const unitCurrencyStyle=document.createElement('style');unitCurrencyStyle.textContent='.fsg-unit-currency-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.fsg-unit-currency-row>.crop-settings{margin:0;min-width:0}.fsg-unit-currency-row .area-unit-options{display:flex;flex-wrap:wrap;gap:7px}@media(max-width:540px){.fsg-unit-currency-row{gap:8px}.fsg-unit-currency-row>.crop-settings{padding:12px 8px}.fsg-unit-currency-row .area-unit-options button{font-size:.8rem;padding:7px 9px}}';document.head.append(unitCurrencyStyle);
+syncCurrencyButtons();
 const animalSettings=makeFarmSelectionSection('Your Animals','Select the animals you keep. Animal-specific events require the relevant animal to be selected.',animalNames,'animalsOwned','animalOptions');
 const cropSettings=makeFarmSelectionSection('Your Crops','Select the crops you grow. Events about any crop or field remain available whenever you grow at least one crop.',cropNames,'cropsOwned','cropOptions');
 $('setupMount').prepend(animalSettings.section);
@@ -495,5 +519,5 @@ $('ongoingMount').append($('tracker'));
 $('historyPanel').hidden=false;
 const hist=$('historyPanel');const summary=document.createElement('summary');summary.textContent='Farm Event History — Show / Hide';const detail=document.createElement('details');detail.className=hist.className;detail.id='historyDetails';hist.parentNode.insertBefore(detail,hist);detail.append(summary,hist);hist.className='history-content';hist.style.cssText='margin-top:8px;border:0;padding:0;background:transparent';
 if(!state.calendar){setupOpen=true;$('calendarSettings').hidden=!state.tracking}
-$('enableTracking').checked=state.tracking;drawCats();if(!state.current)state.current=instantiate(events[0]);showEvent(state.current);updateTracking();renderSchedule();syncCleanLayout();
+$('enableTracking').checked=state.tracking;drawCats();if(!state.current)state.current=instantiate(events[0]);showEvent(state.current);updateTracking();renderSchedule();syncCleanLayout();refreshCurrency();
 if(typeof IntersectionObserver!=='undefined'){const obs=new IntersectionObserver(es=>{$('sticky').classList.toggle('show',!es[0].isIntersecting)},{threshold:.2});obs.observe($('generate'))}
