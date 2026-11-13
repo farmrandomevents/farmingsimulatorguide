@@ -103,11 +103,16 @@ function completeAction(id){
 }
 function renderBannerCompletion(){
  const b=$('bannerComplete'), item=findTracked(state.current);
- b.hidden=!(item&&(item.actionRequired||item.earlyChoice)&&!item.completed);
+ b.hidden=!(item&&(item.completed||item.actionRequired||item.earlyChoice));
  if(b.hidden)return;
- b.disabled=!!item.completed;
- b.textContent=item.completed?'✓ Completed':item.pendingOffer?'✓ Apply Offer When Used':item.earlyChoice?'✓ I chose the early solution':'✓ Mark as Completed';
- b.onclick=()=>completeAction(item.id);
+ const done=!!item.completed;
+ b.disabled=done;
+ b.textContent=done?'✓ Completed':item.pendingOffer?'✓ Apply Offer When Used':item.earlyChoice?'✓ I chose the early solution':'✓ Mark as Completed';
+ b.style.backgroundColor=done?'#D8AD51':'';
+ b.style.color=done?'#173B29':'';
+ b.style.borderColor=done?'#D8AD51':'';
+ b.style.opacity='1';
+ b.onclick=done?null:()=>completeAction(item.id);
 }
 function displayDuration(days){
  const dpm=state.calendar?.daysPerMonth||3;
