@@ -51,18 +51,21 @@ function persist(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){
 function randomFrom(a){return a[Math.floor(Math.random()*a.length)]}
 function dateLabel(c){return c?`${months[c.month]}, Year ${(c.year||0)+1}, Day ${c.day}`:'No farm calendar'}
 function monthKey(){const c=state.calendar;return c?`${c.year||0}-${c.month}${state.frequency==='daily'?'-'+c.day:''}`:null}
+// Shared duration rules for ALL event categories, not only weather.
+// Long-term month-based events and instant events retain their own behaviour.
 function durationFor(e){
  if(!e.duration)return null;
- const dpm=state.calendar?.daysPerMonth||3;
+ const dpm=Math.max(1,Math.min(28,Number(state.calendar?.daysPerMonth)||3));
  if(e.duration==='months'){
-  const lo=Math.max(1,e.minMonths||1),hi=Math.max(lo,e.maxMonths||3);
+  const lo=Math.max(1,e.minMonths||1),hi=Math.max(lo,e.maxMonths||lo);
   const n=lo+Math.floor(Math.random()*(hi-lo+1));
   return {amount:n,unit:'months',label:`${n} ${n===1?'month':'months'}`,total:n*dpm};
  }
- const hi=Math.max(1,Math.min(dpm,e.maxDays||dpm));
- // A short calendar compresses longer restrictions instead of excluding events.
- const lo=Math.min(hi,Math.max(1,e.minDays||1));
- const n=lo+Math.floor(Math.random()*(hi-lo+1));
+ // All day-based timed events draw a duration suited to the player's calendar.
+ // One-day months use a half-day restriction, which expires at the next advance.
+ if(dpm===1)return {amount:.5,unit:'days',label:'until 12pm (half a day)',total:1};
+ const max=dpm===2?1:dpm===3?2:dpm<=7?4:8;
+ const n=1+Math.floor(Math.random()*max);
  return {amount:n,unit:'days',label:`${n} ${n===1?'day':'days'}`,total:n};
 }
 function isPendingOffer(e){
@@ -113,7 +116,7 @@ function displayEventDescription(item){
  if(!item)return '';
  const duration=item.duration;
  if(!duration)return item.description;
- const label=duration.unit==='months'?`${duration.amount} month${duration.amount===1?'':'s'}`:displayDuration(duration.amount);
+ const label=duration.label|| (duration.unit==='months'?`${duration.amount} month${duration.amount===1?'':'s'}`:displayDuration(duration.amount));
  return item.description.replace(duration.label,label);
 }
 function renderThumbnails(){const list=state.periodEvents.length?state.periodEvents:(state.current?[state.current]:[]);const controls=$('carouselControls');controls.hidden=list.length<2;const index=Math.max(0,list.findIndex(e=>e.id===state.current?.id));$('eventPosition').textContent=`Event ${index+1} of ${list.length}`;}
