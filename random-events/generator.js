@@ -26,7 +26,7 @@ const cropNames=['Wheat', 'Barley', 'Oats', 'Canola', 'Soybeans', 'Corn', 'Sorgh
 const cropEventMap={"book-01-030":"Wheat","book-01-031":"Wheat","book-01-032":"Barley","book-01-033":"Oats","book-01-034":"Corn","book-01-035":"Canola","book-01-036":"Potatoes"};
 const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
 const KEY='fsg-first-events-test-v1';
-let state={selected:cats.map((_,i)=>i),current:null,used:[],active:[],categoriesOpen:true,tracking:false,calendar:null,frequency:'manual',count:'1',periodKey:null,periodEvents:[],scheduleAnchor:null,monthSeen:{},lastGenerated:null,sequence:0,animalsOwned:[],cropsOwned:[]};
+let state={selected:cats.map((_,i)=>i),current:null,used:[],active:[],categoriesOpen:true,tracking:false,calendar:null,frequency:'manual',count:'1',periodKey:null,periodEvents:[],scheduleAnchor:null,monthSeen:{},lastGenerated:null,sequence:0,animalsOwned:[],cropsOwned:[],areaUnit:'acres'};
 try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&typeof s==='object')state={...state,...s}}catch(e){}
 if(!Array.isArray(state.selected)||!state.selected.length)state.selected=cats.map((_,i)=>i);
 if(!Array.isArray(state.active))state.active=[];
@@ -34,6 +34,7 @@ if(!Array.isArray(state.periodEvents))state.periodEvents=[];
 if(!Array.isArray(state.used))state.used=[];
 if(!Array.isArray(state.cropsOwned))state.cropsOwned=[];
 if(!Array.isArray(state.animalsOwned))state.animalsOwned=[];
+if(!['acres','hectares'].includes(state.areaUnit))state.areaUnit='acres';
 state.animalsOwned=[...new Set(state.animalsOwned.map(a=>a==='Cows'?'Cattle':a))];
 if(!state.monthGenerated||typeof state.monthGenerated!=='object')state.monthGenerated={};
 if(state.calendar){state.calendar.daysPerMonth=Math.max(1,Math.min(28,Number(state.calendar.daysPerMonth)||1));state.calendar.day=Math.max(1,Math.min(state.calendar.daysPerMonth,Number(state.calendar.day)||1));}
@@ -73,9 +74,9 @@ function isPendingOffer(e){
  const t=(e.t+' '+e.template).toLowerCase();
  return /next (tractor|machine|vehicle|implement|purchase|repair|upgrade|used|new)|towards (your|one|a|any)|discount on (one|your|the next)|voucher|trade-in bonus|customer reward|loyalty reward|free (repair|repaint|tune-up|fuel)|tyre upgrade|engine upgrade|parts voucher|dealer discount|seasonal promotion|attachment offer|used machinery deal/.test(t);
 }
-function instantiate(e){const dur=isPendingOffer(e)?null:durationFor(e);const amount=e.amounts?randomFrom(e.amounts):null;return {id:`event-${Date.now()}-${++state.sequence}`,eventId:e.id,title:e.t,category:e.c,photo:e.p,description:e.template.replace('{duration}',dur?.label||'').replace('{amount}',amount===null?'':amount.toLocaleString('en-GB')),duration:dur,eventType:e.eventType||null,pendingOffer:isPendingOffer(e),completed:false,remaining:dur?.total||0,total:dur?.total||0,created:state.calendar?{...state.calendar}:null,finished:null};}
+function instantiate(e){const dur=isPendingOffer(e)?null:durationFor(e);const amount=e.amounts?randomFrom(e.amounts):null;const animal=e.id==='weather-2026-20'?randomFrom(state.animalsOwned):null;const description=e.template.replace('{animal}',animal?animal.toLowerCase():'livestock');return {id:`event-${Date.now()}-${++state.sequence}`,eventId:e.id,title:e.t,category:e.c,photo:e.p,description:description.replace('{duration}',dur?.label||'').replace('{amount}',amount===null?'':amount.toLocaleString('en-GB')),duration:dur,eventType:e.eventType||null,pendingOffer:isPendingOffer(e),completed:false,remaining:dur?.total||0,total:dur?.total||0,created:state.calendar?{...state.calendar}:null,finished:null};}
 function markSeen(e){if(!state.tracking||!state.calendar)return;const key=`${state.calendar.year||0}-${state.calendar.month}`;if(!key)return;const a=state.monthSeen[key]||[];if(!a.includes(e.id))a.push(e.id);state.monthSeen[key]=a;}
-function eligible(){return events.filter(e=>state.selected.includes(e.c)&&(e.c!==1||state.cropsOwned.length>0)&&(e.c!==3||state.animalsOwned.length>0)&&(!e.animals||e.animals.some(a=>state.animalsOwned.includes(a==='Cows'?'Cattle':a)))&&(!cropEventMap[e.id]||state.cropsOwned.includes(cropEventMap[e.id]))&&(!state.tracking||!state.active.some(a=>!a.completed&&a.eventId===e.id)))}
+function eligible(){return events.filter(e=>state.selected.includes(e.c)&&(e.c!==1||state.cropsOwned.length>0)&&(e.c!==3||state.animalsOwned.length>0)&&(!e.requiresAnimals||state.animalsOwned.length>=e.requiresAnimals)&&(!e.animals||e.animals.some(a=>state.animalsOwned.includes(a==='Cows'?'Cattle':a)))&&(!cropEventMap[e.id]||state.cropsOwned.includes(cropEventMap[e.id]))&&(!state.tracking||!state.active.some(a=>!a.completed&&a.eventId===e.id)))}
 function chooseUnique(pool,used){const a=pool.filter(e=>!used.includes(e.id));return a.length?randomFrom(a):null}
 function drawCats(){
  $('categories').hidden=!state.categoriesOpen;
@@ -112,12 +113,15 @@ function displayDuration(days){
  if(days===.5)return 'Half a day';
   const n=Math.ceil(days);return `${n} day${n===1?'':'s'}`;
 }
+function formatAreaText(str){
+ return String(str||'').replace(/\{area10\}/g,state.areaUnit==='hectares'?'4.05 hectares':'10 acres');
+}
 function displayEventDescription(item){
  if(!item)return '';
  const duration=item.duration;
- if(!duration)return item.description;
+ if(!duration)return formatAreaText(item.description);
  const label=duration.label|| (duration.unit==='months'?`${duration.amount} month${duration.amount===1?'':'s'}`:displayDuration(duration.amount));
- return item.description.replace(duration.label,label);
+ return formatAreaText(item.description.replace(duration.label,label));
 }
 function renderThumbnails(){const list=state.periodEvents.length?state.periodEvents:(state.current?[state.current]:[]);const controls=$('carouselControls');controls.hidden=list.length<2;const index=Math.max(0,list.findIndex(e=>e.id===state.current?.id));$('eventPosition').textContent=`Event ${index+1} of ${list.length}`;}
 function shiftEvent(direction){const list=state.periodEvents;if(list.length<2)return;const index=Math.max(0,list.findIndex(e=>e.id===state.current?.id));showEvent(list[(index+direction+list.length)%list.length]);persist();}
@@ -141,7 +145,7 @@ function generate(){
  // An existing batch is never extended by another click in the same scheduled period.
  const chosen=[];
  for(let i=0;i<count;i++){
-   const next=chooseUnique(pool,[...seen,...chosen.map(e=>e.id)]);
+   const next=chooseUnique(pool.filter(e=>!e.conflictGroup||!chosen.some(c=>c.conflictGroup===e.conflictGroup)),[...seen,...chosen.map(e=>e.id)]);
    if(!next)break;
    chosen.push(next);
  }
@@ -185,10 +189,10 @@ if(actions.length){
   header.append(bulk);
  }
 }
-actions.forEach(item=>{const card=document.createElement('div');card.className='track-card required-card';const title=document.createElement('strong');title.textContent=item.title;const desc=document.createElement('p');desc.textContent=item.description;const button=document.createElement('button');button.type='button';button.textContent=item.pendingOffer?'✓ Apply Offer When Used':'✓ Done — I have completed this';button.className='action-done';button.onclick=()=>completeAction(item.id);const copy=document.createElement('div');copy.className='required-copy';copy.append(title,desc);card.append(copy,button);actionRoot.append(card)});
+actions.forEach(item=>{const card=document.createElement('div');card.className='track-card required-card';const title=document.createElement('strong');title.textContent=item.title;const desc=document.createElement('p');desc.textContent=displayEventDescription(item);const button=document.createElement('button');button.type='button';button.textContent=item.pendingOffer?'✓ Apply Offer When Used':'✓ Done — I have completed this';button.className='action-done';button.onclick=()=>completeAction(item.id);const copy=document.createElement('div');copy.className='required-copy';copy.append(title,desc);card.append(copy,button);actionRoot.append(card)});
 renderHistory();renderBannerCompletion();if(typeof syncCleanLayout==='function')syncCleanLayout();}
 function renderHistory(){const root=$('historyList');root.replaceChildren();$('historyPanel').hidden=!state.tracking;const completed=state.active.filter(e=>e.completed);if(!completed.length){const p=document.createElement('p');p.className='small-event-note';p.textContent='Completed events will appear here automatically.';root.append(p);return}
-const years=[...new Set(completed.map(e=>e.created?.year||0))].sort((a,b)=>b-a);years.forEach(y=>{const yd=document.createElement('details');yd.className='history-year';yd.open=y===years[0];const ys=document.createElement('summary');ys.textContent=`Year ${y+1}`;yd.append(ys);for(let m=0;m<12;m++){const list=completed.filter(e=>(e.created?.year||0)===y&&(e.created?.month||0)===m);if(!list.length)continue;const md=document.createElement('details');md.className='history-month';md.open=y===years[0];const ms=document.createElement('summary');ms.textContent=`${months[m]} (${list.length})`;md.append(ms);list.forEach(e=>{const r=document.createElement('div');r.className='history-row';const name=document.createElement('strong');name.textContent=e.title;const info=document.createElement('small');info.textContent=`${e.description} · Finished: ${dateLabel(e.finished)}`;r.append(name,info);md.append(r)});yd.append(md)}root.append(yd)})}
+const years=[...new Set(completed.map(e=>e.created?.year||0))].sort((a,b)=>b-a);years.forEach(y=>{const yd=document.createElement('details');yd.className='history-year';yd.open=y===years[0];const ys=document.createElement('summary');ys.textContent=`Year ${y+1}`;yd.append(ys);for(let m=0;m<12;m++){const list=completed.filter(e=>(e.created?.year||0)===y&&(e.created?.month||0)===m);if(!list.length)continue;const md=document.createElement('details');md.className='history-month';md.open=y===years[0];const ms=document.createElement('summary');ms.textContent=`${months[m]} (${list.length})`;md.append(ms);list.forEach(e=>{const r=document.createElement('div');r.className='history-row';const name=document.createElement('strong');name.textContent=e.title;const info=document.createElement('small');info.textContent=`${displayEventDescription(e)} · Finished: ${dateLabel(e.finished)}`;r.append(name,info);md.append(r)});yd.append(md)}root.append(yd)})}
 function advance(){if(!state.tracking||!state.calendar)return;const c=state.calendar;
 // Only immediate mandatory actions block the calendar. Saved offers can be applied at any later date.
 const pending=state.active.filter(x=>x.actionRequired&&!x.completed&&!x.pendingOffer);
@@ -324,6 +328,14 @@ function makeFarmSelectionSection(title,description,names,stateKey,optionsId){
  syncAll();
  return {section,checks,syncAll};
 }
+const areaSection=document.createElement('section');
+areaSection.className='crop-settings area-unit-settings';
+areaSection.innerHTML='<h3>Field Measurements</h3><p>Choose which field-size measurement appears in your random events.</p><div class="area-unit-options" role="group" aria-label="Field measurements"><button type="button" data-unit="acres">Acres</button><button type="button" data-unit="hectares">Hectares</button></div>';
+const areaButtons=[...areaSection.querySelectorAll('button')];
+function syncAreaButtons(){areaButtons.forEach(b=>{const selected=b.dataset.unit===state.areaUnit;b.setAttribute('aria-pressed',String(selected));b.classList.toggle('selected',selected)})}
+areaButtons.forEach(b=>b.addEventListener('click',()=>{state.areaUnit=b.dataset.unit;syncAreaButtons();persist();if(state.current)showEvent(state.current);renderTracker();renderSchedule()}));
+syncAreaButtons();
+$('setupMount').prepend(areaSection);
 const animalSettings=makeFarmSelectionSection('Your Animals','Select the animals you keep. Animal-specific events require the relevant animal to be selected.',animalNames,'animalsOwned','animalOptions');
 const cropSettings=makeFarmSelectionSection('Your Crops','Select the crops you grow. Events about any crop or field remain available whenever you grow at least one crop.',cropNames,'cropsOwned','cropOptions');
 $('setupMount').prepend(animalSettings.section);
