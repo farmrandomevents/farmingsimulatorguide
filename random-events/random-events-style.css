@@ -182,3 +182,9 @@ main.wrap #event .event-description .banner-complete{position:absolute!important
 .farm-dialog-cancel{background:#315943;border:1px solid #a2ae98;color:#fff}
 .farm-dialog-confirm{background:#d5ad57;border:1px solid #f1d58a;color:#173626}
 .farm-dialog-actions button:focus-visible,.farm-dialog-actions button:focus{outline:3px solid #fff;outline-offset:3px}
+
+/* Field measurement selector: keyboard and Xbox Edge friendly */
+.area-unit-options{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+.area-unit-options button{border:1px solid #b9974b;border-radius:8px;background:#143b2c;color:#f5e2ac;padding:12px 22px;font-weight:700;cursor:pointer}
+.area-unit-options button[aria-pressed="true"]{background:#d9b766;color:#122a1d;border-color:#f4d992}
+.area-unit-options button:focus-visible{outline:3px solid #fff;outline-offset:3px}
