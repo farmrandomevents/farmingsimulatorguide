@@ -1,0 +1,22 @@
+INSTALLABLE RANDOM EVENTS APP — FIRST VERSION
+
+Upload ONLY these files into your existing GitHub repository's random-events folder:
+  index.html
+  manifest.webmanifest
+  service-worker.js
+  icons/icon-192.png
+  icons/icon-512.png
+
+The icons/ files must go in random-events/icons/.
+Do not replace generator.js, weather.js, any event categories or images.
+
+After deployment, visit https://farmingsimulatorguide.com/random-events/ on your phone.
+Android Chrome: menu > Add to Home screen / Install app.
+iPhone Safari: Share > Add to Home Screen.
+
+Important: Installability depends on the live URL and browser.
+Offline use is best-effort: the application shell and event scripts are cached,
+while images are cached only after being viewed. A browser may clear cached files.
+Existing farm data remains stored locally in the same browser profile; it does
+not automatically sync across devices or migrate into every installed context.
+Test with a backup of important farm settings before relying on the app.
