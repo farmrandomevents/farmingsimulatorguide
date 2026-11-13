@@ -233,7 +233,7 @@ if(actions.length){
  }
 }
 actions.forEach(item=>{const card=document.createElement('div');card.className='track-card required-card';const title=document.createElement('strong');title.textContent=item.title;const desc=document.createElement('p');desc.textContent=displayEventDescription(item);const button=document.createElement('button');button.type='button';button.textContent=item.pendingOffer?'✓ Apply Offer When Used':'✓ Done — I have completed this';button.className='action-done';button.onclick=()=>completeAction(item.id);const copy=document.createElement('div');copy.className='required-copy';copy.append(title,desc);card.append(copy,button);actionRoot.append(card)});
-renderHistory();renderBannerCompletion();if(typeof syncCleanLayout==='function')syncCleanLayout();}
+ renderHistory();renderFarmDashboard();renderBannerCompletion();if(typeof syncCleanLayout==='function')syncCleanLayout();}
 function renderHistory(){const root=$('historyList');root.replaceChildren();$('historyPanel').hidden=!state.tracking;const completed=state.active.filter(e=>e.completed);if(!completed.length){const p=document.createElement('p');p.className='small-event-note';p.textContent='Completed events will appear here automatically.';root.append(p);return}
 const years=[...new Set(completed.map(e=>e.created?.year||0))].sort((a,b)=>b-a);years.forEach(y=>{const yd=document.createElement('details');yd.className='history-year';yd.open=y===years[0];const ys=document.createElement('summary');ys.textContent=`Year ${y+1}`;yd.append(ys);for(let m=0;m<12;m++){const list=completed.filter(e=>(e.created?.year||0)===y&&(e.created?.month||0)===m);if(!list.length)continue;const md=document.createElement('details');md.className='history-month';md.open=y===years[0];const ms=document.createElement('summary');ms.textContent=`${months[m]} (${list.length})`;md.append(ms);list.forEach(e=>{const r=document.createElement('div');r.className='history-row';const name=document.createElement('strong');name.textContent=e.title;const info=document.createElement('small');info.textContent=`${displayEventDescription(e)} · Finished: ${dateLabel(e.finished)}`;r.append(name,info);md.append(r)});yd.append(md)}root.append(yd)})}
 function advance(){if(!state.tracking||!state.calendar)return;const c=state.calendar;
@@ -399,6 +399,64 @@ cropSettings.section.after(resetFarmSettings);
 // The calendar, tracking toggle, and frequency controls live in one setup panel.
 $('setupMount').append($('tracking-optin-placeholder')||$('enableTracking').closest('.tracking-optin'),$('calendarSettings'),$('frequencyPanel'));
 $('calendarEdit').onclick=showSetup;
+
+// Compact three-column Farm Event Dashboard. This is a view of existing state only.
+let dashboardOpen='';
+const dashboardStyle=document.createElement('style');
+dashboardStyle.textContent=`
+#farmEventDashboard{margin:0 0 14px;color:#fff}
+.fsg-dash-heading{font-size:1.18rem;color:#f0c568;margin:0 0 12px;font-weight:700}
+.fsg-dash-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.fsg-dash-tab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;min-height:90px;padding:10px 5px;background:#174735;border:1px solid #547453;border-radius:10px;color:white;cursor:pointer;font:inherit;text-align:center}
+.fsg-dash-tab[aria-expanded="true"]{background:#2c6048;border-color:#f1c469}
+.fsg-dash-number{font-size:1.7rem;font-weight:800;color:#f1c469;line-height:1}
+.fsg-dash-label{font-size:.83rem;font-weight:650}
+.fsg-dash-arrow{color:#f1c469;font-size:.85rem}
+.fsg-dash-content{margin-top:12px;display:grid;gap:9px}
+.fsg-dash-row{background:#174735;border:1px solid #547453;border-radius:8px;padding:12px;display:grid;gap:7px}
+.fsg-dash-row strong{color:#fff}
+.fsg-dash-row p{margin:0;color:#d5e4da;font-size:.9rem;line-height:1.45}
+.fsg-dash-row small{color:#f1c469}
+.fsg-dash-done{justify-self:end;border:1px solid #e2b85d;background:#d8ad51;color:#173b29;border-radius:7px;padding:8px 12px;font-weight:700;cursor:pointer}
+.fsg-dash-empty{color:#d5e4da;margin:8px 0}
+@media(max-width:420px){.fsg-dash-grid{gap:5px}.fsg-dash-tab{min-height:82px;padding:8px 3px}.fsg-dash-label{font-size:.72rem}.fsg-dash-number{font-size:1.5rem}}
+`;
+document.head.append(dashboardStyle);
+const dashboard=document.createElement('div');dashboard.id='farmEventDashboard';
+$('tracker').prepend(dashboard);
+$('requiredActions').style.display='none';
+$('activeList').style.display='none';
+function renderFarmDashboard(){
+ const actions=state.active.filter(x=>!x.completed&&x.actionRequired&&!x.pendingOffer);
+ const offers=state.active.filter(x=>!x.completed&&x.pendingOffer);
+ const running=state.active.filter(x=>!x.completed&&!x.actionRequired);
+ const counts={actions:actions.length,ongoing:running.length,offers:offers.length};
+ dashboard.replaceChildren();
+ const heading=document.createElement('h2');heading.className='fsg-dash-heading';heading.textContent='Farm Event Dashboard';dashboard.append(heading);
+ const grid=document.createElement('div');grid.className='fsg-dash-grid';
+ [['actions','Actions'],['ongoing','In Progress'],['offers','Saved Offers']].forEach(([key,label])=>{
+  const b=document.createElement('button');b.type='button';b.className='fsg-dash-tab';
+  b.setAttribute('aria-expanded',String(dashboardOpen===key));
+  b.innerHTML=`<span class="fsg-dash-number">${counts[key]}</span><span class="fsg-dash-label">${label}</span><span class="fsg-dash-arrow">${dashboardOpen===key?'▴':'▾'}</span>`;
+  b.onclick=()=>{dashboardOpen=dashboardOpen===key?'':key;renderFarmDashboard()};grid.append(b);
+ });dashboard.append(grid);
+ if(!dashboardOpen)return;
+ const content=document.createElement('div');content.className='fsg-dash-content';dashboard.append(content);
+ const items=dashboardOpen==='actions'?actions:dashboardOpen==='offers'?offers:running;
+ if(!items.length){const p=document.createElement('p');p.className='fsg-dash-empty';p.textContent=dashboardOpen==='actions'?'No actions required.':dashboardOpen==='offers'?'No saved offers.':'No events in progress.';content.append(p);return;}
+ items.forEach(item=>{
+  const card=document.createElement('div');card.className='fsg-dash-row';
+  const title=document.createElement('strong');title.textContent=item.title;card.append(title);
+  if(dashboardOpen==='ongoing'){const rem=document.createElement('small');rem.textContent=item.duration?.unit==='months'?`${Math.ceil(item.remaining/(state.calendar?.daysPerMonth||3))} month(s) remaining`:displayDuration(item.remaining)+' remaining';card.append(rem)}
+  const desc=document.createElement('p');desc.textContent=displayEventDescription(item);card.append(desc);
+  if(dashboardOpen!=='ongoing'){
+   const btn=document.createElement('button');btn.type='button';btn.className='fsg-dash-done';btn.textContent=item.pendingOffer?'✓ Apply Offer When Used':'✓ Completed';
+   btn.onclick=()=>completeAction(item.id);card.append(btn);
+  }
+  content.append(card);
+ });
+}
+
 $('tracker').querySelector('.calendar-box').hidden=true;
 $('ongoingMount').append($('tracker'));
 $('historyPanel').hidden=false;
