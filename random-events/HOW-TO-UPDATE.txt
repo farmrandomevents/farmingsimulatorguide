@@ -1,0 +1,11 @@
+FARMING SIMULATOR GUIDE - RANDOM EVENTS
+
+The Random Events homepage is index.html. Its styling is random-events-style.css and functionality is generator.js.
+
+EVENTS: Each category has its own events/*.js file. To edit just Weather, update events/weather.js, keeping the window.FSG_EVENT_CATEGORIES[0] assignment and JSON-style event objects.
+
+IMAGES: Each category has its own images/<category>/ folder. To replace the Weather category thumbnail, replace images/weather/cat-0.webp; to replace the Weather event banner, replace images/weather/event-0.webp. Keep filenames and WebP format.
+
+FIRST UPLOAD: Upload ALL files and folders together to the same directory where the current Random Events index.html is deployed. Later updates can replace one file at a time. The site may take a few minutes to reflect changes, and browser cache may need refreshing.
+
+The 287 event records, generator logic and farm settings are retained. This ZIP is the standalone Random Events page, not the entire website homepage.
