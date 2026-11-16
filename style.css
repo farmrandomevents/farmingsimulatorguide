@@ -60,3 +60,29 @@
 
 /* First banner only: preserve natural image proportions, no stretching. */
 .slider .first-slide .slide-photo{object-fit:cover!important;object-position:center center!important;}
+
+
+/* About Us and Contact Us: scoped styling; existing homepage remains untouched. */
+.info-page{max-width:1050px;margin:0 auto;padding:28px 18px 60px}
+.info-hero{position:relative;overflow:hidden;border-radius:12px;min-height:280px;background:#09291c}
+.info-hero img{width:100%;height:310px;object-fit:cover;display:block}
+.info-hero:after{content:"";position:absolute;inset:20% 0 0;background:linear-gradient(transparent,#061c16dc)}
+.info-hero-title{position:absolute;z-index:1;bottom:25px;left:30px;right:20px}
+.info-hero-title h1,.info-heading h1{font-family:Georgia,serif;color:#e9c46e;font-size:clamp(28px,4vw,44px);margin:0 0 8px}
+.info-hero-title p{color:white;letter-spacing:.13em;font-weight:bold;margin:0}
+.info-heading{text-align:center;padding:26px 8px 18px}
+.info-heading p{color:#e5e9e3}
+.info-panel{background:#0b2d20;border:1px solid #ad8c43;border-radius:12px;padding:clamp(20px,4vw,40px);margin:24px 0;color:#f3f4ef;line-height:1.7}
+.info-panel h2{font-family:Georgia,serif;color:#e9c46e;font-size:clamp(21px,2.6vw,29px);margin:0 0 20px}
+.info-panel p{margin:0 0 17px}
+.info-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+.info-actions a,.info-panel button[type=submit]{background:linear-gradient(#edce80,#bd9444);color:#122b20;border:0;border-radius:7px;padding:11px 19px;font-weight:700;text-decoration:none;font-family:inherit}
+.info-panel button[disabled]{opacity:.5;cursor:not-allowed}
+.form-row{display:flex;flex-direction:column;gap:7px;margin-bottom:20px}
+.form-row label{color:#e9c46e;font-weight:700}
+.form-row input,.form-row select,.form-row textarea{box-sizing:border-box;width:100%;border:1px solid #bba66c;border-radius:6px;background:#f8f9f5;color:#1c2b21;padding:12px;font:inherit}
+.form-row :is(input,select,textarea):focus-visible{outline:3px solid #e9c46e;outline-offset:2px}
+.verification-slot{background:#183c2c;border:1px solid #637d68;border-radius:7px;padding:16px;margin-bottom:18px;color:#e2e8dd}
+.info-panel .contact-note{font-size:13px;color:#d0d8cd}
+#contactStatus{margin-top:13px;font-size:14px;color:#e9c46e}
+@media(max-width:600px){.info-hero img{height:230px}.info-hero-title{left:18px}.info-page{padding:16px 12px 35px}}
