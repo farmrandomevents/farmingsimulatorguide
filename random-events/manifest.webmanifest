@@ -1,6 +1,6 @@
 {
-  "name": "Farming Simulator Guide \u2014 Random Events",
-  "short_name": "Random Events",
+  "name": "Farm Events",
+  "short_name": "Farm Events",
   "description": "Random events and farm roleplay challenges for Farming Simulator.",
   "start_url": "./index.html",
   "scope": "./",
