@@ -86,3 +86,12 @@
 .info-panel .contact-note{font-size:13px;color:#d0d8cd}
 #contactStatus{margin-top:13px;font-size:14px;color:#e9c46e}
 @media(max-width:600px){.info-hero img{height:230px}.info-hero-title{left:18px}.info-page{padding:16px 12px 35px}}
+
+/* Farm Events card and install button */
+.events-feature{display:flex;flex-direction:column;gap:12px;min-width:0}.events-feature .tile{display:block;flex:0 0 auto}.events-feature .tile-copy h3{font-size:clamp(25px,2.2vw,33px);line-height:1.1}.event-generator-label{font:700 clamp(12px,1.05vw,16px) Arial,sans-serif;letter-spacing:.045em;color:#f3c858;margin:4px 0 8px}.events-feature .tile-copy{min-height:145px}.home-install{text-align:center}.home-install[hidden],.install-help[hidden]{display:none!important}.home-install-button{font-family:inherit;font-size:clamp(12px,1vw,15px);font-weight:750;color:#173622;background:linear-gradient(#f5d58a,#cba34f);border:1px solid #f9e5b1;border-radius:8px;padding:11px 12px;cursor:pointer;width:100%}.home-install-button:focus-visible,.install-help button:focus-visible{outline:3px solid #a77718;outline-offset:3px}.install-help{position:fixed;inset:0;z-index:10000;background:#000b;display:flex;justify-content:center;align-items:center;padding:18px}.install-help-panel{max-width:440px;width:100%;padding:22px;border-radius:14px;background:#082c20;border:2px solid #d7b56a;color:#f8f2dd;box-shadow:0 12px 40px #0008}.install-help-panel h2{color:#f5d58a;margin-top:0}.install-help-panel p{line-height:1.5}.install-help-panel button{background:#d7b56a;color:#102b20;border:0;border-radius:7px;padding:10px 22px;font-weight:700;cursor:pointer}@media(max-width:700px){.events-feature .tile-copy h3{font-size:26px}}
+
+/* Attach the install action to the Farm Events card as one continuous panel. */
+.events-feature{gap:0;border:2px solid #bfa15a;border-radius:10px;overflow:hidden;background:#092c1b;box-shadow:0 5px 16px #0002;align-self:start}
+.events-feature .tile{border:0;border-radius:0;box-shadow:none}
+.events-feature .home-install{margin:0;padding:0;border:0;line-height:0}
+.events-feature .home-install-button{display:block;width:100%;margin:0;border:0;border-top:1px solid #f9e5b1;border-radius:0;padding:14px 10px;line-height:1.3}
