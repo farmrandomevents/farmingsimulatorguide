@@ -90,6 +90,9 @@ function chooseUnique(pool,used){const a=pool.filter(e=>!used.includes(e.id));re
 function drawCats(){
  $('all').textContent=state.selected.length===cats.length?'✕ Deselect All':'✓ Select All';
  $('categories').hidden=!state.categoriesOpen;
+ $('categoryHeading').hidden=!state.categoriesOpen;
+ $('all').hidden=!state.categoriesOpen;
+ $('hideCats').setAttribute('aria-expanded',String(state.categoriesOpen));
  $('hideCats').textContent=state.categoriesOpen?'Hide Categories ▴':'Show Categories ▾';
  $('categories').replaceChildren();
  cats.forEach((c,i)=>{
