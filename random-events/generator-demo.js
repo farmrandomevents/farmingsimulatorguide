@@ -99,7 +99,7 @@ function markSeen(e){if(!state.tracking||!state.calendar)return;const key=`${sta
 function eligible(){return events.filter(e=>state.selected.includes(e.c)&&(e.c!==1||state.cropsOwned.length>0)&&(e.c!==3||state.animalsOwned.length>0)&&(!e.requiresAnimals||state.animalsOwned.length>=e.requiresAnimals)&&(!e.animals||e.animals.some(a=>state.animalsOwned.includes(a==='Cows'?'Cattle':a)))&&(!cropEventMap[e.id]||state.cropsOwned.includes(cropEventMap[e.id]))&&(!state.tracking||!state.active.some(a=>!a.completed&&a.eventId===e.id)))}
 function chooseUnique(pool,used){const a=pool.filter(e=>!used.includes(e.id));return a.length?randomFrom(a):null}
 function drawCats(){
- $('all').textContent=state.selected.length===cats.length?'✕ Deselect All':'✓ Select All';
+ $('all').textContent='Weather & Machinery Only';$('all').disabled=true;$('all').title='Other categories are included in the full version';
  $('categories').hidden=!state.categoriesOpen;
  $('categoryHeading').hidden=!state.categoriesOpen;
  $('all').hidden=!state.categoriesOpen;
@@ -111,7 +111,11 @@ function drawCats(){
    const b=document.createElement('button');b.className='category';b.type='button';
    b.setAttribute('aria-pressed',String(state.selected.includes(i)));
    b.innerHTML=`<span class="tick">✓</span><img src="images/${categorySlugs[i]}/cat-${i}.webp" alt=""><span class="name">${c}</span>`;
-   b.disabled=![0,2].includes(i);b.title=b.disabled?'Unlock full access to use this category':'Available in the free demo';b.onclick=()=>{if(true)return;if(state.selected.includes(i)){state.selected=state.selected.filter(x=>x!==i)}else state.selected.push(i);persist();drawCats();renderSchedule()};
+   const locked=![0,2].includes(i);
+   b.disabled=locked;
+   b.title=locked?'Full version — unlock this event category':'Included in the free demo';
+   if(locked){b.classList.add('demo-locked');b.setAttribute('aria-label',c+' — locked in free demo');b.insertAdjacentHTML('beforeend','<span class="demo-lock-overlay" aria-hidden="true"><span class="demo-lock-symbol">🔒</span><span class="demo-lock-label">FULL VERSION</span></span>');}
+   b.onclick=()=>{if(locked)return; /* Demo categories remain enabled so all eight events can be sampled. */};
    wrap.append(b);
    $('categories').append(wrap);
  });
@@ -533,5 +537,16 @@ $('ongoingMount').append($('tracker'));
 $('historyPanel').hidden=false;
 const hist=$('historyPanel');const summary=document.createElement('summary');summary.textContent='Farm Event History — Show / Hide';const detail=document.createElement('details');detail.className=hist.className;detail.id='historyDetails';hist.parentNode.insertBefore(detail,hist);detail.append(summary,hist);hist.className='history-content';hist.style.cssText='margin-top:8px;border:0;padding:0;background:transparent';
 if(!state.calendar){setupOpen=true;$('calendarSettings').hidden=!state.tracking}
-$('enableTracking').checked=state.tracking;drawCats();if(!state.current)state.current=instantiate(events[0]);showEvent(state.current);updateTracking();renderSchedule();syncCleanLayout();refreshCurrency();
+$('enableTracking').checked=true;
+// Show the original optional-calendar control. The demo requires the calendar to
+// enforce one event per in-game month, so explain this if someone switches it off.
+const demoCalendarToggle=$('enableTracking').closest('.tracking-optin');
+demoCalendarToggle.hidden=false;demoCalendarToggle.style.display='';
+const calendarHelp=demoCalendarToggle.querySelector('p');
+if(calendarHelp)calendarHelp.textContent='The free demo uses the farm calendar to limit events to one per month. You can change the month and days per month in Farm Settings.';
+$('enableTracking').addEventListener('change',()=>{if(!$('enableTracking').checked){$('enableTracking').checked=true;farmDialog('The free demo uses the farm calendar to provide one event per month. Calendar tracking can be optional in the full version.',{title:'Demo Calendar'});}});
+drawCats();if(!state.current)state.current=instantiate(events[0]);showEvent(state.current);updateTracking();renderSchedule();syncCleanLayout();refreshCurrency();
 if(typeof IntersectionObserver!=='undefined'){const obs=new IntersectionObserver(es=>{$('sticky').classList.toggle('show',!es[0].isIntersecting)},{threshold:.2});obs.observe($('generate'))}
+
+/* Free demo: photographic category padlocks, without changing the full generator. */
+const demoLockStyle=document.createElement('style');demoLockStyle.textContent=`.category.demo-locked{position:relative;overflow:hidden;opacity:1!important;cursor:not-allowed;filter:none!important}.category.demo-locked img{filter:brightness(.48) saturate(.65)}.category.demo-locked .demo-lock-overlay{position:absolute;inset:0;background:rgba(3,25,17,.42);display:flex;flex-direction:column;justify-content:center;align-items:center;gap:3px;pointer-events:none;z-index:3}.category.demo-locked .demo-lock-symbol{font-size:clamp(22px,3vw,34px);filter:drop-shadow(0 1px 3px #071b11)}.category.demo-locked .demo-lock-label{font-size:10px;letter-spacing:.06em;font-weight:800;color:#f0ca78;background:rgba(4,31,21,.88);padding:3px 7px;border-radius:4px}.category.demo-locked .name{position:relative;z-index:4}.category.demo-locked .tick{display:none}#all:disabled{opacity:.8;cursor:default}`;document.head.append(demoLockStyle);
