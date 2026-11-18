@@ -77,7 +77,11 @@ function durationFor(e){
  }
  // All day-based timed events draw a duration suited to the player's calendar.
  // One-day months use a half-day restriction, which expires at the next advance.
- if(dpm===1)return {amount:.5,unit:'days',label:'until 12pm (half a day)',total:1};
+ if(dpm===1){
+  // Clock times are roleplay targets; the existing calendar still completes at the next advance.
+  const time=randomFrom(['10am','midday','1pm','4pm']);
+  return {amount:.5,unit:'days',label:`until ${time}`,total:1};
+ }
  const max=dpm===2?1:dpm===3?2:dpm<=7?4:8;
  const n=1+Math.floor(Math.random()*max);
  return {amount:n,unit:'days',label:`${n} ${n===1?'day':'days'}`,total:n};
@@ -181,7 +185,15 @@ function completeFarmAction(item,finished){
 }
 function previousWeatherEvent(id){return state.active.some(a=>a.eventId===id&&a.completed&&a.created&&state.calendar&&
   ((state.calendar.year||0)*12+state.calendar.month)-((a.created.year||0)*12+a.created.month)>=1);}
-function instantiate(e){const dur=isPendingOffer(e)?null:durationFor(e);const amount=e.amounts?randomFrom(e.amounts):null;const animal=e.id==='weather-2026-20'?randomFrom(state.animalsOwned):null;const variant=e.weatherAddition?weatherVariant(e):null;const claim=e.id==='weather-2026-29'?availableInsuranceClaim():null;const description=(claim?(claim.large?'Following a further inspection of the recent weather damage, your insurer has identified additional damage and approved a higher settlement than originally anticipated.':'Your insurer has completed its assessment of the recent weather damage and approved a partial settlement towards the repair costs.')+'\n\nGOOD NEWS: Your farm has received £'+claim.amount.toLocaleString('en-GB')+'.':(variant?.description||e.template)).replace('{animal}',animal?animal.toLowerCase():'livestock');if(claim)claim.claimed=true;return {id:`event-${Date.now()}-${++state.sequence}`,eventId:e.id,title:claim?'Insurance Claim Successful':variant?.title||e.t,category:e.c,photo:e.p,description:description.replace('{duration}',dur?.label||'').replace('{amount}',amount===null?'':amount.toLocaleString('en-GB')),duration:dur,eventType:e.eventType||null,pendingOffer:isPendingOffer(e),completed:false,remaining:dur?.total||0,total:dur?.total||0,created:state.calendar?{...state.calendar}:null,finished:null,restrictedProducts:variant?.restrictedProducts||[],requiredProduct:variant?.requiredProduct||null};}
+function naturalDurationSentence(text){
+ return String(text||'')
+  .replace(/\bfor\s+until\s+/gi,'until ')
+  .replace(/\bfor\s+the\s+rest\s+of\s+today/gi,'for the rest of today')
+  .replace(/\buntil\s+until\s+/gi,'until ')
+  .replace(/until 12pm \(half a day\)/gi,'until midday')
+  .replace(/\bin-game\s+(days?|months?)\b/gi,'$1');
+}
+function instantiate(e){const dur=isPendingOffer(e)?null:durationFor(e);const amount=e.amounts?randomFrom(e.amounts):null;const animal=e.id==='weather-2026-20'?randomFrom(state.animalsOwned):null;const variant=e.weatherAddition?weatherVariant(e):null;const claim=e.id==='weather-2026-29'?availableInsuranceClaim():null;const description=(claim?(claim.large?'Following a further inspection of the recent weather damage, your insurer has identified additional damage and approved a higher settlement than originally anticipated.':'Your insurer has completed its assessment of the recent weather damage and approved a partial settlement towards the repair costs.')+'\n\nGOOD NEWS: Your farm has received £'+claim.amount.toLocaleString('en-GB')+'.':(variant?.description||e.template)).replace('{animal}',animal?animal.toLowerCase():'livestock');if(claim)claim.claimed=true;return {id:`event-${Date.now()}-${++state.sequence}`,eventId:e.id,title:claim?'Insurance Claim Successful':variant?.title||e.t,category:e.c,photo:e.p,description:naturalDurationSentence(description.replace('{duration}',dur?.label||'').replace('{amount}',amount===null?'':amount.toLocaleString('en-GB'))),duration:dur,eventType:e.eventType||null,pendingOffer:isPendingOffer(e),completed:false,remaining:dur?.total||0,total:dur?.total||0,created:state.calendar?{...state.calendar}:null,finished:null,restrictedProducts:variant?.restrictedProducts||[],requiredProduct:variant?.requiredProduct||null};}
 
 function markSeen(e){if(!state.tracking||!state.calendar)return;const key=`${state.calendar.year||0}-${state.calendar.month}`;if(!key)return;const a=state.monthSeen[key]||[];if(!a.includes(e.id))a.push(e.id);state.monthSeen[key]=a;}
 // A repeat is a repeat even if the product, deadline or wording changes.
@@ -280,9 +292,9 @@ function formatAreaText(str){
 function displayEventDescription(item){
  if(!item)return '';
  const duration=item.duration;
- if(!duration)return currencyText(formatAreaText(item.description));
- const label=duration.label|| (duration.unit==='months'?`${duration.amount} month${duration.amount===1?'':'s'}`:displayDuration(duration.amount));
- return currencyText(formatAreaText(item.description.replace(duration.label,label)));
+ if(!duration)return currencyText(formatAreaText(naturalDurationSentence(item.description)));
+ const label=(duration.label==='until 12pm (half a day)'?'until midday':duration.label)|| (duration.unit==='months'?`${duration.amount} month${duration.amount===1?'':'s'}`:displayDuration(duration.amount));
+ return currencyText(formatAreaText(naturalDurationSentence(item.description.replace(duration.label,label))));
 }
 function renderThumbnails(){const list=state.periodEvents.length?state.periodEvents:(state.current?[state.current]:[]);const controls=$('carouselControls');controls.hidden=list.length<2;const index=Math.max(0,list.findIndex(e=>e.id===state.current?.id));$('eventPosition').textContent=`Event ${index+1} of ${list.length}`;}
 function shiftEvent(direction){const list=state.periodEvents;if(list.length<2)return;const index=Math.max(0,list.findIndex(e=>e.id===state.current?.id));showEvent(list[(index+direction+list.length)%list.length]);persist();}
