@@ -198,6 +198,34 @@ if(copy.eventType==='info'){copy.actionRequired=false;copy.completed=true;copy.f
 if(copy.pendingOffer){copy.actionRequired=true;copy.completed=false;}
 if(copy.eventType==='choice')copy.earlyChoice=true;
 state.active.push(copy);}
+// Weather compatibility: one prevailing weather pattern per generated month.
+// Compatible conditions (e.g. frost + severe cold, rain + wind) may coexist.
+const weatherFamilies={
+ '01':'wet','02':'wet','03':'wet','04':'wet','05':'wet','06':'wet',
+ '07':'wind','08':'storm','09':'storm','10':'storm','11':'storm',
+ '12':'dry','13':'heat','14':'dry','15':'cold','16':'cold',
+ '17':'dry','18':'mild','19':'dry','20':'cold','21':'cold'
+};
+function weatherFamily(e){const id=(e.eventId||e.id||'').match(/^weather-2026-(\d{2})$/);return id?weatherFamilies[id[1]]||null:null;}
+function weatherCompatible(a,b){
+ const x=weatherFamily(a),y=weatherFamily(b);
+ if(!x||!y)return true;
+ // Avoid two separate events describing the same weather situation.
+ if(x===y)return x==='cold' && new Set([a.id,b.id]).size===2 &&
+   ((/weather-2026-(15|16)$/.test(a.id)&&/weather-2026-(20|21)$/.test(b.id))||
+    (/weather-2026-(15|16)$/.test(b.id)&&/weather-2026-(20|21)$/.test(a.id)));
+ const incompatible={
+   wet:['cold','heat','dry'],cold:['wet','heat','dry','mild'],
+   heat:['wet','cold'],dry:['wet','cold'],mild:['cold']
+ };
+ return !(incompatible[x]||[]).includes(y)&&!(incompatible[y]||[]).includes(x);
+}
+function compatibleWithBatch(e,chosen){
+ if(e.c!==0)return true;
+ const weather=chosen.filter(x=>x.c===0);
+ return weather.length<2 && weather.every(x=>weatherCompatible(x,e)) &&
+  (!e.conflictGroup||!chosen.some(x=>x.conflictGroup===e.conflictGroup));
+}
 function generate(){
  const scheduled=state.tracking&&state.calendar&&state.frequency!=='manual';
  if(scheduled&&!dueForPeriod()){$('status').textContent='No events due this month. Advance your farm calendar.';return;}
@@ -212,7 +240,13 @@ function generate(){
  // An existing batch is never extended by another click in the same scheduled period.
  const chosen=[];
  for(let i=0;i<count;i++){
-   const next=chooseUnique(pool.filter(e=>!e.conflictGroup||!chosen.some(c=>c.conflictGroup===e.conflictGroup)),[...seen,...chosen.map(e=>e.id)]);
+   const candidates=pool.filter(e=>
+     (!e.conflictGroup||!chosen.some(c=>c.conflictGroup===e.conflictGroup))&&
+     compatibleWithBatch(e,chosen));
+   // Prefer a variety of event categories. Do not fill the month with weather.
+   const unrepresented=candidates.filter(e=>!chosen.some(c=>c.c===e.c));
+   const preferred=unrepresented.length?unrepresented:candidates;
+   const next=chooseUnique(preferred,[...seen,...chosen.map(e=>e.id)]);
    if(!next)break;
    chosen.push(next);
  }
