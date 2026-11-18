@@ -393,8 +393,8 @@ window.FSG_EVENT_CATEGORIES[0] = [
   {
     "id": "weather-2026-29",
     "c": 0,
-    "t": "Insurance Claim Settled",
-    "template": "The insurance company has completed its assessment of the weather damage previously repaired on your farm.\n\nGOOD NEWS: Your insurer has settled the weather damage claim. You have received £250.",
+    "t": "Insurance Claim Successful",
+    "template": "The insurance company has completed its assessment of the weather damage previously repaired on your farm.\n\nGOOD NEWS: Your insurer has approved a settlement following an inspection of the weather damage.",
     "p": "category-0",
     "eventType": "action",
     "weatherAddition": "followup",
