@@ -85,9 +85,51 @@ function isPendingOffer(e){
  const t=(e.t+' '+e.template).toLowerCase();
  return /next (tractor|machine|vehicle|implement|purchase|repair|upgrade|used|new)|towards (your|one|a|any)|discount on (one|your|the next)|voucher|trade-in bonus|customer reward|loyalty reward|free (repair|repaint|tune-up|fuel)|tyre upgrade|engine upgrade|parts voucher|dealer discount|seasonal promotion|attachment offer|used machinery deal/.test(t);
 }
-function instantiate(e){const dur=isPendingOffer(e)?null:durationFor(e);const amount=e.amounts?randomFrom(e.amounts):null;const animal=e.id==='weather-2026-20'?randomFrom(state.animalsOwned):null;const description=e.template.replace('{animal}',animal?animal.toLowerCase():'livestock');return {id:`event-${Date.now()}-${++state.sequence}`,eventId:e.id,title:e.t,category:e.c,photo:e.p,description:description.replace('{duration}',dur?.label||'').replace('{amount}',amount===null?'':amount.toLocaleString('en-GB')),duration:dur,eventType:e.eventType||null,pendingOffer:isPendingOffer(e),completed:false,remaining:dur?.total||0,total:dur?.total||0,created:state.calendar?{...state.calendar}:null,finished:null};}
+// Weather variations are selected once when the event is created and saved with the event.
+const weatherPick=randomFrom;
+const feedChoices={
+ 'Cattle':['hay bale','silage bale','TMR'], 'Water Buffalo':['hay bale','silage bale','TMR'],
+ 'Sheep':['hay bale','grass'], 'Goats':['hay bale','grass'], 'Horses':['hay bale'],
+ 'Pigs':['pig food'], 'Chickens':['chicken feed']
+};
+function weatherVariant(e){
+ const id=e.id, animals=state.animalsOwned.filter(a=>feedChoices[a]);
+ const v={title:e.t,description:e.template};
+ const replace=(key,value)=>{v.description=v.description.replaceAll('{'+key+'}',value)};
+ const times=['11:00 am','12:00 pm','2:00 pm','3:00 pm'];
+ if(id==='weather-2026-23'){
+  const products=weatherPick(['Fertiliser','Lime','Seeds','Fertiliser and lime','Seeds and fertiliser']);
+  const story=weatherPick(['Heavy rainfall has disrupted transport routes supplying the local agricultural dealer.','Strong winds have brought down trees on roads used by the local agricultural dealer.','Flooding elsewhere in the region has delayed deliveries to the local agricultural dealer.','Severe weather has delayed incoming stock deliveries to the local agricultural dealer.']);
+  v.title=products+' Shortage';replace('supplyStory',story+' The dealer is temporarily out of '+products.toLowerCase()+'.');replace('supplyProduct',products);replace('supplyTime',weatherPick(times));v.restrictedProducts=products.toLowerCase().split(' and ');
+ }
+ if(id==='weather-2026-24'){
+  const product=weatherPick(['Hay bales','Straw bales','Silage bales']);
+  replace('baleStory',weatherPick(['High winds have damaged the roof of the local agricultural dealer’s bale store.','Floodwater has entered the local agricultural dealer’s bale storage area.','Heavy snowfall has made part of the local agricultural dealer’s bale yard inaccessible.'])+' '+product+' are temporarily unavailable.');
+  replace('baleProduct',product);replace('baleTime',weatherPick(times));v.title=product+' Supply Disruption';v.restrictedProducts=[product.toLowerCase()];
+ }
+ if(id==='weather-2026-26'&&animals.length){
+  const animal=weatherPick(animals),food=weatherPick(feedChoices[animal]);
+  const group=animal==='Chickens'?'chicken housing':animal==='Horses'?'stable':animal.toLowerCase()+' housing';
+  v.title=animal+' Feed Spoilage';
+  replace('feedStory',weatherPick(['Strong winds have damaged part of the roof of the '+group+', allowing rainwater to spoil some of the feed already in the enclosure.','Heavy rain has entered the '+group+', spoiling some of the feed already in the enclosure.']));
+  const item=food==='hay bale'||food==='silage bale'?'one additional '+food:'one additional purchase of '+food;
+  replace('feedAction','Purchase '+item+' from the agricultural dealer to replace the spoiled feed.');
+  replace('feedDeadline','Complete this before '+weatherPick(['12:00 pm','2:00 pm','4:00 pm'])+' today.');v.requiredProduct=food;
+ }
+ if(id==='weather-2026-27'){
+  const animal=weatherPick(state.animalsOwned.filter(a=>['Cattle','Pigs','Horses'].includes(a)));
+  v.title=animal+' Bedding Damage';
+  replace('beddingStory',weatherPick(['Strong winds have damaged the roof of the '+animal.toLowerCase()+' housing, allowing rainwater to soak the straw bedding.','Heavy snowfall has damaged part of the '+animal.toLowerCase()+' housing roof. Melting snow has soaked the straw bedding.']));
+  replace('beddingDeadline','before '+weatherPick(['2:00 pm','4:00 pm','the end of the game day'])+'.');v.requiredProduct='straw bale';
+ }
+ return v;
+}
+function previousWeatherEvent(id){return state.active.some(a=>a.eventId===id&&a.completed&&a.created&&state.calendar&&
+  ((state.calendar.year||0)*12+state.calendar.month)-((a.created.year||0)*12+a.created.month)>=1);}
+function instantiate(e){const dur=isPendingOffer(e)?null:durationFor(e);const amount=e.amounts?randomFrom(e.amounts):null;const animal=e.id==='weather-2026-20'?randomFrom(state.animalsOwned):null;const variant=e.weatherAddition?weatherVariant(e):null;const description=(variant?.description||e.template).replace('{animal}',animal?animal.toLowerCase():'livestock');return {id:`event-${Date.now()}-${++state.sequence}`,eventId:e.id,title:variant?.title||e.t,category:e.c,photo:e.p,description:description.replace('{duration}',dur?.label||'').replace('{amount}',amount===null?'':amount.toLocaleString('en-GB')),duration:dur,eventType:e.eventType||null,pendingOffer:isPendingOffer(e),completed:false,remaining:dur?.total||0,total:dur?.total||0,created:state.calendar?{...state.calendar}:null,finished:null,restrictedProducts:variant?.restrictedProducts||[],requiredProduct:variant?.requiredProduct||null};}
+
 function markSeen(e){if(!state.tracking||!state.calendar)return;const key=`${state.calendar.year||0}-${state.calendar.month}`;if(!key)return;const a=state.monthSeen[key]||[];if(!a.includes(e.id))a.push(e.id);state.monthSeen[key]=a;}
-function eligible(){return events.filter(e=>(!e.seasonMonths||!state.calendar||e.seasonMonths.includes(state.calendar.month))&&(!e.requiresStrawCompatibleAnimals||state.animalsOwned.some(a=>['Cattle','Pigs','Horses'].includes(a)))&&state.selected.includes(e.c)&&(e.c!==1||state.cropsOwned.length>0)&&(e.c!==3||state.animalsOwned.length>0)&&(!e.requiresAnimals||state.animalsOwned.length>=e.requiresAnimals)&&(!e.animals||e.animals.some(a=>state.animalsOwned.includes(a==='Cows'?'Cattle':a)))&&(!cropEventMap[e.id]||state.cropsOwned.includes(cropEventMap[e.id]))&&(!state.tracking||!state.active.some(a=>!a.completed&&a.eventId===e.id)))}
+function eligible(){return events.filter(e=>(!e.seasonMonths||!state.calendar||e.seasonMonths.includes(state.calendar.month))&&(!e.requiresStrawCompatibleAnimals||state.animalsOwned.some(a=>['Cattle','Pigs','Horses'].includes(a)))&&state.selected.includes(e.c)&&(e.c!==1||state.cropsOwned.length>0)&&(e.c!==3||state.animalsOwned.length>0)&&(!e.requiresAnimals||state.animalsOwned.length>=e.requiresAnimals)&&(!e.followUp||(e.id==='weather-2026-28'?previousWeatherEvent('weather-2026-03'):previousWeatherEvent('weather-2026-28')))&&(!e.animals||e.animals.some(a=>state.animalsOwned.includes(a==='Cows'?'Cattle':a)))&&(!cropEventMap[e.id]||state.cropsOwned.includes(cropEventMap[e.id]))&&(!state.tracking||!state.active.some(a=>!a.completed&&a.eventId===e.id)))}
 function chooseUnique(pool,used){const a=pool.filter(e=>!used.includes(e.id));return a.length?randomFrom(a):null}
 function drawCats(){
  $('all').textContent=state.selected.length===cats.length?'✕ Deselect All':'✓ Select All';
@@ -223,7 +265,8 @@ function weatherCompatible(a,b){
 function compatibleWithBatch(e,chosen){
  if(e.c!==0)return true;
  const weather=chosen.filter(x=>x.c===0);
- return weather.length<2 && weather.every(x=>weatherCompatible(x,e)) &&
+ return (weather.length<2 || (state.selected.length===1&&state.selected[0]===0)) && weather.every(x=>weatherCompatible(x,e)) &&
+  !chosen.some(x=>(e.weatherAddition==='dealer'&&x.weatherAddition==='dealer')||(e.weatherAddition==='livestock'&&x.weatherAddition==='livestock')||((e.weatherAddition==='dealer'&&x.weatherAddition==='livestock')||(e.weatherAddition==='livestock'&&x.weatherAddition==='dealer'))) &&
   (!e.conflictGroup||!chosen.some(x=>x.conflictGroup===e.conflictGroup));
 }
 function generate(){
@@ -335,7 +378,7 @@ function completionMessage(item){
  if(item.eventId==='weather-2026-01'||item.eventId==='weather-2026-02'||item.eventId==='weather-2026-03')return 'The flooding restriction has ended. Fieldwork can resume.';
  if(item.eventId==='weather-2026-11')return 'The power outage restriction has ended. Production can resume.';
  if(item.eventId==='weather-2026-14')return 'The drought-related cultivation restriction has ended. Cultivation can resume.';
- if(item.category===0)return 'The weather restriction has ended. Normal farm activities can resume.';
+ if(item.category===0)return 'This weather-related event has finished.';
  return 'The event duration has ended. Any temporary restriction has now been lifted.';
 }
 function advance(){if(!state.tracking||!state.calendar)return;const c=state.calendar;
