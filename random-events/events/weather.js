@@ -322,5 +322,82 @@ window.FSG_EVENT_CATEGORIES[0] = [
       0,
       1
     ]
+  },
+  {
+    "id": "weather-2026-22",
+    "c": 0,
+    "t": "Weather-Related Staff Delays",
+    "template": "Severe weather has disrupted local roads, delaying several farmworkers.\n\nACTION REQUIRED: Farmworkers are unavailable until 11:00 am today. You may operate machinery yourself.",
+    "p": "category-0",
+    "eventType": "action",
+    "weatherAddition": "staff"
+  },
+  {
+    "id": "weather-2026-23",
+    "c": 0,
+    "t": "Agricultural Supply Disruption",
+    "template": "{supplyStory}\n\nACTION REQUIRED: {supplyProduct} cannot be purchased from the agricultural dealer until after {supplyTime} today.",
+    "p": "category-0",
+    "eventType": "action",
+    "weatherAddition": "dealer"
+  },
+  {
+    "id": "weather-2026-24",
+    "c": 0,
+    "t": "Bale Supply Disruption",
+    "template": "{baleStory}\n\nACTION REQUIRED: {baleProduct} cannot be purchased from the agricultural dealer until after {baleTime} today.",
+    "p": "category-0",
+    "eventType": "action",
+    "weatherAddition": "dealer"
+  },
+  {
+    "id": "weather-2026-25",
+    "c": 0,
+    "t": "Emergency Weather Assistance",
+    "template": "Severe weather has caused difficulties for a neighbouring farmer, who is offering an additional payment for assistance.\n\nOPPORTUNITY: Complete the available contract nearest your farm and receive an additional £350 upon completion. If no contract is available, no action is required.",
+    "p": "category-0",
+    "eventType": "action",
+    "weatherAddition": "assistance"
+  },
+  {
+    "id": "weather-2026-26",
+    "c": 0,
+    "t": "Livestock Feed Spoilage",
+    "template": "{feedStory}\n\nACTION REQUIRED: {feedAction} {feedDeadline}",
+    "p": "category-0",
+    "eventType": "action",
+    "weatherAddition": "livestock",
+    "requiresAnimals": 1
+  },
+  {
+    "id": "weather-2026-27",
+    "c": 0,
+    "t": "Livestock Bedding Damage",
+    "template": "{beddingStory}\n\nACTION REQUIRED: Purchase one additional straw bale from the agricultural dealer {beddingDeadline}",
+    "p": "category-0",
+    "eventType": "action",
+    "weatherAddition": "livestock",
+    "requiresAnimals": 1,
+    "requiresStrawCompatibleAnimals": true
+  },
+  {
+    "id": "weather-2026-28",
+    "c": 0,
+    "t": "Weather Damage Discovered",
+    "template": "Following the recent flooding, further weather-related damage has been discovered around the farm.\n\nACTION REQUIRED: Pay £400 for repairs.",
+    "p": "category-0",
+    "eventType": "action",
+    "weatherAddition": "followup",
+    "followUp": true
+  },
+  {
+    "id": "weather-2026-29",
+    "c": 0,
+    "t": "Insurance Claim Settled",
+    "template": "The insurance company has completed its assessment of the weather damage previously repaired on your farm.\n\nGOOD NEWS: Receive £250 from your Payment Farm as a partial insurance settlement.",
+    "p": "category-0",
+    "eventType": "action",
+    "weatherAddition": "followup",
+    "followUp": true
   }
 ];
