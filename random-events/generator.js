@@ -106,7 +106,13 @@ function drawCats(){
    $('categories').append(wrap);
  });
 }
-function showEvent(v){if(!v)return;state.current=v;$('cat').textContent=cats[v.category].toUpperCase()+' • RANDOM EVENT';$('title').textContent=v.title;$('desc').textContent=displayEventDescription(v);$('desc').style.whiteSpace='pre-line';// Load an individual event banner by title, falling back to the category banner.
+function showEvent(v){if(!v)return;state.current=v;$('cat').textContent=cats[v.category].toUpperCase()+' • RANDOM EVENT';$('title').textContent=v.title;const fullDescription=displayEventDescription(v);
+ const parts=fullDescription.split(/\s*ACTION REQUIRED:\s*/i);
+ $('desc').textContent=parts[0].trim();$('desc').style.whiteSpace='pre-line';
+ const actionText=$('eventActionText');
+ actionText.textContent=parts.length>1?parts.slice(1).join(' ').trim():'';
+ $('eventAction').classList.toggle('has-action-text',parts.length>1);
+ // Load an individual event banner by title, falling back to the category banner.
  const photo=$('photo');
  const folder='images/'+categorySlugs[v.category]+'/';
  const fallback=folder+'event-'+v.category+'.webp';
@@ -121,27 +127,26 @@ function completeAction(id){
  persist();renderTracker();renderBannerCompletion();syncCleanLayout();
 }
 function renderBannerCompletion(){
- const b=$('bannerComplete'), item=findTracked(state.current);
- // A completed badge remains gold for the in-game day it was finished.
- // After the player advances their farm calendar, it disappears from the banner;
- // the completion itself remains saved in Farm Event History.
- const finishedToday=!!(item?.completed && item.finished && state.calendar &&
-   item.finished.year===state.calendar.year &&
-   item.finished.month===state.calendar.month &&
-   item.finished.day===state.calendar.day);
- // Without a farm calendar, retain the badge for the current generated batch.
- const finishedWithoutCalendar=!!(item?.completed && !state.calendar);
- const showCompleted=finishedToday || finishedWithoutCalendar;
- b.hidden=!(item && (showCompleted || (!item.completed && (item.actionRequired || item.earlyChoice))));
- if(b.hidden)return;
- const done=showCompleted;
- b.disabled=done;
- b.textContent=done?'✓ Completed':item.pendingOffer?'✓ Apply Offer When Used':item.earlyChoice?'✓ I chose the early solution':'✓ Mark as Completed';
- b.style.backgroundColor=done?'#D8AD51':'';
- b.style.color=done?'#173B29':'';
- b.style.borderColor=done?'#D8AD51':'';
- b.style.opacity='1';
- b.onclick=done?null:()=>completeAction(item.id);
+ const legacy=$('bannerComplete');
+ legacy.hidden=true;
+ const box=$('eventAction');
+ const heading=$('eventActionHeading');
+ const hint=$('eventActionHint');
+ const item=findTracked(state.current);
+ const completed=!!item?.completed;
+ const hasAction=$('eventAction').classList.contains('has-action-text');
+ // Information-only events are automatically completed; show their status clearly.
+ const informational=state.current?.eventType==='info';
+ const canComplete=!!(item&&!completed&&(item.actionRequired||item.earlyChoice));
+ const inProgress=!!(item&&!completed&&!canComplete);
+ box.hidden=!(canComplete||completed||inProgress||hasAction);
+ box.disabled=!canComplete;
+ box.classList.toggle('is-completed',completed);
+ box.classList.toggle('is-in-progress',inProgress);
+ heading.textContent=completed?'✓ COMPLETED':inProgress?'IN PROGRESS':informational?'GOOD NEWS':item?.pendingOffer?'OFFER AVAILABLE':'ACTION REQUIRED';
+ hint.textContent=completed?'':inProgress?'Duration being tracked':canComplete?'Tap when completed':'';
+ if(!hasAction) $('eventActionText').textContent='';
+ box.onclick=canComplete?()=>completeAction(item.id):null;
 }
 function displayDuration(days){
  const dpm=state.calendar?.daysPerMonth||3;

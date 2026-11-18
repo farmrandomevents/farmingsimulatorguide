@@ -188,3 +188,22 @@ main.wrap #event .event-description .banner-complete{position:absolute!important
 .area-unit-options button{border:1px solid #b9974b;border-radius:8px;background:#143b2c;color:#f5e2ac;padding:12px 22px;font-weight:700;cursor:pointer}
 .area-unit-options button[aria-pressed="true"]{background:#d9b766;color:#122a1d;border-color:#f4d992}
 .area-unit-options button:focus-visible{outline:3px solid #fff;outline-offset:3px}
+
+/* Integrated action/completion surface: replaces the separate gold button. */
+main.wrap #event .event-description{padding:14px 18px 14px 11%!important;gap:8px;justify-content:center;}
+main.wrap #event .event-description-text{overflow:visible;max-height:none;flex:0 1 auto;}
+main.wrap #event .event-description .eyebrow{font-size:11px;margin-bottom:3px;}
+main.wrap #event .event-description h2{font-size:clamp(20px,2.2vw,29px);margin:0 0 5px;line-height:1.12;}
+main.wrap #event .event-description p{font-size:clamp(12px,1.15vw,15px);line-height:1.3;}
+main.wrap #event .event-description .banner-complete{display:none!important;}
+main.wrap #event .fsg-event-action{display:block;position:relative;flex-shrink:0;width:100%;border:1px solid #c5a45b;border-radius:8px;background:#284a39;color:#fff;padding:10px 12px;text-align:left;cursor:pointer;font:inherit;box-shadow:0 2px 8px #0003;}
+main.wrap #event .fsg-event-action[hidden]{display:none!important;}
+main.wrap #event .fsg-event-action-head{display:flex;justify-content:space-between;align-items:center;gap:8px;color:#e6c778;font-weight:800;font-size:12px;letter-spacing:.35px;}
+main.wrap #event .fsg-event-action-head span:last-child{font-size:10px;font-weight:500;letter-spacing:0;white-space:nowrap;}
+main.wrap #event .fsg-event-action-text{display:block;font-size:clamp(12px,1.15vw,15px);line-height:1.28;font-weight:600;margin-top:5px;}
+main.wrap #event .fsg-event-action:not(.has-action-text) .fsg-event-action-text{display:none;}
+main.wrap #event .fsg-event-action.is-completed{background:#b99a55;border-color:#e5c37b;color:#17382b;cursor:default;}
+main.wrap #event .fsg-event-action.is-completed .fsg-event-action-head{color:#17382b;}
+main.wrap #event .fsg-event-action.is-in-progress{cursor:default;}
+main.wrap #event .fsg-event-action:hover:not(:disabled){background:#345b45;}
+@media(max-width:680px){main.wrap #event{height:440px;min-height:440px}main.wrap #event .event-description{padding:48px 13px 12px!important;gap:6px;max-height:78%;}main.wrap #event .event-description h2{font-size:21px;margin-bottom:4px}main.wrap #event .event-description p{font-size:12px;line-height:1.28}main.wrap #event .fsg-event-action{padding:8px 10px}main.wrap #event .fsg-event-action-text{font-size:12px;line-height:1.25}}
