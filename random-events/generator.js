@@ -107,11 +107,14 @@ function drawCats(){
  });
 }
 function showEvent(v){if(!v)return;state.current=v;$('cat').textContent=cats[v.category].toUpperCase()+' • RANDOM EVENT';$('title').textContent=v.title;const fullDescription=displayEventDescription(v);
- const parts=fullDescription.split(/\s*ACTION REQUIRED:\s*/i);
- $('desc').textContent=parts[0].trim();$('desc').style.whiteSpace='pre-line';
- const actionText=$('eventActionText');
- actionText.textContent=parts.length>1?parts.slice(1).join(' ').trim():'';
- $('eventAction').classList.toggle('has-action-text',parts.length>1);
+ const actionMatch=/\b(ACTION REQUIRED|OPPORTUNITY|GOOD NEWS)\s*:\s*/i.exec(fullDescription);
+ const actionKind=actionMatch?actionMatch[1].toUpperCase():'';
+ const actionDescription=actionMatch?fullDescription.slice(0,actionMatch.index).trim():fullDescription.trim();
+ const actionBody=actionMatch?fullDescription.slice(actionMatch.index+actionMatch[0].length).trim():'';
+ $('desc').textContent=actionDescription;$('desc').style.whiteSpace='pre-line';
+ $('eventActionText').textContent=actionBody;
+ $('eventAction').dataset.actionKind=actionKind;
+ $('eventAction').classList.toggle('has-action-text',!!actionMatch);
  // Load an individual event banner by title, falling back to the category banner.
  const photo=$('photo');
  const folder='images/'+categorySlugs[v.category]+'/';
@@ -143,7 +146,7 @@ function renderBannerCompletion(){
  box.disabled=!canComplete;
  box.classList.toggle('is-completed',completed);
  box.classList.toggle('is-in-progress',inProgress);
- heading.textContent=completed?'✓ COMPLETED':inProgress?'IN PROGRESS':informational?'GOOD NEWS':item?.pendingOffer?'OFFER AVAILABLE':'ACTION REQUIRED';
+ heading.textContent=completed?'✓ COMPLETED':inProgress?'IN PROGRESS':box.dataset.actionKind==='OPPORTUNITY'?'OPPORTUNITY':box.dataset.actionKind==='GOOD NEWS'||informational?'GOOD NEWS':item?.pendingOffer?'OFFER AVAILABLE':'ACTION REQUIRED';
  hint.textContent=completed?'':inProgress?'Duration being tracked':canComplete?'Tap when completed':'';
  if(!hasAction) $('eventActionText').textContent='';
  box.onclick=canComplete?()=>completeAction(item.id):null;
