@@ -354,7 +354,7 @@ window.FSG_EVENT_CATEGORIES[0] = [
     "id": "weather-2026-25",
     "c": 0,
     "t": "Emergency Weather Assistance",
-    "template": "Severe weather has caused difficulties for a neighbouring farmer, who is offering an additional payment for assistance.\n\nOPPORTUNITY: Complete the available contract nearest your farm and receive an additional £350 upon completion. If no contract is available, no action is required.",
+    "template": "Severe weather has caused difficulties for a neighbouring farmer, who is offering an additional payment for assistance.\n\nOPPORTUNITY: Complete the available contract nearest your farm and receive an additional £350.",
     "p": "category-0",
     "eventType": "action",
     "weatherAddition": "assistance"
@@ -394,7 +394,7 @@ window.FSG_EVENT_CATEGORIES[0] = [
     "id": "weather-2026-29",
     "c": 0,
     "t": "Insurance Claim Settled",
-    "template": "The insurance company has completed its assessment of the weather damage previously repaired on your farm.\n\nGOOD NEWS: Receive £250 from your Payment Farm as a partial insurance settlement.",
+    "template": "The insurance company has completed its assessment of the weather damage previously repaired on your farm.\n\nGOOD NEWS: Your insurer has settled the weather damage claim. You have received £250.",
     "p": "category-0",
     "eventType": "action",
     "weatherAddition": "followup",
