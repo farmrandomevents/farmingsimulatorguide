@@ -158,24 +158,30 @@ function weatherVariant(e){
  return v;
 }
 
-// Claims are occasional, tied to a completed weather repair, and paid only once.
+// Only qualifying completed repairs can produce a claim. Decide once per repair.
+const INSURABLE_WEATHER_REPAIRS=new Set(['weather-2026-08','weather-2026-09','weather-2026-28']);
 function queuePossibleInsuranceClaim(item){
- if(item.eventId!=='weather-2026-28'||!state.calendar)return;
+ if(!state.calendar||!item||!INSURABLE_WEATHER_REPAIRS.has(item.eventId)||item.insuranceConsidered)return;
+ item.insuranceConsidered=true;
  const roll=Math.random();
- if(roll>=0.30)return; // Most repairs have no insurance follow-up.
+ if(roll>=0.30)return; // Most damage is not followed by an insurance message.
  const large=roll<0.05;
  const amount=large?randomFrom([600,800,1000,1200,1500,1800,2000]):randomFrom([100,200,300,400,500]);
- const due=farmMonthIndex(state.calendar)+randomFrom([1,2,3]);
- state.insuranceClaims.push({sourceId:item.id,due,amount,large});
+ state.insuranceClaims.push({sourceId:item.id,due:farmMonthIndex(state.calendar)+randomFrom([1,2,3]),amount,large});
 }
 function availableInsuranceClaim(){
  if(!state.calendar)return null;
  const now=farmMonthIndex(state.calendar);
- return state.insuranceClaims.find(c=>c.due<=now&&state.active.some(a=>a.id===c.sourceId&&a.completed))||null;
+ return state.insuranceClaims.find(c=>!c.claimed&&c.due<=now)||null;
+}
+function completeFarmAction(item,finished){
+ if(!item||item.completed)return;
+ item.completed=true;item.actionRequired=false;item.finished=finished?{...finished}:null;
+ queuePossibleInsuranceClaim(item);
 }
 function previousWeatherEvent(id){return state.active.some(a=>a.eventId===id&&a.completed&&a.created&&state.calendar&&
   ((state.calendar.year||0)*12+state.calendar.month)-((a.created.year||0)*12+a.created.month)>=1);}
-function instantiate(e){const dur=isPendingOffer(e)?null:durationFor(e);const amount=e.amounts?randomFrom(e.amounts):null;const animal=e.id==='weather-2026-20'?randomFrom(state.animalsOwned):null;const variant=e.weatherAddition?weatherVariant(e):null;const claim=e.id==='weather-2026-29'?availableInsuranceClaim():null;const description=(claim?(claim.large?'Following a further inspection of the recent weather damage, your insurer has identified additional damage and approved a higher settlement than originally anticipated.':'Your insurer has completed its assessment of the recent weather damage and approved a partial settlement towards the repair costs.')+'\n\nGOOD NEWS: Your farm has received £'+claim.amount.toLocaleString('en-GB')+'.':(variant?.description||e.template)).replace('{animal}',animal?animal.toLowerCase():'livestock');if(claim)state.insuranceClaims=state.insuranceClaims.filter(c=>c!==claim);return {id:`event-${Date.now()}-${++state.sequence}`,eventId:e.id,title:claim?'Insurance Claim Successful':variant?.title||e.t,category:e.c,photo:e.p,description:description.replace('{duration}',dur?.label||'').replace('{amount}',amount===null?'':amount.toLocaleString('en-GB')),duration:dur,eventType:e.eventType||null,pendingOffer:isPendingOffer(e),completed:false,remaining:dur?.total||0,total:dur?.total||0,created:state.calendar?{...state.calendar}:null,finished:null,restrictedProducts:variant?.restrictedProducts||[],requiredProduct:variant?.requiredProduct||null};}
+function instantiate(e){const dur=isPendingOffer(e)?null:durationFor(e);const amount=e.amounts?randomFrom(e.amounts):null;const animal=e.id==='weather-2026-20'?randomFrom(state.animalsOwned):null;const variant=e.weatherAddition?weatherVariant(e):null;const claim=e.id==='weather-2026-29'?availableInsuranceClaim():null;const description=(claim?(claim.large?'Following a further inspection of the recent weather damage, your insurer has identified additional damage and approved a higher settlement than originally anticipated.':'Your insurer has completed its assessment of the recent weather damage and approved a partial settlement towards the repair costs.')+'\n\nGOOD NEWS: Your farm has received £'+claim.amount.toLocaleString('en-GB')+'.':(variant?.description||e.template)).replace('{animal}',animal?animal.toLowerCase():'livestock');if(claim)claim.claimed=true;return {id:`event-${Date.now()}-${++state.sequence}`,eventId:e.id,title:claim?'Insurance Claim Successful':variant?.title||e.t,category:e.c,photo:e.p,description:description.replace('{duration}',dur?.label||'').replace('{amount}',amount===null?'':amount.toLocaleString('en-GB')),duration:dur,eventType:e.eventType||null,pendingOffer:isPendingOffer(e),completed:false,remaining:dur?.total||0,total:dur?.total||0,created:state.calendar?{...state.calendar}:null,finished:null,restrictedProducts:variant?.restrictedProducts||[],requiredProduct:variant?.requiredProduct||null};}
 
 function markSeen(e){if(!state.tracking||!state.calendar)return;const key=`${state.calendar.year||0}-${state.calendar.month}`;if(!key)return;const a=state.monthSeen[key]||[];if(!a.includes(e.id))a.push(e.id);state.monthSeen[key]=a;}
 // A repeat is a repeat even if the product, deadline or wording changes.
@@ -238,8 +244,7 @@ function findTracked(v){return state.active.find(x=>x.id===v?.id)}
 function completeAction(id){
  const item=state.active.find(x=>x.id===id);
  if(!item||(!item.actionRequired&&!item.earlyChoice)||item.completed)return;
- item.completed=true;item.actionRequired=false;item.finished=state.calendar?{...state.calendar}:null;
- queuePossibleInsuranceClaim(item);
+ completeFarmAction(item,state.calendar);
  persist();renderTracker();renderBannerCompletion();syncCleanLayout();
 }
 function renderBannerCompletion(){
@@ -398,7 +403,7 @@ if(actions.length){
   bulk.title='Complete pending actions only. Saved dealership offers will not be applied.';
   bulk.onclick=()=>{
    const finished=state.calendar?{...state.calendar}:null;
-   state.active.forEach(x=>{if(x.actionRequired&&!x.completed&&!x.pendingOffer){x.completed=true;x.actionRequired=false;x.finished=finished?{...finished}:null;}});
+   state.active.forEach(x=>{if(x.actionRequired&&!x.completed&&!x.pendingOffer){completeFarmAction(x,finished);}});
    persist();renderTracker();renderBannerCompletion();syncCleanLayout();
   };
   header.append(bulk);
@@ -687,7 +692,7 @@ function renderFarmDashboard(){
    bulk.title='Complete all outstanding actions; saved offers are excluded.';
    bulk.onclick=()=>{
     const now=state.calendar?{...state.calendar}:null;
-    outstanding.forEach(x=>{x.completed=true;x.actionRequired=false;x.finished=now?{...now}:null;});
+    outstanding.forEach(x=>{completeFarmAction(x,now);});
     persist();renderTracker();renderBannerCompletion();syncCleanLayout();
    };
    tile.append(bulk);
