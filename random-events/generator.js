@@ -178,10 +178,27 @@ function availableInsuranceClaim(){
  const now=farmMonthIndex(state.calendar);
  return state.insuranceClaims.find(c=>!c.claimed&&c.due<=now)||null;
 }
+// A timed event needing a player action does not begin its countdown until the
+// player has arranged the repair / carried out the action. Instant actions still finish immediately.
 function completeFarmAction(item,finished){
  if(!item||item.completed)return;
+ if(item.actionRequired && item.total>0 && !item.pendingOffer){
+  item.actionRequired=false;
+  item.started=finished?{...finished}:null;
+  item.remaining=item.total;
+  return;
+ }
  item.completed=true;item.actionRequired=false;item.finished=finished?{...finished}:null;
  queuePossibleInsuranceClaim(item);
+}
+// Use event-specific instructions rather than making every timed weather condition
+// require a click. All timed machinery faults need the player to arrange repairs.
+function requiresActionBeforeWaiting(item){
+ if(!item.total || item.pendingOffer || item.eventType==='info')return false;
+ if(item.category===2)return true;
+ const text=(item.description||'').toLowerCase();
+ return /\b(pay|purchase|buy|repair|replace|arrange|take (?:it|the|your)|transport|deliver|move|park|remove|sell|dispose|treat|isolate|clean|restock|feed|call (?:the|a)|contact (?:the|a)|hire|lease|order|collect|provide|inspect|apply|store|secure|relocate)\b/.test(text)
+   && !/\b(?:no action required|no repairs required)\b/.test(text);
 }
 function previousWeatherEvent(id){return state.active.some(a=>a.eventId===id&&a.completed&&a.created&&state.calendar&&
   ((state.calendar.year||0)*12+state.calendar.month)-((a.created.year||0)*12+a.created.month)>=1);}
@@ -277,7 +294,7 @@ function renderBannerCompletion(){
  box.classList.toggle('is-completed',completed);
  box.classList.toggle('is-in-progress',inProgress);
  heading.textContent=completed?'✓ COMPLETED':inProgress?'IN PROGRESS':box.dataset.actionKind==='OPPORTUNITY'?'OPPORTUNITY':box.dataset.actionKind==='GOOD NEWS'||informational?'GOOD NEWS':item?.pendingOffer?'OFFER AVAILABLE':'ACTION REQUIRED';
- hint.textContent=completed?'':inProgress?'Duration being tracked':canComplete?'Tap when completed':'';
+ hint.textContent=completed?'':inProgress?'Waiting for completion':canComplete?'Tap once you have carried out the action':'';
  if(!hasAction) $('eventActionText').textContent='';
  box.onclick=canComplete?()=>completeAction(item.id):null;
 }
@@ -323,7 +340,7 @@ $('eventPrev').onclick=()=>shiftEvent(-1);$('eventNext').onclick=()=>shiftEvent(
 
 function autoTrack(v){if(!state.tracking||!state.calendar)return;const copy={...v,created:v.created||{...state.calendar}};
 // Immediate events have no ongoing duration and go straight into history.
-if(copy.eventType==='info'){copy.actionRequired=false;copy.completed=true;copy.finished=state.calendar?{...state.calendar}:null;}else if(!copy.total){copy.actionRequired=true;copy.completed=false;}
+if(copy.eventType==='info'){copy.actionRequired=false;copy.completed=true;copy.finished=state.calendar?{...state.calendar}:null;}else if(!copy.total || requiresActionBeforeWaiting(copy)){copy.actionRequired=true;copy.completed=false;}
 if(copy.pendingOffer){copy.actionRequired=true;copy.completed=false;}
 if(copy.eventType==='choice')copy.earlyChoice=true;
 state.active.push(copy);}
@@ -412,7 +429,7 @@ if(actions.length){
   const bulk=document.createElement('button');bulk.type='button';bulk.className='action-done bulk-complete';
   bulk.textContent=completable.length?`✓ Mark All ${completable.length} Actions Completed`:`✓ No Actions to Complete`;
   bulk.disabled=!completable.length;
-  bulk.title='Complete pending actions only. Saved dealership offers will not be applied.';
+  bulk.title='Confirm all required actions. Timed repairs then move into In Progress; saved offers are excluded.';
   bulk.onclick=()=>{
    const finished=state.calendar?{...state.calendar}:null;
    state.active.forEach(x=>{if(x.actionRequired&&!x.completed&&!x.pendingOffer){completeFarmAction(x,finished);}});
@@ -421,7 +438,7 @@ if(actions.length){
   header.append(bulk);
  }
 }
-actions.forEach(item=>{const card=document.createElement('div');card.className='track-card required-card';const title=document.createElement('strong');title.textContent=item.title;const desc=document.createElement('p');desc.textContent=displayEventDescription(item);const button=document.createElement('button');button.type='button';button.textContent=item.pendingOffer?'✓ Apply Offer When Used':'✓ Done — I have completed this';button.className='action-done';button.onclick=()=>completeAction(item.id);const copy=document.createElement('div');copy.className='required-copy';copy.append(title,desc);card.append(copy,button);actionRoot.append(card)});
+actions.forEach(item=>{const card=document.createElement('div');card.className='track-card required-card';const title=document.createElement('strong');title.textContent=item.title;const desc=document.createElement('p');desc.textContent=displayEventDescription(item);const button=document.createElement('button');button.type='button';button.textContent=item.pendingOffer?'✓ Apply Offer When Used':'✓ Action Completed';button.className='action-done';button.onclick=()=>completeAction(item.id);const copy=document.createElement('div');copy.className='required-copy';copy.append(title,desc);card.append(copy,button);actionRoot.append(card)});
  renderHistory();renderFarmDashboard();renderBannerCompletion();if(typeof syncCleanLayout==='function')syncCleanLayout();}
 function renderHistory(){const root=$('historyList');root.replaceChildren();$('historyPanel').hidden=!state.tracking;const completed=state.active.filter(e=>e.completed);if(!completed.length){const p=document.createElement('p');p.className='small-event-note';p.textContent='Completed events will appear here automatically.';root.append(p);return}
 const years=[...new Set(completed.map(e=>e.created?.year||0))].sort((a,b)=>b-a);years.forEach(y=>{const yd=document.createElement('details');yd.className='history-year';yd.open=y===years[0];const ys=document.createElement('summary');ys.textContent=`Year ${y+1}`;yd.append(ys);for(let m=0;m<12;m++){const list=completed.filter(e=>(e.created?.year||0)===y&&(e.created?.month||0)===m);if(!list.length)continue;const md=document.createElement('details');md.className='history-month';md.open=y===years[0];const ms=document.createElement('summary');ms.textContent=`${months[m]} (${list.length})`;md.append(ms);list.forEach(e=>{const r=document.createElement('div');r.className='history-row';const name=document.createElement('strong');name.textContent=e.title;const info=document.createElement('small');info.textContent=`${displayEventDescription(e)} · Finished: ${dateLabel(e.finished)}`;r.append(name,info);md.append(r)});yd.append(md)}root.append(yd)})}
@@ -467,7 +484,8 @@ function completionMessage(item){
  if(item.eventId==='weather-2026-11')return 'The power outage restriction has ended. Production can resume.';
  if(item.eventId==='weather-2026-14')return 'The drought-related cultivation restriction has ended. Cultivation can resume.';
  if(item.category===0)return 'This weather-related event has finished.';
- return 'The event duration has ended. Any temporary restriction has now been lifted.';
+ if(item.category===2)return 'Repairs are complete. Your machinery is ready to collect or return to service.';
+ return 'The event has finished. Any temporary restriction has now been lifted.';
 }
 function advance(){if(!state.tracking||!state.calendar)return;const c=state.calendar;
 if(state.completionNotices.length){showCompletionNotices();return;}
@@ -481,7 +499,7 @@ if(pending.length){
   return;
 }
 if(c.day>=c.daysPerMonth){c.day=1;c.month=(c.month+1)%12;if(c.month===0)c.year=(c.year||0)+1}else c.day++;
-if(c.day===1||state.frequency==='daily'){state.periodEvents=[];state.periodKey=null;state.current=null;}state.active.forEach(x=>{if(!x.completed&&x.remaining>0){x.remaining=Math.max(0,x.remaining-1);if(x.remaining===0){x.completed=true;x.finished={...c};state.completionNotices.push({id:x.id,title:x.title,message:completionMessage(x)});}}});persist();renderTracker();renderSchedule();syncCleanLayout();renderBannerCompletion();showCompletionNotices();
+if(c.day===1||state.frequency==='daily'){state.periodEvents=[];state.periodKey=null;state.current=null;}state.active.forEach(x=>{if(!x.completed&&x.remaining>0){x.remaining=Math.max(0,x.remaining-1);if(x.remaining===0){x.completed=true;x.finished={...c};queuePossibleInsuranceClaim(x);state.completionNotices.push({id:x.id,title:x.title,message:completionMessage(x)});}}});persist();renderTracker();renderSchedule();syncCleanLayout();renderBannerCompletion();showCompletionNotices();
 // Automatically draw the new day's/month's scheduled events after advancing.
 // Manual mode stays manual; do not generate twice for an already drawn period.
 if(state.frequency!=='manual'&&dueForPeriod()&&!monthAlreadyGenerated())generate();
@@ -701,7 +719,7 @@ function renderFarmDashboard(){
    const outstanding=actions.filter(x=>!x.completed);
    const bulk=document.createElement('button');bulk.type='button';bulk.className='fsg-dash-bulk';
    bulk.textContent=outstanding.length?'✓ Complete All':'✓ All Done';bulk.disabled=!outstanding.length;
-   bulk.title='Complete all outstanding actions; saved offers are excluded.';
+   bulk.title='Confirm outstanding actions and begin any waiting periods; saved offers are excluded.';
    bulk.onclick=()=>{
     const now=state.calendar?{...state.calendar}:null;
     outstanding.forEach(x=>{completeFarmAction(x,now);});
@@ -727,7 +745,7 @@ function renderFarmDashboard(){
   }
   if(dashboardOpen!=='ongoing'){
    const btn=document.createElement('button');btn.type='button';btn.className='fsg-dash-done';
-   btn.textContent=item.completed?'✓ Completed':item.pendingOffer?'✓ Apply Offer When Used':'✓ Mark as Completed';
+   btn.textContent=item.completed?'✓ Completed':item.pendingOffer?'✓ Apply Offer When Used':'✓ Action Completed';
    if(item.completed){btn.classList.add('is-completed');btn.disabled=true;}else btn.onclick=()=>completeAction(item.id);card.append(btn);
   }
   content.append(card);
