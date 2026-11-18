@@ -29,6 +29,7 @@ let state={selected:cats.map((_,i)=>i),current:null,used:[],active:[],categories
 try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&typeof s==='object')state={...state,...s}}catch(e){}
 if(!Array.isArray(state.selected))state.selected=cats.map((_,i)=>i);
 if(!Array.isArray(state.active))state.active=[];
+if(!Array.isArray(state.completionNotices))state.completionNotices=[];
 if(!Array.isArray(state.periodEvents))state.periodEvents=[];
 if(!Array.isArray(state.used))state.used=[];
 if(!Array.isArray(state.cropsOwned))state.cropsOwned=[];
@@ -259,7 +260,52 @@ actions.forEach(item=>{const card=document.createElement('div');card.className='
  renderHistory();renderFarmDashboard();renderBannerCompletion();if(typeof syncCleanLayout==='function')syncCleanLayout();}
 function renderHistory(){const root=$('historyList');root.replaceChildren();$('historyPanel').hidden=!state.tracking;const completed=state.active.filter(e=>e.completed);if(!completed.length){const p=document.createElement('p');p.className='small-event-note';p.textContent='Completed events will appear here automatically.';root.append(p);return}
 const years=[...new Set(completed.map(e=>e.created?.year||0))].sort((a,b)=>b-a);years.forEach(y=>{const yd=document.createElement('details');yd.className='history-year';yd.open=y===years[0];const ys=document.createElement('summary');ys.textContent=`Year ${y+1}`;yd.append(ys);for(let m=0;m<12;m++){const list=completed.filter(e=>(e.created?.year||0)===y&&(e.created?.month||0)===m);if(!list.length)continue;const md=document.createElement('details');md.className='history-month';md.open=y===years[0];const ms=document.createElement('summary');ms.textContent=`${months[m]} (${list.length})`;md.append(ms);list.forEach(e=>{const r=document.createElement('div');r.className='history-row';const name=document.createElement('strong');name.textContent=e.title;const info=document.createElement('small');info.textContent=`${displayEventDescription(e)} · Finished: ${dateLabel(e.finished)}`;r.append(name,info);md.append(r)});yd.append(md)}root.append(yd)})}
+// Time-limited events must be acknowledged before their completion notice disappears.
+// The queue is saved with the farm, so reloading cannot silently discard a notice.
+let completionNoticeOpen=false;
+function showCompletionNotices(){
+ if(completionNoticeOpen||!state.completionNotices.length)return;
+ completionNoticeOpen=true;
+ const notices=state.completionNotices.slice();
+ const previous=document.activeElement;
+ const overlay=document.createElement('div');overlay.className='farm-dialog-overlay fsg-completion-overlay';
+ const panel=document.createElement('section');panel.className='farm-dialog fsg-completion-dialog';
+ panel.setAttribute('role','alertdialog');panel.setAttribute('aria-modal','true');
+ const heading=document.createElement('h2');heading.textContent=notices.length===1?'✓ EVENT COMPLETED':'✓ EVENTS COMPLETED';
+ heading.id='fsg-completion-heading';panel.setAttribute('aria-labelledby',heading.id);
+ const intro=document.createElement('p');intro.textContent=notices.length===1?'Your farm event has finished.':'These farm events have finished.';
+ const list=document.createElement('div');list.className='fsg-completion-list';
+ notices.forEach(n=>{
+  const row=document.createElement('div');row.className='fsg-completion-item';
+  const title=document.createElement('strong');title.textContent=n.title;
+  const message=document.createElement('p');message.textContent=n.message||'The event restriction has ended. Normal farm activities can resume.';
+  row.append(title,message);list.append(row);
+ });
+ const acknowledge=document.createElement('button');acknowledge.type='button';acknowledge.className='farm-dialog-confirm fsg-completion-ack';
+ acknowledge.textContent=notices.length===1?'Acknowledge Completion':`Acknowledge ${notices.length} Completions`;
+ acknowledge.onclick=()=>{
+  const acknowledged=new Set(notices.map(n=>n.id));
+  state.completionNotices=state.completionNotices.filter(n=>!acknowledged.has(n.id));
+  persist();overlay.remove();completionNoticeOpen=false;previous?.focus?.();
+  if(state.completionNotices.length)showCompletionNotices();
+ };
+ panel.append(heading,intro,list,acknowledge);overlay.append(panel);document.body.append(overlay);
+ // Do not close on Escape, outside tap, or reload; acknowledgement is intentional.
+ overlay.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){e.preventDefault();acknowledge.focus()}
+  if(e.key==='Tab'){e.preventDefault();acknowledge.focus()}
+ });
+ acknowledge.focus();
+}
+function completionMessage(item){
+ if(item.eventId==='weather-2026-01'||item.eventId==='weather-2026-02'||item.eventId==='weather-2026-03')return 'The flooding restriction has ended. Fieldwork can resume.';
+ if(item.eventId==='weather-2026-11')return 'The power outage restriction has ended. Production can resume.';
+ if(item.eventId==='weather-2026-14')return 'The drought-related cultivation restriction has ended. Cultivation can resume.';
+ if(item.category===0)return 'The weather restriction has ended. Normal farm activities can resume.';
+ return 'The event duration has ended. Any temporary restriction has now been lifted.';
+}
 function advance(){if(!state.tracking||!state.calendar)return;const c=state.calendar;
+if(state.completionNotices.length){showCompletionNotices();return;}
 // Only immediate mandatory actions block the calendar. Saved offers can be applied at any later date.
 const pending=state.active.filter(x=>x.actionRequired&&!x.completed&&!x.pendingOffer);
 if(pending.length){
@@ -270,7 +316,7 @@ if(pending.length){
   return;
 }
 if(c.day>=c.daysPerMonth){c.day=1;c.month=(c.month+1)%12;if(c.month===0)c.year=(c.year||0)+1}else c.day++;
-if(c.day===1||state.frequency==='daily'){state.periodEvents=[];state.periodKey=null;state.current=null;}state.active.forEach(x=>{if(!x.completed&&x.remaining>0){x.remaining=Math.max(0,x.remaining-1);if(x.remaining===0){x.completed=true;x.finished={...c}}}});persist();renderTracker();renderSchedule();syncCleanLayout();renderBannerCompletion();
+if(c.day===1||state.frequency==='daily'){state.periodEvents=[];state.periodKey=null;state.current=null;}state.active.forEach(x=>{if(!x.completed&&x.remaining>0){x.remaining=Math.max(0,x.remaining-1);if(x.remaining===0){x.completed=true;x.finished={...c};state.completionNotices.push({id:x.id,title:x.title,message:completionMessage(x)});}}});persist();renderTracker();renderSchedule();syncCleanLayout();renderBannerCompletion();showCompletionNotices();
 // Automatically draw the new day's/month's scheduled events after advancing.
 // Manual mode stays manual; do not generate twice for an already drawn period.
 if(state.frequency!=='manual'&&dueForPeriod()&&!monthAlreadyGenerated())generate();
@@ -533,3 +579,20 @@ const hist=$('historyPanel');const summary=document.createElement('summary');sum
 if(!state.calendar){setupOpen=true;$('calendarSettings').hidden=!state.tracking}
 $('enableTracking').checked=state.tracking;drawCats();if(!state.current)state.current=instantiate(events[0]);showEvent(state.current);updateTracking();renderSchedule();syncCleanLayout();refreshCurrency();
 if(typeof IntersectionObserver!=='undefined'){const obs=new IntersectionObserver(es=>{$('sticky').classList.toggle('show',!es[0].isIntersecting)},{threshold:.2});obs.observe($('generate'))}
+
+// Compact completion notification styled to match the approved forest-green/gold UI.
+const completionStyle=document.createElement('style');
+completionStyle.textContent=`
+.fsg-completion-overlay{z-index:99999}
+.fsg-completion-dialog{max-width:min(440px,calc(100vw - 32px));width:100%;box-sizing:border-box;background:#17382b;border:1px solid #b99a55;color:#f4f1e6;max-height:calc(100dvh - 36px);overflow-y:auto}
+.fsg-completion-dialog h2{color:#e8cb83;text-align:center;margin:0 0 10px;font-size:clamp(19px,4.5vw,25px)}
+.fsg-completion-dialog>p{text-align:center;color:#f4f1e6;margin:0 0 14px}
+.fsg-completion-list{display:grid;gap:10px;margin-bottom:16px}
+.fsg-completion-item{background:#254b39;border:1px solid #9e864e;border-radius:10px;padding:12px}
+.fsg-completion-item strong{display:block;color:#e8cb83;margin-bottom:5px}
+.fsg-completion-item p{margin:0;color:#fff;line-height:1.45;font-size:14px}
+.fsg-completion-ack{display:block;width:100%;background:#d8ad51!important;color:#17382b!important;font-weight:800;border-radius:8px;padding:13px 10px}
+`;
+document.head.append(completionStyle);
+// Restore unacknowledged notices when the farm is reopened.
+showCompletionNotices();
