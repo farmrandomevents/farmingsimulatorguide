@@ -65,6 +65,7 @@ function monthKey(){const c=state.calendar;return c?`${c.year||0}-${c.month}${st
 // Long-term month-based events and instant events retain their own behaviour.
 function durationFor(e){
  if(!e.duration)return null;
+ if(e.fixedDays){const dpm=Math.max(1,Number(state.calendar?.daysPerMonth)||3);const n=e.fixedDays;return {amount:n,unit:'days',label:`${n} ${n===1?'day':'days'}`,total:Math.min(n,dpm)};}
  const dpm=Math.max(1,Math.min(28,Number(state.calendar?.daysPerMonth)||3));
  if(e.duration==='months'){
   const lo=Math.max(1,e.minMonths||1),hi=Math.max(lo,e.maxMonths||lo);
@@ -85,7 +86,7 @@ function isPendingOffer(e){
 }
 function instantiate(e){const dur=isPendingOffer(e)?null:durationFor(e);const amount=e.amounts?randomFrom(e.amounts):null;const animal=e.id==='weather-2026-20'?randomFrom(state.animalsOwned):null;const description=e.template.replace('{animal}',animal?animal.toLowerCase():'livestock');return {id:`event-${Date.now()}-${++state.sequence}`,eventId:e.id,title:e.t,category:e.c,photo:e.p,description:description.replace('{duration}',dur?.label||'').replace('{amount}',amount===null?'':amount.toLocaleString('en-GB')),duration:dur,eventType:e.eventType||null,pendingOffer:isPendingOffer(e),completed:false,remaining:dur?.total||0,total:dur?.total||0,created:state.calendar?{...state.calendar}:null,finished:null};}
 function markSeen(e){if(!state.tracking||!state.calendar)return;const key=`${state.calendar.year||0}-${state.calendar.month}`;if(!key)return;const a=state.monthSeen[key]||[];if(!a.includes(e.id))a.push(e.id);state.monthSeen[key]=a;}
-function eligible(){return events.filter(e=>state.selected.includes(e.c)&&(e.c!==1||state.cropsOwned.length>0)&&(e.c!==3||state.animalsOwned.length>0)&&(!e.requiresAnimals||state.animalsOwned.length>=e.requiresAnimals)&&(!e.animals||e.animals.some(a=>state.animalsOwned.includes(a==='Cows'?'Cattle':a)))&&(!cropEventMap[e.id]||state.cropsOwned.includes(cropEventMap[e.id]))&&(!state.tracking||!state.active.some(a=>!a.completed&&a.eventId===e.id)))}
+function eligible(){return events.filter(e=>(!e.seasonMonths||!state.calendar||e.seasonMonths.includes(state.calendar.month))&&(!e.requiresStrawCompatibleAnimals||state.animalsOwned.some(a=>['Cattle','Pigs','Horses'].includes(a)))&&state.selected.includes(e.c)&&(e.c!==1||state.cropsOwned.length>0)&&(e.c!==3||state.animalsOwned.length>0)&&(!e.requiresAnimals||state.animalsOwned.length>=e.requiresAnimals)&&(!e.animals||e.animals.some(a=>state.animalsOwned.includes(a==='Cows'?'Cattle':a)))&&(!cropEventMap[e.id]||state.cropsOwned.includes(cropEventMap[e.id]))&&(!state.tracking||!state.active.some(a=>!a.completed&&a.eventId===e.id)))}
 function chooseUnique(pool,used){const a=pool.filter(e=>!used.includes(e.id));return a.length?randomFrom(a):null}
 function drawCats(){
  $('all').textContent=state.selected.length===cats.length?'✕ Deselect All':'✓ Select All';
@@ -105,7 +106,7 @@ function drawCats(){
    $('categories').append(wrap);
  });
 }
-function showEvent(v){if(!v)return;state.current=v;$('cat').textContent=cats[v.category].toUpperCase()+' • RANDOM EVENT';$('title').textContent=v.title;$('desc').textContent=displayEventDescription(v);// Load an individual event banner by title, falling back to the category banner.
+function showEvent(v){if(!v)return;state.current=v;$('cat').textContent=cats[v.category].toUpperCase()+' • RANDOM EVENT';$('title').textContent=v.title;$('desc').textContent=displayEventDescription(v);$('desc').style.whiteSpace='pre-line';// Load an individual event banner by title, falling back to the category banner.
  const photo=$('photo');
  const folder='images/'+categorySlugs[v.category]+'/';
  const fallback=folder+'event-'+v.category+'.webp';
@@ -184,7 +185,7 @@ $('eventPrev').onclick=()=>shiftEvent(-1);$('eventNext').onclick=()=>shiftEvent(
 
 function autoTrack(v){if(!state.tracking||!state.calendar)return;const copy={...v,created:v.created||{...state.calendar}};
 // Immediate events have no ongoing duration and go straight into history.
-if(!copy.total){copy.actionRequired=true;copy.completed=false;}
+if(copy.eventType==='info'){copy.actionRequired=false;copy.completed=true;copy.finished=state.calendar?{...state.calendar}:null;}else if(!copy.total){copy.actionRequired=true;copy.completed=false;}
 if(copy.pendingOffer){copy.actionRequired=true;copy.completed=false;}
 if(copy.eventType==='choice')copy.earlyChoice=true;
 state.active.push(copy);}
