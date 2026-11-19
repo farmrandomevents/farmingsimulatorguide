@@ -1,4 +1,4 @@
-const CACHE='fsg-random-events-v2';
+const CACHE='fsg-random-events-v3-crop-images';
 const SHELL=['./','./index.html','./homepage-style.css','./random-events-style.css','./generator.js','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png',
 './events/weather.js','./events/crops-fields.js','./events/machinery.js','./events/animals.js','./events/supplies-storage.js','./events/finance.js','./events/contracts-neighbours.js','./events/dealership.js','./events/challenges.js','./events/community.js'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(c=>c.addAll(SHELL)));self.skipWaiting();});

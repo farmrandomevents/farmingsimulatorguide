@@ -22,7 +22,6 @@ const cats=['Weather','Crops & Fields','Machinery','Animals','Supplies & Storage
 const events=Object.keys(window.FSG_EVENT_CATEGORIES).sort((a,b)=>Number(a)-Number(b)).flatMap(k=>window.FSG_EVENT_CATEGORIES[k]);
 const animalNames=['Cattle','Sheep','Pigs','Chickens','Goats','Horses','Water Buffalo','Bees','Alpacas'];
 const cropNames=['Wheat', 'Barley', 'Oats', 'Canola', 'Soybeans', 'Corn', 'Sorghum', 'Sunflowers', 'Potatoes', 'Sugar Beet', 'Cotton', 'Rice', 'Long Grain Rice', 'Grapes', 'Olives', 'Sugarcane', 'Poplar', 'Grass', 'Onions', 'Coffee', 'Bananas'];
-const cropEventMap={"book-01-030":"Wheat","book-01-031":"Wheat","book-01-032":"Barley","book-01-033":"Oats","book-01-034":"Corn","book-01-035":"Canola","book-01-036":"Potatoes"};
 const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
 const KEY='fsg-first-events-test-v1';
 let state={selected:cats.map((_,i)=>i),current:null,used:[],active:[],categoriesOpen:true,tracking:false,calendar:null,frequency:'manual',count:'1',periodKey:null,periodEvents:[],scheduleAnchor:null,monthSeen:{},lastGenerated:null,sequence:0,animalsOwned:[],cropsOwned:[],areaUnit:'acres',currency:'GBP',minEvents:null,maxEvents:null};
@@ -239,8 +238,49 @@ function naturalDurationSentence(text){
   .replace(/until 12pm \(half a day\)/gi,'until midday')
   .replace(/\bin-game\s+(days?|months?)\b/gi,'$1');
 }
-function instantiate(e){const dur=isPendingOffer(e)?null:durationFor(e);const amount=e.amounts?randomFrom(e.amounts):null;const animal=e.id==='weather-2026-20'?randomFrom(state.animalsOwned):null;const variant=e.weatherAddition?weatherVariant(e):null;const claim=e.id==='weather-2026-29'?availableInsuranceClaim():null;const description=(claim?(claim.large?'Following a further inspection of the recent weather damage, your insurer has identified additional damage and approved a higher settlement than originally anticipated.':'Your insurer has completed its assessment of the recent weather damage and approved a partial settlement towards the repair costs.')+'\n\nGOOD NEWS: Your farm has received £'+claim.amount.toLocaleString('en-GB')+'.':(variant?.description||e.template)).replace('{animal}',animal?animal.toLowerCase():'livestock');if(claim)claim.claimed=true;return {id:`event-${Date.now()}-${++state.sequence}`,eventId:e.id,title:claim?'Insurance Claim Successful':variant?.title||e.t,category:e.c,photo:e.p,description:naturalDurationSentence(description.replace('{duration}',dur?.label||'').replace('{amount}',amount===null?'':amount.toLocaleString('en-GB'))),duration:dur,eventType:e.eventType||null,pendingOffer:isPendingOffer(e),completed:false,remaining:dur?.total||0,total:dur?.total||0,created:state.calendar?{...state.calendar}:null,finished:null,restrictedProducts:variant?.restrictedProducts||[],requiredProduct:variant?.requiredProduct||null};}
+function instantiate(e){const crop=e.c===1?cropEventDescription(e):null;const dur=isPendingOffer(e)?null:durationFor(e);const amount=e.amounts?randomFrom(e.amounts):null;const animal=e.id==='weather-2026-20'?randomFrom(state.animalsOwned):null;const variant=e.weatherAddition?weatherVariant(e):null;const claim=e.id==='weather-2026-29'?availableInsuranceClaim():null;const description=crop?crop.description:(claim?(claim.large?'Following a further inspection of the recent weather damage, your insurer has identified additional damage and approved a higher settlement than originally anticipated.':'Your insurer has completed its assessment of the recent weather damage and approved a partial settlement towards the repair costs.')+'\n\nGOOD NEWS: Your farm has received £'+claim.amount.toLocaleString('en-GB')+'.':(variant?.description||e.template)).replace('{animal}',animal?animal.toLowerCase():'livestock');if(claim)claim.claimed=true;return {id:`event-${Date.now()}-${++state.sequence}`,eventId:e.id,title:claim?'Insurance Claim Successful':variant?.title||e.t,category:e.c,photo:e.p,description:naturalDurationSentence(description.replace('{duration}',dur?.label||'').replace('{amount}',amount===null?'':amount.toLocaleString('en-GB'))),duration:crop?crop.duration:dur,eventType:e.eventType||null,pendingOffer:isPendingOffer(e),completed:false,remaining:(crop?crop.duration:dur)?.total||0,total:(crop?crop.duration:dur)?.total||0,created:state.calendar?{...state.calendar}:null,finished:null,restrictedProducts:variant?.restrictedProducts||[],requiredProduct:variant?.requiredProduct||null};}
 
+// FS25 standard seasonal-growth calendar (month indices, Jan=0).
+// Approximate planting and harvest windows: use the active crop selections rather
+// than guessing a particular field's actual growth stage. Grass/perennials remain
+// eligible for general soil events, not annual crop germination or disease events.
+const cropCalendar={
+ 'Wheat':{s:[8,9],h:[6,7]},'Barley':{s:[8,9],h:[5,6]},'Oats':{s:[2,3],h:[6,7]},
+ 'Canola':{s:[7,8],h:[5,6]},'Soybeans':{s:[3,4],h:[9,10]},
+ 'Corn':{s:[3,4],h:[9,10]},'Sorghum':{s:[3,4],h:[7,8]},
+ 'Sunflowers':{s:[2,3],h:[9,10]},'Potatoes':{s:[2,3],h:[7,8]},
+ 'Sugar Beet':{s:[2,3],h:[9,10]},'Cotton':{s:[1,2],h:[9,10]},
+ 'Rice':{s:[3,4],h:[7,8]},'Long Grain Rice':{s:[3,4],h:[7,8]}
+};
+function monthsBetween(start,end){const a=[];for(let m=start;;m=(m+1)%12){a.push(m);if(m===end||a.length>=12)break;}return a;}
+function cropStageMatches(crop,stage,month){
+ const cal=cropCalendar[crop];if(!cal)return stage==='general'||stage==='stored';
+ if(stage==='general'||stage==='stored')return true;
+ if(stage==='sowing')return cal.s.includes(month);
+ if(stage==='early')return cal.s.some(m=>[m,(m+1)%12].includes(month));
+ if(stage==='fieldwork')return true;
+ if(stage==='growth')return cal.s.some(m=>monthsBetween(m,cal.h[0]).includes(month))&&!cal.h.includes(month);
+ return true;
+}
+function cropEventEligible(e){
+ if(e.c!==1)return true;
+ const owned=state.cropsOwned.filter(c=>!e.crops||e.crops.includes(c));
+ if(!owned.length)return false;
+ if(!state.calendar)return ['general','stored'].includes(e.cropStage);
+ return owned.some(c=>cropStageMatches(c,e.cropStage,state.calendar.month));
+}
+function cropEventDescription(e){
+ const field=randomFrom(['smallest','largest']);
+ const width=e.widths?randomFrom(e.widths):null;
+ const amount=e.amounts?randomFrom(e.amounts):null;
+ const duration=e.duration?durationFor(e):null;
+ const action=e.instruction.replace('{field}',field)
+  .replace('{width}',width===null?'':String(width))
+  .replace('{money}',amount===null?'':money(amount))
+  .replace('{duration}',duration?.label||'1 day');
+ const label=e.eventType==='info'?'GOOD NEWS':e.cropStage==='stored'?'OPPORTUNITY':'ACTION REQUIRED';
+ return {description:e.story+'\n\n'+label+': '+action,duration};
+}
 function markSeen(e){if(!state.tracking||!state.calendar)return;const key=`${state.calendar.year||0}-${state.calendar.month}`;if(!key)return;const a=state.monthSeen[key]||[];if(!a.includes(e.id))a.push(e.id);state.monthSeen[key]=a;}
 // A repeat is a repeat even if the product, deadline or wording changes.
 // Three full intervening months: January incident can return from May onward.
@@ -262,7 +302,7 @@ function recordWeatherIncident(e){
  state.weatherHistory.push({family:weatherCooldownFamily(e),month:now,id:e.id});
  state.weatherHistory=state.weatherHistory.filter(h=>now-h.month<24).slice(-200);
 }
-function eligible(){return events.filter(e=>!weatherCoolingDown(e)&&(!e.seasonMonths||!state.calendar||e.seasonMonths.includes(state.calendar.month))&&(!e.requiresStrawCompatibleAnimals||state.animalsOwned.some(a=>['Cattle','Pigs','Horses'].includes(a)))&&state.selected.includes(e.c)&&(e.c!==1||state.cropsOwned.length>0)&&(e.c!==3||state.animalsOwned.length>0)&&(!e.requiresAnimals||state.animalsOwned.length>=e.requiresAnimals)&&(!e.followUp||(e.id==='weather-2026-28'?previousWeatherEvent('weather-2026-03'):!!availableInsuranceClaim()))&&(!e.animals||e.animals.some(a=>state.animalsOwned.includes(a==='Cows'?'Cattle':a)))&&(!cropEventMap[e.id]||state.cropsOwned.includes(cropEventMap[e.id]))&&(!state.tracking||!state.active.some(a=>!a.completed&&a.eventId===e.id)))}
+function eligible(){return events.filter(e=>!weatherCoolingDown(e)&&(!e.seasonMonths||!state.calendar||e.seasonMonths.includes(state.calendar.month))&&(!e.requiresStrawCompatibleAnimals||state.animalsOwned.some(a=>['Cattle','Pigs','Horses'].includes(a)))&&state.selected.includes(e.c)&&(e.c!==1||state.cropsOwned.length>0)&&(e.c!==3||state.animalsOwned.length>0)&&(!e.requiresAnimals||state.animalsOwned.length>=e.requiresAnimals)&&(!e.followUp||(e.id==='weather-2026-28'?previousWeatherEvent('weather-2026-03'):!!availableInsuranceClaim()))&&(!e.animals||e.animals.some(a=>state.animalsOwned.includes(a==='Cows'?'Cattle':a)))&&cropEventEligible(e)&&(!state.tracking||!state.active.some(a=>!a.completed&&a.eventId===e.id)))}
 function chooseUnique(pool,used){const a=pool.filter(e=>!used.includes(e.id));return a.length?randomFrom(a):null}
 function drawCats(){
  $('all').textContent=state.selected.length===cats.length?'✕ Deselect All':'✓ Select All';
@@ -296,7 +336,7 @@ function showEvent(v){if(!v)return;state.current=v;$('cat').textContent=cats[v.c
  const folder='images/'+categorySlugs[v.category]+'/';
  const fallback=folder+'event-'+v.category+'.webp';
  const slug=String(v.title||'').toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
- photo.onerror=()=>{const replacement=v.category===2?folder+'machinery-yard.webp':fallback;photo.onerror=null;if(!photo.src.endsWith('/machinery-yard.webp'))photo.src=replacement;};
+ photo.onerror=()=>{photo.onerror=null;photo.src=fallback;};
  // Machinery-specific scenes, with a small pool of appropriate alternatives.
  // Choose per generated event so reopening the same event doesn't shuffle its image.
  const machineryPhotos={
@@ -311,8 +351,8 @@ function showEvent(v){if(!v)return;state.current=v;$('cat').textContent=cats[v.c
   'book-02-055':['harvester'],
   'book-02-056':['seeder'],
   'book-02-057':['baler'],
-  'book-02-058':['yard'],
-  'book-02-059':['yard'],
+  'book-02-058':['seeder','workshop'],
+  'book-02-059':['workshop'],
   'book-02-060':['trailer'],
   'book-02-061':['seeder'],
   'book-02-062':['seeder'],
@@ -325,7 +365,39 @@ function showEvent(v){if(!v)return;state.current=v;$('cat').textContent=cats[v.c
   'book-02-069':['workshop','engine'],
   'book-02-070':['engine','workshop']
  };
- if(v.category===2 && machineryPhotos[v.eventId]){
+ const cropPhotos={
+  'book-01-023':'02-crop-spraying.webp',
+  'book-01-024':'02-crop-spraying.webp',
+  'book-01-025':'02-crop-spraying.webp',
+  'book-01-026':'02-crop-spraying.webp',
+  'book-01-027':'01-crops-fields-universal.webp',
+  'book-01-028':'02-crop-spraying.webp',
+  'book-01-029':'05-field-cultivation.webp',
+  'book-01-030':'02-crop-spraying.webp',
+  'book-01-031':'05-field-cultivation.webp',
+  'book-01-032':'02-crop-spraying.webp',
+  'book-01-033':'05-field-cultivation.webp',
+  'book-01-034':'02-crop-spraying.webp',
+  'book-01-035':'02-crop-spraying.webp',
+  'book-01-036':'02-crop-spraying.webp',
+  'book-01-037':'05-field-cultivation.webp',
+  'book-01-038':'04-ploughing.webp',
+  'book-01-039':'07-waterlogged-field.webp',
+  'book-01-040':'01-crops-fields-universal.webp',
+  'book-01-041':'05-field-cultivation.webp',
+  'book-01-042':'08-muddy-field-cultivation.webp',
+  'book-01-043':'05-field-cultivation.webp',
+  'book-01-044':'05-field-cultivation.webp',
+  'book-01-045':'03-fertiliser-spreading.webp',
+  'book-01-046':'08-muddy-field-cultivation.webp',
+  'crops-2026-25':'06-harvesting-grain-trailer.webp',
+  'crops-2026-26':'03-fertiliser-spreading.webp',
+  'crops-2026-27':'01-crops-fields-universal.webp',
+  'crops-2026-28':'06-harvesting-grain-trailer.webp'
+ };
+ if(v.category===1 && cropPhotos[v.eventId]){
+  photo.src=folder+cropPhotos[v.eventId];
+ }elseif(v.category===2 && machineryPhotos[v.eventId]){
   const options=machineryPhotos[v.eventId];
   const stableKey=String(v.id)+'|'+String(v.month||state.calendar?.month||'')+'|'+String(v.year||state.calendar?.year||'');
   let hash=0;for(let i=0;i<stableKey.length;i++)hash=((hash*31)+stableKey.charCodeAt(i))|0;
