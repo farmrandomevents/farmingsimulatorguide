@@ -296,8 +296,8 @@ function showEvent(v){if(!v)return;state.current=v;$('cat').textContent=cats[v.c
   'book-02-069':['workshop','engine'],
   'book-02-070':['engine','workshop']
  };
- if(v.category===2 && machineryPhotos[v.id]){
-  const options=machineryPhotos[v.id];
+ if(v.category===2 && machineryPhotos[v.eventId]){
+  const options=machineryPhotos[v.eventId];
   const stableKey=String(v.id)+'|'+String(v.month||state.calendar?.month||'')+'|'+String(v.year||state.calendar?.year||'');
   let hash=0;for(let i=0;i<stableKey.length;i++)hash=((hash*31)+stableKey.charCodeAt(i))|0;
   photo.src=folder+'machinery-'+options[(hash>>>0)%options.length]+'.webp';
