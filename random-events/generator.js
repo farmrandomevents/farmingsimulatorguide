@@ -51,6 +51,35 @@ if(state.calendar){state.calendar.daysPerMonth=Math.max(1,Math.min(28,Number(sta
 if(!state.monthSeen||typeof state.monthSeen!=='object')state.monthSeen={};
 if(!Array.isArray(state.weatherHistory))state.weatherHistory=[];
 if(!Array.isArray(state.insuranceClaims))state.insuranceClaims=[];
+
+// Upgrade existing, unstarted Machinery Events without resetting the player's farm.
+// Earlier versions saved the entire instruction in the description and sometimes
+// started the waiting timer before the player confirmed the required action.
+function updateSavedMachineryEvents(){
+ const source=new Map((window.FSG_EVENT_CATEGORIES?.[2]||[]).map(e=>[e.id,e]));
+ const changed=new Map();
+ for(const item of state.active){
+  if(item.category!==2||item.completed||!source.has(item.eventId))continue;
+  const original=source.get(item.eventId);
+  // Only migrate events which have not actually started counting down.
+  // Respect any action already confirmed or elapsed waiting time.
+  if(item.started || (item.total>0 && item.remaining<item.total))continue;
+  if(!item.machineryActionMigrated){
+   let template=original.template;
+   if(item.duration?.label)template=template.replace('{duration}',item.duration.label);
+   item.description=naturalDurationSentence(template);
+   item.machineryActionMigrated=true;
+   if(item.total>0)item.actionRequired=true;
+   else if(original.eventType==='action')item.actionRequired=true;
+   changed.set(item.id,item);
+  }
+ }
+ for(const item of state.periodEvents){const replacement=changed.get(item.id);if(replacement)Object.assign(item,replacement)}
+ if(state.current&&changed.has(state.current.id))Object.assign(state.current,changed.get(state.current.id));
+ if(changed.size)try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}
+}
+
+updateSavedMachineryEvents();
 function updateCalculator(){const price=Math.max(0,Number($('calcPrice').value)||0);const pct=Math.min(100,Math.max(0,Number($('calcPercent').value)||0));const saving=price*pct/100;const isDiscount=$('calcKind').value==='discount';$('calcResult').innerHTML=isDiscount?`<strong>Receive ${money(saving)} from your Payment Farm</strong><div>Final purchase cost: ${money(price-saving)}</div>`:`<strong>Receive ${money(saving)} from your Payment Farm</strong><div>Total sale value: ${money(price+saving)}</div>`;}
 const calcPriceOptions=$('calcPriceOptions');
 [1000,5000,10000,25000,50000,100000,250000,500000].forEach(price=>{const b=document.createElement('button');b.type='button';b.dataset.price=String(price);b.textContent=money(price);b.addEventListener('click',()=>{$('calcPrice').value=String(Math.max(0,Number($('calcPrice').value)||0)+price);updateCalculator()});calcPriceOptions.append(b)});
