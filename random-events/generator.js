@@ -268,7 +268,43 @@ function showEvent(v){if(!v)return;state.current=v;$('cat').textContent=cats[v.c
  const fallback=folder+'event-'+v.category+'.webp';
  const slug=String(v.title||'').toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
  photo.onerror=()=>{photo.onerror=null;photo.src=fallback;};
- photo.src=folder+slug+'.webp';$('photo').alt=v.title+' farming scene';renderThumbnails();renderBannerCompletion();}
+ // Machinery-specific scenes, with a small pool of appropriate alternatives.
+ // Choose per generated event so reopening the same event doesn't shuffle its image.
+ const machineryPhotos={
+  'book-02-047':['puncture','workshop'],
+  'book-02-048':['engine','workshop'],
+  'book-02-049':['workshop','engine'],
+  'book-02-050':['workshop','engine'],
+  'book-02-051':['engine','workshop'],
+  'book-02-052':['puncture'],
+  'book-02-053':['engine','workshop'],
+  'book-02-054':['engine'],
+  'book-02-055':['harvester'],
+  'book-02-056':['seeder'],
+  'book-02-057':['baler'],
+  'book-02-058':['seeder','workshop'],
+  'book-02-059':['workshop'],
+  'book-02-060':['trailer'],
+  'book-02-061':['seeder'],
+  'book-02-062':['seeder'],
+  'book-02-063':['workshop','engine'],
+  'book-02-064':['engine','workshop'],
+  'book-02-065':['engine'],
+  'book-02-066':['engine','workshop'],
+  'book-02-067':['workshop','engine'],
+  'book-02-068':['workshop','engine'],
+  'book-02-069':['workshop','engine'],
+  'book-02-070':['engine','workshop']
+ };
+ if(v.category===2 && machineryPhotos[v.id]){
+  const options=machineryPhotos[v.id];
+  const stableKey=String(v.id)+'|'+String(v.month||state.calendar?.month||'')+'|'+String(v.year||state.calendar?.year||'');
+  let hash=0;for(let i=0;i<stableKey.length;i++)hash=((hash*31)+stableKey.charCodeAt(i))|0;
+  photo.src=folder+'machinery-'+options[(hash>>>0)%options.length]+'.webp';
+ }else{
+  photo.src=folder+slug+'.webp';
+ }
+ $('photo').alt=v.title+' farming scene';renderThumbnails();renderBannerCompletion();}
 function findTracked(v){return state.active.find(x=>x.id===v?.id)}
 function completeAction(id){
  const item=state.active.find(x=>x.id===id);
