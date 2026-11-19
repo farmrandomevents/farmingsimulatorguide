@@ -397,7 +397,7 @@ function showEvent(v){if(!v)return;state.current=v;$('cat').textContent=cats[v.c
  };
  if(v.category===1 && cropPhotos[v.eventId]){
   photo.src=folder+cropPhotos[v.eventId];
- }elseif(v.category===2 && machineryPhotos[v.eventId]){
+ }else if(v.category===2 && machineryPhotos[v.eventId]){
   const options=machineryPhotos[v.eventId];
   const stableKey=String(v.id)+'|'+String(v.month||state.calendar?.month||'')+'|'+String(v.year||state.calendar?.year||'');
   let hash=0;for(let i=0;i<stableKey.length;i++)hash=((hash*31)+stableKey.charCodeAt(i))|0;
