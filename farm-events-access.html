@@ -2,13 +2,48 @@
 body{background:#092b20;color:#fff;font-family:Arial,sans-serif;margin:0} .access{max-width:830px;margin:35px auto 70px;padding:0 18px}.access h1{text-align:center;color:#e8c879;font-size:clamp(30px,6vw,49px);margin-bottom:8px}.intro{text-align:center;color:#e4d7ad}.access-grid{display:grid;gap:22px;margin-top:28px}.access-card{background:#174432;border-radius:12px;padding:25px;border:1px solid #41684f}.access-card.full{background:#102e23;border-color:#bfa25d}.access h2{margin:0 0 12px;color:#f4e0a4}.access p{line-height:1.55}.access ul{line-height:2;padding-left:22px}.access .cta{display:block;text-align:center;background:#d6b364;color:#173324;text-decoration:none;padding:15px;border-radius:7px;font-weight:700;margin-top:18px}.access .note{color:#e1d7bf;font-size:13px}.access .tag{font-size:12px;letter-spacing:1.2px;color:#e8c879;font-weight:700}.access .coming{background:transparent!important;color:#fff!important;border-top:1px solid #507158;margin-top:20px;padding-top:20px;border-radius:0;box-shadow:none}.access .coming h2{color:#f4e0a4!important}.access .coming p{color:#fff!important}.access .code{width:100%;box-sizing:border-box;background:#244c3a;color:#fff;border:1px solid #bfa25d;border-radius:6px;padding:13px;font-size:16px}.access .disabled{opacity:.65;cursor:not-allowed;border:0;width:100%;padding:15px;background:#d6b364;color:#173324;font-weight:700;border-radius:7px;margin-top:10px} .brandline{text-align:center;padding:23px 10px;background:#06251b;border-bottom:2px solid #9d8041;color:#dfc57f;letter-spacing:2px;font-weight:bold}.access{box-sizing:content-box}.return{text-align:center;margin-top:15px}.return a{color:#e8c879}</style></head><body>
 <header class="brand"><a href="index.html" aria-label="Farming Simulator Guide home"><span class="brand-line" aria-hidden="true">━━━ ❧</span><span class="brand-title">FARMING SIMULATOR GUIDE</span><span class="brand-line" aria-hidden="true">❧ ━━━</span></a></header><nav class="nav" aria-label="Main navigation"><a href="index.html">Home</a><a href="books.html">Our Books</a><div class="nav-menu"><button type="button" class="nav-toggle" aria-expanded="false">Gameplay Tools ▾</button><div class="nav-dropdown"><a href="farm-events-access.html">Farm Events</a><a href="ai-competitors.html">AI Farming Competitors</a><a href="multiplayer-events.html">Multiplayer Events</a></div></div><a href="book-owners.html">Book Owners’ Area</a><a href="about.html">About</a><a href="contact.html">Contact</a></nav><main class="access"><h1>FARM EVENTS</h1><p class="intro">Bring your farm to life with realistic random events.</p>
 <div class="access-grid"><section class="access-card"><div class="tag">FREE DEMO · 8 EVENTS</div><h2>Try Farm Events</h2><p>The free demo features four Weather &amp; Field events and four Machinery events, shuffled before repeating. One event per month; other categories are locked.</p><a class="cta" href="random-events/demo.html">TRY FREE DEMO</a></section>
-<section class="access-card full"><div class="tag">FULL ACCESS INCLUDED WITH OUR BOOKS</div><h2>UNLOCK HUNDREDS OF RANDOM FARM EVENTS</h2><p>Use the access code included in your Farming Simulator book to unlock the full experience.</p><ul><li>Hundreds of different farm events</li><li>Every event category unlocked</li><li>Up to 10 events per month</li><li>Future event-library updates included</li></ul><label for="book-code">Book access code</label><input id="book-code" class="code" placeholder="Enter your book access code" autocomplete="off"><button class="disabled" id="unlock" type="button" style="opacity:1;cursor:pointer">UNLOCK FULL ACCESS</button><p id="unlock-status" role="status" class="note" aria-live="polite"></p><div class="coming"><h2>FARM MESSAGES · COMING SOON</h2><p>Optional realistic farm updates delivered as text-message notifications during gameplay.</p></div></section></div><p class="return"><a href="index.html">Return to homepage</a></p></main><script>
+<section class="access-card full"><div class="tag">FULL ACCESS INCLUDED WITH OUR BOOKS</div><h2>UNLOCK HUNDREDS OF RANDOM FARM EVENTS</h2><p>Use the access code included in your Farming Simulator book to unlock the full experience.</p><ul><li>Hundreds of different farm events</li><li>Every event category unlocked</li><li>Up to 10 events per month</li><li>Future event-library updates included</li></ul><label for="book-code">Book access code</label><input id="book-code" class="code" placeholder="Enter your book access code" autocomplete="off"><label style="display:flex;align-items:center;gap:9px;margin-top:13px;color:#fff;font-size:15px"><input type="checkbox" id="remember-access" checked style="width:18px;height:18px;accent-color:#d6b364">Remember me for 30 days</label><button class="disabled" id="unlock" type="button" style="opacity:1;cursor:pointer">UNLOCK FULL ACCESS</button><p id="unlock-status" role="status" class="note" aria-live="polite"></p><div class="coming"><h2>FARM MESSAGES · COMING SOON</h2><p>Optional realistic farm updates delivered as text-message notifications during gameplay.</p></div></section></div><p class="return"><a href="index.html">Return to homepage</a></p></main><script>
 (function(){
-const input=document.getElementById('book-code'),status=document.getElementById('unlock-status');
-function unlock(){if(input.value.trim().replace(/\s+/g,' ').toUpperCase()==='MY FARM'){
-try{localStorage.setItem('fsg-book-demo-access','yes')}catch(e){}
-location.href='random-events/index.html';
-}else{status.textContent='That access code is not recognised. Please try again.';}}
+const input=document.getElementById('book-code');
+const status=document.getElementById('unlock-status');
+const remember=document.getElementById('remember-access');
+const KEY='fsg-farm-events-remember-until';
+const LEGACY='fsg-book-demo-access';
+const THIRTY_DAYS=30*24*60*60*1000;
+const params=new URLSearchParams(location.search);
+if(params.has('logout')){
+  try{localStorage.removeItem(KEY);localStorage.removeItem(LEGACY);
+      sessionStorage.removeItem('fsg-farm-events-session');}catch(e){}
+  history.replaceState(null,'',location.pathname);
+  status.textContent='You have logged out of Farm Events.';
+}else{
+  try{
+    const until=Number(localStorage.getItem(KEY));
+    const session=sessionStorage.getItem('fsg-farm-events-session')==='yes';
+    if((Number.isFinite(until)&&until>Date.now())||session){
+      location.replace('random-events/index.html');
+      return;
+    }
+    if(until) localStorage.removeItem(KEY);
+  }catch(e){}
+}
+function unlock(){
+  if(input.value.trim().replace(/\\s+/g,' ').toUpperCase()==='MY FARM'){
+    try{
+      localStorage.setItem(LEGACY,'yes');
+      if(remember.checked){
+        localStorage.setItem(KEY,String(Date.now()+THIRTY_DAYS));
+        sessionStorage.removeItem('fsg-farm-events-session');
+      }else{
+        localStorage.removeItem(KEY);
+        sessionStorage.setItem('fsg-farm-events-session','yes');
+      }
+    }catch(e){}
+    location.href='random-events/index.html';
+  }else{
+    status.textContent='That access code is not recognised. Please try again.';
+  }
+}
 document.getElementById('unlock').addEventListener('click',unlock);
 input.addEventListener('keydown',e=>{if(e.key==='Enter')unlock()});
 })();</script><script src="navigation.js"></script></body></html>
