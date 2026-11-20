@@ -395,7 +395,11 @@ function showEvent(v){if(!v)return;state.current=v;$('cat').textContent=cats[v.c
   'crops-2026-27':'01-crops-fields-universal.webp',
   'crops-2026-28':'06-harvesting-grain-trailer.webp'
  };
- if(v.category===1 && cropPhotos[v.eventId]){
+ if(v.eventId==='book-06-200'){
+  photo.src='images/contracts-neighbours/wheat-contract.webp';
+ }else if(v.eventId==='book-02-057'){
+  photo.src='images/machinery/baler-breakdown.webp';
+ }else if(v.category===1 && cropPhotos[v.eventId]){
   photo.src=folder+cropPhotos[v.eventId];
  }else if(v.category===2 && machineryPhotos[v.eventId]){
   const options=machineryPhotos[v.eventId];
