@@ -95,3 +95,7 @@
 .events-feature .tile{border:0;border-radius:0;box-shadow:none}
 .events-feature .home-install{margin:0;padding:0;border:0;line-height:0}
 .events-feature .home-install-button{display:block;width:100%;margin:0;border:0;border-top:1px solid #f9e5b1;border-radius:0;padding:14px 10px;line-height:1.3}
+
+/* Owners Area remains accessible in the top navigation, not a homepage tile. */
+.nav .owners-nav-link{color:#f3c858;border:1px solid #b99547;border-radius:6px;margin-left:12px}
+@media(max-width:700px){.nav .owners-nav-link{margin-left:0}}

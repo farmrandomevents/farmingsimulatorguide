@@ -1,0 +1,1 @@
+Upload these four files to the ROOT of your GitHub Pages repository, keeping the assets subfolder. Replace index.html and style.css; add campaigns.html and assets/box-campaigns.webp. Do not upload the entire old site. Permanent QR destination: https://farmingsimulatorguide.com/campaigns.html . No other pages or random-events files are changed.
