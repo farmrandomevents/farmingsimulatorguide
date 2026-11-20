@@ -248,10 +248,36 @@ function animalEventDescription(e){
  let action=e.template;
  if(count!==null)action=action.replace(/\b(?:1|2|3) newborn animals?\b|\b(?:1|2|3) newborns?\b|\b(?:1|2|3) newborn\b|\b(?:1|2|3) young animals?\b/gi,`${count} ${count===1?terms[0]:terms[1]}`);
  else action=action.replace(/\b2 newborn animals?\b|\b2 newborns?\b/gi,`2 ${terms[1]}`).replace(/\b1 newborn animals?\b|\b1 newborns?\b|\b1 newborn\b/gi,`1 ${terms[0]}`);
+ // Keep the selected livestock species visible in every player action.
+ const herd={Cattle:'cattle',Sheep:'sheep',Pigs:'pigs',Goats:'goats',Horses:'horses','Water Buffalo':'water buffalo',Alpacas:'alpacas',Chickens:'chickens',Bees:'bees'}[species]||'livestock';
+ const singular={Cattle:'cow',Sheep:'sheep',Pigs:'pig',Goats:'goat',Horses:'horse','Water Buffalo':'water buffalo',Alpacas:'alpaca',Chickens:'chicken',Bees:'bee'}[species]||'animal';
+ const plural=herd;
+ // Use livestock-specific enclosure wording, and never refer to an anonymous animal.
+ action=action.replace(/\bthe youngest animal\b/gi,`the youngest ${singular}`)
+  .replace(/\bthe oldest animal\b/gi,`the oldest ${singular}`)
+  .replace(/\byour youngest animal\b/gi,`your youngest ${singular}`)
+  .replace(/\bone animal\b/gi,`one ${singular}`)
+  .replace(/\b1 adult animal\b/gi,`1 adult ${singular}`)
+  .replace(/\b2 adult animals\b/gi,`2 adult ${plural}`)
+  .replace(/\b(\d+) animals\b/gi,(_,n)=>`${n} ${plural}`)
+  .replace(/\bnew animals\b/gi,`new ${plural}`)
+  .replace(/\bany pen\b/gi,`any ${herd} enclosure`)
+  .replace(/\bevery pen\b/gi,`every ${herd} enclosure`)
+  .replace(/\byour largest pen\b/gi,`your largest ${herd} enclosure`)
+  .replace(/\byour smallest pen\b/gi,`your smallest ${herd} enclosure`)
+  .replace(/\byour fullest pen\b/gi,`your fullest ${herd} enclosure`)
+  .replace(/\bsmallest pen\b/gi,`your smallest ${herd} enclosure`)
+  .replace(/\bthe same pen\b/gi,`the same ${herd} enclosure`)
+  .replace(/\byour largest pasture\b/gi,`your largest ${herd} pasture`)
+  .replace(/\byour largest animal pen\b/gi,`your largest ${herd} enclosure`)
+  .replace(/\bdifferent pens\b/gi,`different ${herd} enclosures`);
+ // A general veterinary/repair/payment instruction still needs to identify its subject.
+ if(!action.toLowerCase().includes(herd.toLowerCase()) && !action.toLowerCase().includes(singular.toLowerCase()) && !action.toLowerCase().includes(terms[0].toLowerCase()) && !action.toLowerCase().includes(terms[1].toLowerCase())){
+   action=action.replace(/\.$/, '')+` (for your ${herd}).`;
+ }
  const story=e.story||'';
- const speciesLabel=species?`${species} — `:'';
  const label=e.optionalOffer?'OPTIONAL OPPORTUNITY':'ACTION REQUIRED';
- return `${speciesLabel}${story}\n\n${label}: ${action}`;
+ return `${story}\n\n${label}: ${action}`;
 }
 function instantiate(e){const crop=e.c===1?cropEventDescription(e):null;const dur=isPendingOffer(e)?null:durationFor(e);const amount=e.amounts?randomFrom(e.amounts):null;const animal=e.id==='weather-2026-20'?randomFrom(state.animalsOwned):null;const variant=e.weatherAddition?weatherVariant(e):null;const claim=e.id==='weather-2026-29'?availableInsuranceClaim():null;const description=crop?crop.description:(e.c===3?animalEventDescription(e):(claim?(claim.large?'Following a further inspection of the recent weather damage, your insurer has identified additional damage and approved a higher settlement than originally anticipated.':'Your insurer has completed its assessment of the recent weather damage and approved a partial settlement towards the repair costs.')+'\n\nGOOD NEWS: Your farm has received £'+claim.amount.toLocaleString('en-GB')+'.':(variant?.description||e.template))).replace('{animal}',animal?animal.toLowerCase():'livestock');if(claim)claim.claimed=true;return {id:`event-${Date.now()}-${++state.sequence}`,eventId:e.id,title:claim?'Insurance Claim Successful':variant?.title||e.t,category:e.c,photo:e.p,description:naturalDurationSentence(description.replace('{duration}',dur?.label||'').replace('{amount}',amount===null?'':amount.toLocaleString('en-GB'))),duration:crop?crop.duration:dur,eventType:e.eventType||null,pendingOffer:isPendingOffer(e),completed:false,remaining:(crop?crop.duration:dur)?.total||0,total:(crop?crop.duration:dur)?.total||0,created:state.calendar?{...state.calendar}:null,finished:null,restrictedProducts:variant?.restrictedProducts||[],requiredProduct:variant?.requiredProduct||null};}
 
