@@ -1466,5 +1466,196 @@ window.FSG_EVENT_CATEGORIES[3] = [
     ],
     "story": "A buyer is seeking animals from more than one livestock enclosure and is offering a bonus.",
     "requiresMultipleAnimalTypes": true
+  },
+  {
+    "id": "animal-chickens-01",
+    "c": 3,
+    "t": "Hen Housing Repairs",
+    "template": "Pay £{amount} to repair the chicken house.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Chickens"
+    ],
+    "story": "A loose panel has damaged the chicken house during the night.",
+    "amounts": [
+      200,
+      300,
+      400
+    ]
+  },
+  {
+    "id": "animal-chickens-02",
+    "c": 3,
+    "t": "Egg Demand Rises",
+    "template": "Deliver one pallet of eggs and record a £{amount} bonus.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Chickens"
+    ],
+    "story": "The local shop has asked for extra eggs for the weekend.",
+    "amounts": [
+      200,
+      300,
+      400
+    ]
+  },
+  {
+    "id": "animal-chickens-03",
+    "c": 3,
+    "t": "Poor Egg Production",
+    "template": "Pay £{amount} to check the hens and repair the run.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Chickens"
+    ],
+    "story": "Egg production has fallen after a disturbance near the chicken run.",
+    "amounts": [
+      100,
+      200,
+      300
+    ]
+  },
+  {
+    "id": "animal-chickens-04",
+    "c": 3,
+    "t": "Chicken Feed Spoilage",
+    "template": "Buy one bag of chicken feed to replace the spoiled stock.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Chickens"
+    ],
+    "story": "Rain has reached part of the feed stored next to the chicken house."
+  },
+  {
+    "id": "animal-chickens-05",
+    "c": 3,
+    "t": "Chicken Flock Expansion",
+    "template": "Buy 10 hens and record a £100 supplier credit.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Chickens"
+    ],
+    "story": "The local poultry supplier is offering a contribution towards expanding your flock.",
+    "optionalOffer": true
+  },
+  {
+    "id": "animal-chickens-06",
+    "c": 3,
+    "t": "Chicken Run Damage",
+    "template": "Pay £{amount} to repair the chicken run.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Chickens"
+    ],
+    "story": "Part of the mesh around the chicken run needs replacing.",
+    "amounts": [
+      100,
+      200,
+      300
+    ]
+  },
+  {
+    "id": "animal-chickens-07",
+    "c": 3,
+    "t": "Poultry Health Check",
+    "template": "Pay £{amount} for a health check on the hens.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Chickens"
+    ],
+    "story": "Several hens have gone off their feed and the flock needs checking.",
+    "amounts": [
+      200,
+      300,
+      400
+    ]
+  },
+  {
+    "id": "animal-bees-01",
+    "c": 3,
+    "t": "Beehive Repairs",
+    "template": "Pay £{amount} to repair the beehive.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Bees"
+    ],
+    "story": "Strong winds have shifted a hive lid and damaged its fittings.",
+    "amounts": [
+      100,
+      200,
+      300
+    ]
+  },
+  {
+    "id": "animal-bees-02",
+    "c": 3,
+    "t": "Local Honey Order",
+    "template": "Deliver one pallet of honey and record a £{amount} bonus for your bees.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Bees"
+    ],
+    "story": "A farm shop is putting together a display of local honey.",
+    "amounts": [
+      200,
+      300,
+      400
+    ]
+  },
+  {
+    "id": "animal-bees-03",
+    "c": 3,
+    "t": "Bee Colony Swarms",
+    "template": "Pay £{amount} for the beekeeper to collect the bee swarm.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Bees"
+    ],
+    "story": "A swarm from one of your hives has settled nearby, and a beekeeper can collect it.",
+    "amounts": [
+      100,
+      200,
+      300
+    ]
+  },
+  {
+    "id": "animal-bees-04",
+    "c": 3,
+    "t": "Beehive Stand Damage",
+    "template": "Pay £{amount} to secure the stand for your beehive.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Bees"
+    ],
+    "story": "Heavy rain has softened the ground and one hive stand has shifted.",
+    "amounts": [
+      100,
+      200,
+      300
+    ]
+  },
+  {
+    "id": "animal-bees-05",
+    "c": 3,
+    "t": "New Bee Colony Offer",
+    "template": "Place one new beehive and record a £200 supplier credit.",
+    "p": "category-3",
+    "eventType": "action",
+    "animals": [
+      "Bees"
+    ],
+    "story": "A local beekeeper is offering to contribute towards an additional hive.",
+    "optionalOffer": true
   }
 ];
