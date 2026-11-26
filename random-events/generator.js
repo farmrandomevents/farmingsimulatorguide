@@ -175,6 +175,7 @@ function weatherVariant(e){
   const animal=weatherPick(animals),food=weatherPick(feedChoices[animal]);
   const group=animal==='Chickens'?'chicken housing':animal==='Horses'?'stable':animal.toLowerCase()+' housing';
   v.title=animal+' Feed Spoilage';
+  v.animalSpecies=animal;
   const story=weatherPick(['Strong winds have damaged part of the roof of the '+group+', allowing rainwater to spoil some of the feed already in the enclosure.', 'Heavy rain has entered the '+group+', spoiling some of the feed already in the enclosure.']);
   const purchase=food==='hay bale'||food==='silage bale'?'one additional '+food:'additional '+food;
   v.description=story+'\n\nACTION REQUIRED: Purchase '+purchase+' to replace the spoiled feed before '+weatherPick(times)+' today.';
@@ -184,6 +185,7 @@ function weatherVariant(e){
   const animal=weatherPick(state.animalsOwned.filter(a=>['Cattle','Pigs','Horses'].includes(a)));
   const housing=animal==='Horses'?'stable':animal.toLowerCase()+' housing';
   v.title=animal+' Bedding Damage';
+  v.animalSpecies=animal;
   const story=weatherPick(['Strong winds have damaged the roof of the '+housing+', allowing rainwater to soak the straw bedding.', ...([11,0,1].includes(month)?['Heavy snow has damaged part of the '+housing+' roof. Melting snow has soaked the straw bedding.']:[])]);
   v.description=story+'\n\nACTION REQUIRED: Purchase one additional straw bale before '+weatherPick(['2:00 pm','4:00 pm','the end of today'])+'.';
   v.requiredProduct='straw bale';
@@ -239,9 +241,7 @@ function naturalDurationSentence(text){
   .replace(/until 12pm \(half a day\)/gi,'until midday')
   .replace(/\bin-game\s+(days?|months?)\b/gi,'$1');
 }
-function animalEventDescription(e){
- const selected=(e.animals||[]).filter(a=>state.animalsOwned.includes(a));
- const species=randomFrom(selected.length?selected:state.animalsOwned);
+function animalEventDescription(e,species){
  const names={Cattle:['calf','calves','cattle'],Sheep:['lamb','lambs','sheep'],Pigs:['piglet','piglets','pigs'],Goats:['kid','kids','goats'],Horses:['foal','foals','horses'],'Water Buffalo':['buffalo calf','buffalo calves','water buffalo'],Alpacas:['cria','crias','alpacas']};
  const terms=names[species]||['newborn animal','newborn animals','livestock'];
  const count=e.animalCountRange?e.animalCountRange[0]+Math.floor(Math.random()*(e.animalCountRange[1]-e.animalCountRange[0]+1)):null;
@@ -279,7 +279,33 @@ function animalEventDescription(e){
  const label=e.optionalOffer?'OPTIONAL OPPORTUNITY':'ACTION REQUIRED';
  return `${story}\n\n${label}: ${action}`;
 }
-function instantiate(e){const crop=e.c===1?cropEventDescription(e):null;const dur=isPendingOffer(e)?null:durationFor(e);const amount=e.amounts?randomFrom(e.amounts):null;const animal=e.id==='weather-2026-20'?randomFrom(state.animalsOwned):null;const variant=e.weatherAddition?weatherVariant(e):null;const claim=e.id==='weather-2026-29'?availableInsuranceClaim():null;const description=crop?crop.description:(e.c===3?animalEventDescription(e):(claim?(claim.large?'Following a further inspection of the recent weather damage, your insurer has identified additional damage and approved a higher settlement than originally anticipated.':'Your insurer has completed its assessment of the recent weather damage and approved a partial settlement towards the repair costs.')+'\n\nGOOD NEWS: Your farm has received £'+claim.amount.toLocaleString('en-GB')+'.':(variant?.description||e.template))).replace('{animal}',animal?animal.toLowerCase():'livestock');if(claim)claim.claimed=true;return {id:`event-${Date.now()}-${++state.sequence}`,eventId:e.id,title:claim?'Insurance Claim Successful':variant?.title||e.t,category:e.c,photo:e.p,description:naturalDurationSentence(description.replace('{duration}',dur?.label||'').replace('{amount}',amount===null?'':amount.toLocaleString('en-GB'))),duration:crop?crop.duration:dur,eventType:e.eventType||null,pendingOffer:isPendingOffer(e),completed:false,remaining:(crop?crop.duration:dur)?.total||0,total:(crop?crop.duration:dur)?.total||0,created:state.calendar?{...state.calendar}:null,finished:null,restrictedProducts:variant?.restrictedProducts||[],requiredProduct:variant?.requiredProduct||null};}
+function animalEventSpecies(e){
+ const available=e.animals?e.animals.filter(a=>state.animalsOwned.includes(a)):state.animalsOwned;
+ return randomFrom(available);
+}
+const animalBannerTerms={
+ Cattle:/\b(?:cattle|cows?|heifers?|calf|calves)\b/i,
+ Sheep:/\b(?:sheep|ewes?|lambs?|rams?)\b/i,
+ Pigs:/\b(?:pigs?|piglets?|sows?|boars?)\b/i,
+ Chickens:/\b(?:chickens?|hens?|chicks?|roosters?)\b/i,
+ Goats:/\b(?:goats?|kids?)\b/i,
+ Horses:/\b(?:horses?|mares?|foals?)\b/i,
+ 'Water Buffalo':/\b(?:water )?buffalo\b/i,
+ Bees:/\b(?:bees?|bee colonies|bee swarms)\b/i,
+ Alpacas:/\b(?:alpacas?|crias?)\b/i
+};
+function animalBannerSpecies(event){
+ // Older saved events may only have the species in their wording.
+ if(Object.hasOwn(event,'animalSpecies'))return event.animalSpecies;
+ const definition=events.find(e=>e.id===event.eventId);
+ if(definition?.requiresMultipleAnimalTypes)return null;
+ if(event.category!==3 && !['weather-2026-20','weather-2026-26','weather-2026-27'].includes(event.eventId))return null;
+ if(definition?.animals?.length===1)return definition.animals[0];
+ const wording=(event.title+' '+event.description).replace(/\bbuffalo (calf|calves)\b/gi,'buffalo');
+ const matches=Object.keys(animalBannerTerms).filter(species=>animalBannerTerms[species].test(wording));
+ return matches.length===1?matches[0]:null;
+}
+function instantiate(e){const crop=e.c===1?cropEventDescription(e):null;const dur=isPendingOffer(e)?null:durationFor(e);const amount=e.amounts?randomFrom(e.amounts):null;const animal=e.id==='weather-2026-20'?randomFrom(state.animalsOwned):null;const variant=e.weatherAddition?weatherVariant(e):null;const species=e.c===3?animalEventSpecies(e):null;const claim=e.id==='weather-2026-29'?availableInsuranceClaim():null;const description=crop?crop.description:(e.c===3?animalEventDescription(e,species):(claim?(claim.large?'Following a further inspection of the recent weather damage, your insurer has identified additional damage and approved a higher settlement than originally anticipated.':'Your insurer has completed its assessment of the recent weather damage and approved a partial settlement towards the repair costs.')+'\n\nGOOD NEWS: Your farm has received £'+claim.amount.toLocaleString('en-GB')+'.':(variant?.description||e.template))).replace('{animal}',animal?animal.toLowerCase():'livestock');if(claim)claim.claimed=true;return {id:`event-${Date.now()}-${++state.sequence}`,eventId:e.id,title:claim?'Insurance Claim Successful':variant?.title||e.t,category:e.c,photo:e.p,animalSpecies:e.requiresMultipleAnimalTypes?null:(species||variant?.animalSpecies||animal||null),description:naturalDurationSentence(description.replace('{duration}',dur?.label||'').replace('{amount}',amount===null?'':amount.toLocaleString('en-GB'))),duration:crop?crop.duration:dur,eventType:e.eventType||null,pendingOffer:isPendingOffer(e),completed:false,remaining:(crop?crop.duration:dur)?.total||0,total:(crop?crop.duration:dur)?.total||0,created:state.calendar?{...state.calendar}:null,finished:null,restrictedProducts:variant?.restrictedProducts||[],requiredProduct:variant?.requiredProduct||null};}
 
 // FS25 standard seasonal-growth calendar (month indices, Jan=0).
 // Approximate planting and harvest windows: use the active crop selections rather
@@ -436,7 +462,10 @@ function showEvent(v){if(!v)return;state.current=v;$('cat').textContent=cats[v.c
   'crops-2026-27':'01-crops-fields-universal.webp',
   'crops-2026-28':'06-harvesting-grain-trailer.webp'
  };
- if(v.eventId==='book-06-200'){
+ const bannerSpecies=animalBannerSpecies(v);
+ if(animalNames.includes(bannerSpecies)){
+  photo.src='images/animals/'+bannerSpecies.toLowerCase().replaceAll(' ','-')+'.webp';
+ }else if(v.eventId==='book-06-200'){
   photo.src='images/contracts-neighbours/wheat-contract.webp';
  }else if(v.eventId==='book-02-057'){
   photo.src='images/machinery/baler-breakdown.webp';
