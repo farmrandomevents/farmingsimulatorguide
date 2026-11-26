@@ -261,7 +261,7 @@ window.FSG_EVENT_CATEGORIES[6] = [
     "id": "book-06-208",
     "c": 6,
     "t": "Seed Delivery",
-    "template": "The merchant has four seed pallets ready, but its usual driver is tied up.\n\nOPPORTUNITY: Roleplay collecting four seed pallets from the merchant and delivering to the neighbouring farm. Make the trip with a suitable trailer, then record a £{amount} haulage fee.",
+    "template": "The merchant has four seed pallets ready, but its usual driver is tied up.\n\nOPPORTUNITY: Collect four seed pallets from the merchant and deliver to the neighbouring farm. Then record a £{amount} haulage fee.",
     "p": "merchant-haulage",
     "eventType": "action",
     "amounts": [
@@ -276,7 +276,7 @@ window.FSG_EVENT_CATEGORIES[6] = [
     "id": "book-06-209",
     "c": 6,
     "t": "Fertiliser Delivery",
-    "template": "A neighbour is waiting for fertiliser and the merchant needs someone to do the local run.\n\nOPPORTUNITY: Roleplay collecting four solid fertiliser pallets from the merchant and delivering to the neighbouring farm. Make the trip with a suitable trailer, then record a £{amount} haulage fee.",
+    "template": "A neighbour is waiting for fertiliser and the merchant needs someone to do the local run.\n\nOPPORTUNITY: Collect four solid fertiliser pallets from the merchant and deliver to the neighbouring farm. Then record a £{amount} haulage fee.",
     "p": "merchant-haulage",
     "eventType": "action",
     "amounts": [
@@ -291,7 +291,7 @@ window.FSG_EVENT_CATEGORIES[6] = [
     "id": "book-06-210",
     "c": 6,
     "t": "Liquid Fertiliser Delivery",
-    "template": "The merchant has a local liquid fertiliser order ready to go.\n\nOPPORTUNITY: Roleplay collecting four liquid fertiliser pallets from the merchant and delivering to the neighbouring farm. Make the trip with a suitable trailer, then record a £{amount} haulage fee.",
+    "template": "The merchant has a local liquid fertiliser order ready to go.\n\nOPPORTUNITY: Collect four liquid fertiliser pallets from the merchant and deliver to the neighbouring farm. Then record a £{amount} haulage fee.",
     "p": "merchant-haulage",
     "eventType": "action",
     "amounts": [
@@ -306,7 +306,7 @@ window.FSG_EVENT_CATEGORIES[6] = [
     "id": "book-06-211",
     "c": 6,
     "t": "Herbicide Delivery",
-    "template": "The merchant’s driver is covering another route and needs help with an herbicide order.\n\nOPPORTUNITY: Roleplay collecting four herbicide pallets from the merchant and delivering to the neighbouring farm. Make the trip with a suitable trailer, then record a £{amount} haulage fee.",
+    "template": "The merchant’s driver is covering another route and needs help with an herbicide order.\n\nOPPORTUNITY: Collect four herbicide pallets from the merchant and deliver to the neighbouring farm. Then record a £{amount} haulage fee.",
     "p": "merchant-haulage",
     "eventType": "action",
     "amounts": [
@@ -321,7 +321,7 @@ window.FSG_EVENT_CATEGORIES[6] = [
     "id": "book-06-212",
     "c": 6,
     "t": "Pig Feed Delivery",
-    "template": "A pig farm has placed a top-up order and the merchant needs someone to deliver it.\n\nOPPORTUNITY: Roleplay collecting four pig feed pallets from the merchant and delivering to the neighbouring farm. Make the trip with a suitable trailer, then record a £{amount} haulage fee.",
+    "template": "A pig farm has placed a top-up order and the merchant needs someone to deliver it.\n\nOPPORTUNITY: Collect four pig feed pallets from the merchant and deliver to the neighbouring farm. Then record a £{amount} haulage fee.",
     "p": "merchant-haulage",
     "eventType": "action",
     "amounts": [
@@ -336,7 +336,7 @@ window.FSG_EVENT_CATEGORIES[6] = [
     "id": "book-06-213",
     "c": 6,
     "t": "Lime Delivery",
-    "template": "A neighbour has booked a spreading contractor and the lime needs bringing over from the depot.\n\nOPPORTUNITY: Roleplay collecting one trailer load of lime from the merchant and delivering to the neighbouring farm. Make the trip with a suitable trailer, then record a £{amount} haulage fee.",
+    "template": "A neighbour has booked a spreading contractor and the lime needs bringing over from the depot.\n\nOPPORTUNITY: Collect one trailer load of lime from the merchant and deliver to the neighbouring farm. Then record a £{amount} haulage fee.",
     "p": "merchant-haulage",
     "eventType": "action",
     "amounts": [
@@ -351,7 +351,7 @@ window.FSG_EVENT_CATEGORIES[6] = [
     "id": "book-06-214",
     "c": 6,
     "t": "Large Seed Order",
-    "template": "Several neighbouring farms have combined their seed order into one delivery.\n\nOPPORTUNITY: Roleplay collecting eight seed pallets from the merchant and delivering to the neighbouring farm. Make the trip with a suitable trailer, then record a £{amount} haulage fee.",
+    "template": "Several neighbouring farms have combined their seed order into one delivery.\n\nOPPORTUNITY: Collect eight seed pallets from the merchant and deliver to the neighbouring farm. Then record a £{amount} haulage fee.",
     "p": "merchant-haulage",
     "eventType": "action",
     "amounts": [
@@ -367,7 +367,7 @@ window.FSG_EVENT_CATEGORIES[6] = [
     "id": "book-06-215",
     "c": 6,
     "t": "Large Fertiliser Order",
-    "template": "The merchant needs a large fertiliser order moved before the next load comes in.\n\nOPPORTUNITY: Roleplay collecting eight solid fertiliser pallets from the merchant and delivering to the neighbouring farm. Make the trip with a suitable trailer, then record a £{amount} haulage fee.",
+    "template": "The merchant needs a large fertiliser order moved before the next load comes in.\n\nOPPORTUNITY: Collect eight solid fertiliser pallets from the merchant and deliver to the neighbouring farm. Then record a £{amount} haulage fee.",
     "p": "merchant-haulage",
     "eventType": "action",
     "amounts": [
