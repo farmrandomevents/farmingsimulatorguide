@@ -330,6 +330,7 @@ function cropStageMatches(crop,stage,month){
  return true;
 }
 function cropEventEligible(e){
+ if(e.c===6 && e.crops)return e.crops.some(crop=>state.cropsOwned.includes(crop));
  if(e.c!==1)return true;
  const owned=state.cropsOwned.filter(c=>!e.crops||e.crops.includes(c));
  if(!owned.length)return false;
@@ -465,6 +466,8 @@ function showEvent(v){if(!v)return;state.current=v;$('cat').textContent=cats[v.c
  const bannerSpecies=animalBannerSpecies(v);
  if(animalNames.includes(bannerSpecies)){
   photo.src='images/animals/'+bannerSpecies.toLowerCase().replaceAll(' ','-')+'.webp';
+ }else if(v.category===6 && ['neighbour-bales','crop-delivery','merchant-haulage'].includes(v.photo)){
+  photo.src=v.eventId==='book-06-200'?'images/contracts-neighbours/wheat-contract.webp':folder+v.photo+'.webp';
  }else if(v.eventId==='book-06-200'){
   photo.src='images/contracts-neighbours/wheat-contract.webp';
  }else if(v.eventId==='book-02-057'){
