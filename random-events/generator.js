@@ -466,22 +466,31 @@ function showEvent(v){if(!v)return;state.current=v;$('cat').textContent=cats[v.c
  const bannerSpecies=animalBannerSpecies(v);
  if(animalNames.includes(bannerSpecies)){
   photo.src='images/animals/'+bannerSpecies.toLowerCase().replaceAll(' ','-')+'.webp';
- }else if(v.category===6 && ['neighbour-bales','crop-delivery','merchant-haulage'].includes(v.photo)){
-  photo.src=v.eventId==='book-06-200'?'images/contracts-neighbours/wheat-contract.webp':folder+v.photo+'.webp';
  }else if(v.eventId==='book-06-200'){
   photo.src='images/contracts-neighbours/wheat-contract.webp';
  }else if(v.eventId==='book-02-057'){
   photo.src='images/machinery/baler-breakdown.webp';
- }else if(v.category===5){
-  const banner=events.find(e=>e.id===v.eventId)?.p;
-  photo.src=['farm-accounts','farm-repairs','farm-income'].includes(banner)
-   ?folder+banner+'.webp':fallback;
- }else if(v.category===4 && ['feed-bale-store','supplier-delivery','grain-silo'].includes(v.photo)){
-  photo.onerror=()=>{
-   photo.onerror=()=>{photo.onerror=null;photo.src=fallback;};
-   photo.src='images/'+v.photo+'.webp';
+ }else if([3,4,5,6].includes(v.category)){
+  const specificBanners={
+   'feed-bale-store':[96,97,115,116],
+   'supplier-delivery':[104,107,109],
+   'grain-silo':[111,112,118],
+   'farm-repairs':[121,126,131],
+   'farm-accounts':[125,138],
+   'farm-income':[141],
+   'neighbour-bales':[192,193,194],
+   'crop-delivery':[201,202,203,204,205,206,207],
+   'merchant-haulage':[208,209,210,211,212,213,214,215]
   };
-  photo.src=folder+v.photo+'.webp';
+  const bookNumber=Number(/^book-0[456]-(\d+)$/.exec(v.eventId)?.[1]);
+  const banner=Object.keys(specificBanners).find(key=>specificBanners[key].includes(bookNumber));
+  if(v.category===4 && banner){
+   photo.onerror=()=>{
+    photo.onerror=()=>{photo.onerror=null;photo.src=fallback;};
+    photo.src='images/'+banner+'.webp';
+   };
+  }
+  photo.src=banner?folder+banner+'.webp':fallback;
  }else if(v.category===1 && cropPhotos[v.eventId]){
   photo.src=folder+cropPhotos[v.eventId];
  }else if(v.category===2 && machineryPhotos[v.eventId]){
