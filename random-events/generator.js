@@ -469,6 +469,10 @@ function showEvent(v){if(!v)return;state.current=v;$('cat').textContent=cats[v.c
   photo.src='images/contracts-neighbours/wheat-contract.webp';
  }else if(v.eventId==='book-02-057'){
   photo.src='images/machinery/baler-breakdown.webp';
+ }else if(v.category===5){
+  const banner=events.find(e=>e.id===v.eventId)?.p;
+  photo.src=['farm-accounts','farm-repairs','farm-income'].includes(banner)
+   ?folder+banner+'.webp':fallback;
  }else if(v.category===4 && ['feed-bale-store','supplier-delivery','grain-silo'].includes(v.photo)){
   photo.onerror=()=>{
    photo.onerror=()=>{photo.onerror=null;photo.src=fallback;};
