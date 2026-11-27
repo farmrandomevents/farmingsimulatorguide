@@ -316,8 +316,8 @@ function animalBannerSpecies(event){
  return matches.length===1?matches[0]:null;
 }
 const brandedRepairs=new Set(['book-02-048','book-02-050','book-02-051','book-02-052','book-02-053','book-02-054']);
-function tractorEventVariant(event){
- if(brandedRepairs.has(event.id) && state.tractorsOwned.length){
+function tractorEventVariant(event, nameRepair=false){
+ if(nameRepair && brandedRepairs.has(event.id) && state.tractorsOwned.length){
   const tractor=randomFrom(state.tractorsOwned);
   const name=tractor.brand+' '+tractor.size.toLowerCase()+' tractor';
   return {...event,t:tractor.brand+' '+event.t,template:event.template.replace(/\byour (?:largest|oldest|newest) tractor\b/gi,match=>(match[0]==='Y'?'Your ':'your ')+name)};
@@ -333,7 +333,7 @@ function tractorEventVariant(event){
  const amount=offer.minimum+100*Math.floor(Math.random()*(1+(offer.maximum-offer.minimum)/100));
  return {...event,t:offer.brand+' Promotion',template:event.template.replaceAll('{brand}',offer.brand).replace('{machine}',offer.machine),amounts:[amount]};
 }
-function instantiate(e){e=tractorEventVariant(e);const crop=e.c===1?cropEventDescription(e):null;const dur=isPendingOffer(e)?null:durationFor(e);const amount=e.amounts?randomFrom(e.amounts):null;const animal=e.id==='weather-2026-20'?randomFrom(state.animalsOwned):null;const variant=e.weatherAddition?weatherVariant(e):null;const species=e.c===3?animalEventSpecies(e):null;const claim=e.id==='weather-2026-29'?availableInsuranceClaim():null;const description=crop?crop.description:(e.c===3?animalEventDescription(e,species):(claim?(claim.large?'Following a further inspection of the recent weather damage, your insurer has identified additional damage and approved a higher settlement than originally anticipated.':'Your insurer has completed its assessment of the recent weather damage and approved a partial settlement towards the repair costs.')+'\n\nGOOD NEWS: Your farm has received £'+claim.amount.toLocaleString('en-GB')+'.':(variant?.description||e.template))).replace('{animal}',animal?animal.toLowerCase():'livestock');if(claim)claim.claimed=true;return {id:`event-${Date.now()}-${++state.sequence}`,eventId:e.id,title:claim?'Insurance Claim Successful':variant?.title||e.t,category:e.c,photo:e.p,animalSpecies:e.requiresMultipleAnimalTypes?null:(species||variant?.animalSpecies||animal||null),description:naturalDurationSentence(description.replace('{duration}',dur?.label||'').replace('{amount}',amount===null?'':amount.toLocaleString('en-GB'))),duration:crop?crop.duration:dur,eventType:e.eventType||null,pendingOffer:isPendingOffer(e),completed:false,remaining:(crop?crop.duration:dur)?.total||0,total:(crop?crop.duration:dur)?.total||0,created:state.calendar?{...state.calendar}:null,finished:null,restrictedProducts:variant?.restrictedProducts||[],requiredProduct:variant?.requiredProduct||null};}
+function instantiate(e,nameRepair=false){e=tractorEventVariant(e,nameRepair);const crop=e.c===1?cropEventDescription(e):null;const dur=isPendingOffer(e)?null:durationFor(e);const amount=e.amounts?randomFrom(e.amounts):null;const animal=e.id==='weather-2026-20'?randomFrom(state.animalsOwned):null;const variant=e.weatherAddition?weatherVariant(e):null;const species=e.c===3?animalEventSpecies(e):null;const claim=e.id==='weather-2026-29'?availableInsuranceClaim():null;const description=crop?crop.description:(e.c===3?animalEventDescription(e,species):(claim?(claim.large?'Following a further inspection of the recent weather damage, your insurer has identified additional damage and approved a higher settlement than originally anticipated.':'Your insurer has completed its assessment of the recent weather damage and approved a partial settlement towards the repair costs.')+'\n\nGOOD NEWS: Your farm has received £'+claim.amount.toLocaleString('en-GB')+'.':(variant?.description||e.template))).replace('{animal}',animal?animal.toLowerCase():'livestock');if(claim)claim.claimed=true;return {id:`event-${Date.now()}-${++state.sequence}`,eventId:e.id,title:claim?'Insurance Claim Successful':variant?.title||e.t,category:e.c,photo:e.p,animalSpecies:e.requiresMultipleAnimalTypes?null:(species||variant?.animalSpecies||animal||null),description:naturalDurationSentence(description.replace('{duration}',dur?.label||'').replace('{amount}',amount===null?'':amount.toLocaleString('en-GB'))),duration:crop?crop.duration:dur,eventType:e.eventType||null,pendingOffer:isPendingOffer(e),completed:false,remaining:(crop?crop.duration:dur)?.total||0,total:(crop?crop.duration:dur)?.total||0,created:state.calendar?{...state.calendar}:null,finished:null,restrictedProducts:variant?.restrictedProducts||[],requiredProduct:variant?.requiredProduct||null};}
 
 // FS25 standard seasonal-growth calendar (month indices, Jan=0).
 // Approximate planting and harvest windows: use the active crop selections rather
@@ -651,23 +651,26 @@ function generate(){
  // An existing batch is never extended by another click in the same scheduled period.
  const chosen=[];
  for(let i=0;i<count;i++){
+   const hasNamedDealerEvent=chosen.some(e=>e.recallSize||e.brandOffers);
    const candidates=pool.filter(e=>
+     (!(e.recallSize||e.brandOffers)||!hasNamedDealerEvent)&&
      (!e.conflictGroup||!chosen.some(c=>c.conflictGroup===e.conflictGroup))&&
      !(e.c===0&&chosen.some(c=>c.c===0&&weatherCooldownFamily(c)===weatherCooldownFamily(e)))&&
      compatibleWithBatch(e,chosen));
    // Prefer a variety of event categories. Do not fill the month with weather.
    const unrepresented=candidates.filter(e=>!chosen.some(c=>c.c===e.c));
    const preferred=unrepresented.length?unrepresented:candidates;
-   const used=[...seen,...chosen.map(e=>e.id)];
-   const available=preferred.filter(e=>!used.includes(e.id));
-   const brandFocus=state.tractorsOwned.length && state.selected.every(category=>category===2||category===7);
-   const branded=brandFocus ? available.filter(e=>e.recallSize||brandedRepairs.has(e.id)) : [];
-   const next=chooseUnique(branded.length&&Math.random()<0.5?branded:available,[]);
+   const next=chooseUnique(preferred,[...seen,...chosen.map(e=>e.id)]);
    if(!next)break;
    chosen.push(next);
  }
  if(!chosen.length){$('status').textContent='No unused eligible events remain this month. Advance the calendar or select more categories.';return;}
- state.periodEvents=chosen.map(e=>{markSeen(e);recordWeatherIncident(e);if(!state.tracking||!state.calendar)state.used.push(e.id);const v=instantiate(e);autoTrack(v);return v});
+ // A named fault is an occasional alternative to the ordinary machinery wording.
+ const nameableRepairs=chosen.filter(e=>brandedRepairs.has(e.id));
+ const namedRepair=state.tractorsOwned.length && nameableRepairs.length &&
+  !chosen.some(e=>e.recallSize||e.brandOffers) && Math.random()<0.15
+  ? randomFrom(nameableRepairs) : null;
+ state.periodEvents=chosen.map(e=>{markSeen(e);recordWeatherIncident(e);if(!state.tracking||!state.calendar)state.used.push(e.id);const v=instantiate(e,e===namedRepair);autoTrack(v);return v});
  if(scheduled)state.periodKey=period;
  if(state.tracking&&state.calendar)state.monthGenerated[monthKey()]=true;
  showEvent(state.periodEvents[0]);if(state.periodEvents.some(e=>!e.total)&&state.tracking){ongoingOpen=true;state.ongoingOpen=true;}persist();renderTracker();renderSchedule();syncCleanLayout();
@@ -832,28 +835,27 @@ $('farmSettingsMenu').onclick=e=>{e.preventDefault();showSetup()};
 $('finishSetup').onclick=()=>{state.tracking=$('enableTracking').checked;if(state.tracking){$('calendarSave').click();}else{state.periodEvents=[];state.current=null;state.used=[];persist();renderTracker();renderSchedule();}setupOpen=false;syncCleanLayout();$('event').scrollIntoView({behavior:'smooth',block:'center'})};
 $('closeSetup').onclick=()=>{setupOpen=false;syncCleanLayout()};
 
-// A new save should clear progress without changing player preferences.
+// Reload without the saved state so the new farm uses the defaults.
 const newFarmButton=document.createElement('button');
 newFarmButton.type='button';
 newFarmButton.id='newFarmReset';
 newFarmButton.className='select-all';
-newFarmButton.textContent='↻ Start New Farm / Reset Progress';
+newFarmButton.textContent='↻ Start New Farm';
 newFarmButton.style.cssText='display:block;margin:18px 0 6px;padding:11px 16px;';
-newFarmButton.title='Clears farm events and calendar, but keeps your selected categories and preferences';
+newFarmButton.title='Clears all saved Random Events settings and progress';
 $('farmSetup').append(newFarmButton);
 const resetExplanation=document.createElement('p');
 resetExplanation.className='calendar-note';
-resetExplanation.textContent='Clears this farm’s events, history and calendar. Keeps your category, animal, crop and event preferences.';
+resetExplanation.textContent='Clears your farm setup, events, history and calendar, and restores the default settings.';
 $('farmSetup').append(resetExplanation);
 newFarmButton.addEventListener('click',()=>{
- farmDialog('Start a new farm? This will permanently clear all active events, completed history and the farm calendar saved in this browser. Your event preferences will be kept.',{title:'Start New Farm',confirm:true,confirmLabel:'Yes, Start New Farm',onConfirm:()=>{
- const fresh={
-   selected:[...state.selected],current:null,used:[],active:[],categoriesOpen:state.categoriesOpen,
-   tracking:state.tracking,calendar:null,frequency:state.frequency,count:state.count,minEvents:state.minEvents,maxEvents:state.maxEvents,currency:state.currency,areaUnit:state.areaUnit,
-   periodKey:null,periodEvents:[],scheduleAnchor:null,monthSeen:{},monthGenerated:{},weatherHistory:[],insuranceClaims:[],
-   lastGenerated:null,sequence:0,animalsOwned:[...state.animalsOwned],cropsOwned:[...state.cropsOwned],tractorsOwned:[...state.tractorsOwned],dealershipPacks:[...state.dealershipPacks],ongoingOpen:false
- };
- try{localStorage.setItem(KEY,JSON.stringify(fresh))}catch(e){}
+ farmDialog('Start a new farm? This clears the saved tractor list, crops, animals, settings, events and calendar for Random Events in this browser.',{title:'Start New Farm',confirm:true,confirmLabel:'Yes, Start New Farm',onConfirm:()=>{
+ try{
+  localStorage.removeItem(KEY);
+ }catch(e){
+  farmDialog('The browser could not clear the saved farm. Please try again.',{title:'Could Not Start New Farm'});
+  return;
+ }
  window.location.reload();
 }});
 });
