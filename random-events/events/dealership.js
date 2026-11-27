@@ -437,7 +437,7 @@ window.FSG_EVENT_CATEGORIES[7] = [
     "fixedDays": 1,
     "recallSize": "Small",
     "conflictGroup": "dealer-recall",
-    "template": "The dealer has issued a fictional recall for {brand} small tractors because a wiring loom retaining clip can rub against the bonnet support.\n\nACTION REQUIRED: Take the tractor to the dealership. Once you’ve dropped it off, tap Action Completed if tracking is enabled. The workshop will replace the clip and check the loom free of charge. Leave the tractor there for {duration}, then collect it."
+    "template": "The dealer has issued a fictional recall for {brand} small tractors because a wiring loom retaining clip can rub against the bonnet support.\n\nACTION REQUIRED: Take the tractor to the dealership. The workshop will replace the clip and check the loom free of charge. Leave the tractor there for one day, then collect it."
   },
   {
     "id": "dealer-recall-medium",
@@ -450,7 +450,7 @@ window.FSG_EVENT_CATEGORIES[7] = [
     "fixedDays": 1,
     "recallSize": "Medium",
     "conflictGroup": "dealer-recall",
-    "template": "The dealer has issued a fictional recall for {brand} medium tractors because a hydraulic hose support bracket can loosen during fieldwork.\n\nACTION REQUIRED: Take the tractor to the dealership. Once you’ve dropped it off, tap Action Completed if tracking is enabled. The workshop will replace the bracket and check the hose free of charge. Leave the tractor there for {duration}, then collect it."
+    "template": "The dealer has issued a fictional recall for {brand} medium tractors because a hydraulic hose support bracket can loosen during fieldwork.\n\nACTION REQUIRED: Take the tractor to the dealership. The workshop will replace the bracket and check the hose free of charge. Leave the tractor there for one day, then collect it."
   },
   {
     "id": "dealer-recall-large",
@@ -463,6 +463,6 @@ window.FSG_EVENT_CATEGORIES[7] = [
     "fixedDays": 1,
     "recallSize": "Large",
     "conflictGroup": "dealer-recall",
-    "template": "The dealer has issued a fictional recall for {brand} large tractors because the transmission controller needs a software update.\n\nACTION REQUIRED: Take the tractor to the dealership. Once you’ve dropped it off, tap Action Completed if tracking is enabled. The workshop will install the update and run a transmission check free of charge. Leave the tractor there for {duration}, then collect it."
+    "template": "The dealer has issued a fictional recall for {brand} large tractors because the transmission controller needs a software update.\n\nACTION REQUIRED: Take the tractor to the dealership. The workshop will install the update and run a transmission check free of charge. Leave the tractor there for one day, then collect it."
   }
 ];
