@@ -17,7 +17,7 @@ window.FSG_EVENT_CATEGORIES[7] = [
     "c": 7,
     "t": "Implement Demonstration",
     "template": "The dealer has an implement available between demonstrations.\n\nOPPORTUNITY: Try one implement free of charge for {duration}, then return it to the dealership.",
-    "p": "tractor-lineup",
+    "p": "category-7",
     "duration": "days",
     "minDays": 2,
     "maxDays": 2,
@@ -53,7 +53,7 @@ window.FSG_EVENT_CATEGORIES[7] = [
     "c": 7,
     "t": "Trade-In Bonus",
     "template": "The dealer is looking for used vehicles to add to its stock.\n\nOPPORTUNITY: Record an extra £{amount} when you next sell a vehicle.",
-    "p": "tractor-lineup",
+    "p": "category-7",
     "optionalOffer": true,
     "amounts": [
       3000,
@@ -68,7 +68,7 @@ window.FSG_EVENT_CATEGORIES[7] = [
     "c": 7,
     "t": "Used Machinery Deal",
     "template": "The dealer has reduced the price of selected second-hand stock to clear space in the yard.\n\nOPPORTUNITY: Apply up to £{amount} off one used machine purchase.",
-    "p": "tractor-lineup",
+    "p": "category-7",
     "optionalOffer": true,
     "amounts": [
       3000,
@@ -83,7 +83,7 @@ window.FSG_EVENT_CATEGORIES[7] = [
     "c": 7,
     "t": "Attachment Offer",
     "template": "The dealer is running a promotion on attachments and implements.\n\nOPPORTUNITY: Apply up to £{amount} off your next implement purchase.",
-    "p": "tractor-lineup",
+    "p": "category-7",
     "optionalOffer": true,
     "amounts": [
       1000,
@@ -104,7 +104,7 @@ window.FSG_EVENT_CATEGORIES[7] = [
     "c": 7,
     "t": "Dealer Discount",
     "template": "The sales team has offered your farm a one-off discount.\n\nOPPORTUNITY: Apply up to £{amount} off one dealership purchase.",
-    "p": "tractor-lineup",
+    "p": "category-7",
     "optionalOffer": true,
     "amounts": [
       3000,
@@ -127,7 +127,7 @@ window.FSG_EVENT_CATEGORIES[7] = [
     "c": 7,
     "t": "Free Tractor Refill",
     "template": "The dealer is covering the cost of a tank of diesel for a regular customer.\n\nOPPORTUNITY: Refuel your largest tractor once and record a reimbursement for the fuel charge.",
-    "p": "tractor-lineup",
+    "p": "category-7",
     "optionalOffer": true
   },
   {
@@ -135,7 +135,7 @@ window.FSG_EVENT_CATEGORIES[7] = [
     "c": 7,
     "t": "Fuel Voucher",
     "template": "A fuel supplier has issued your farm a voucher through the dealership.\n\nOPPORTUNITY: Apply up to £{amount} towards your next fuel bill.",
-    "p": "tractor-lineup",
+    "p": "category-7",
     "optionalOffer": true,
     "amounts": [
       300,
@@ -214,7 +214,7 @@ window.FSG_EVENT_CATEGORIES[7] = [
     "c": 7,
     "t": "Vintage Tractor Draw",
     "template": "Your farm’s entry has won a contribution towards a classic tractor at the dealer’s open day.\n\nOPPORTUNITY: Apply up to £{amount} towards one vintage tractor purchase.",
-    "p": "tractor-lineup",
+    "p": "category-7",
     "optionalOffer": true,
     "amounts": [
       25000,
@@ -235,7 +235,7 @@ window.FSG_EVENT_CATEGORIES[7] = [
     "c": 7,
     "t": "Cash Prize",
     "template": "Your entry won the dealership’s open-day cash draw.\n\nGOOD NEWS: Record the £{amount} cash prize.",
-    "p": "tractor-lineup",
+    "p": "category-7",
     "optionalOffer": false,
     "amounts": [
       3000,
@@ -250,7 +250,7 @@ window.FSG_EVENT_CATEGORIES[7] = [
     "c": 7,
     "t": "Customer Reward",
     "template": "The dealer has credited your farm for its past machinery purchases.\n\nOPPORTUNITY: Apply up to £{amount} off your next machine purchase.",
-    "p": "tractor-lineup",
+    "p": "category-7",
     "optionalOffer": true,
     "amounts": [
       1500,
@@ -264,7 +264,7 @@ window.FSG_EVENT_CATEGORIES[7] = [
     "c": 7,
     "t": "Implement Credit",
     "template": "The parts and sales teams have offered your farm a credit towards an implement.\n\nOPPORTUNITY: Apply up to £{amount} towards one implement purchase.",
-    "p": "tractor-lineup",
+    "p": "category-7",
     "optionalOffer": true,
     "amounts": [
       6000,
@@ -283,7 +283,7 @@ window.FSG_EVENT_CATEGORIES[7] = [
     "c": 7,
     "t": "Tractor Loyalty Reward",
     "template": "The dealer has offered a loyalty contribution towards your next tractor.\n\nOPPORTUNITY: Apply up to £{amount} off one tractor purchase.",
-    "p": "tractor-lineup",
+    "p": "category-7",
     "optionalOffer": true,
     "amounts": [
       3000,
@@ -298,7 +298,7 @@ window.FSG_EVENT_CATEGORIES[7] = [
     "c": 7,
     "t": "Open Day Machine Trial",
     "template": "Your open-day entry won a trial of a machine from the dealer’s demonstration fleet.\n\nOPPORTUNITY: Try one dealership machine free of charge for {duration}, then return it to the dealership.",
-    "p": "tractor-lineup",
+    "p": "category-7",
     "duration": "days",
     "minDays": 3,
     "maxDays": 3,
@@ -310,7 +310,7 @@ window.FSG_EVENT_CATEGORIES[7] = [
     "c": 7,
     "t": "Parts Voucher",
     "template": "The dealer has issued your farm a workshop voucher.\n\nOPPORTUNITY: Apply up to £{amount} towards one repair or upgrade.",
-    "p": "tractor-lineup",
+    "p": "category-7",
     "optionalOffer": true,
     "amounts": [
       1500,
@@ -331,7 +331,7 @@ window.FSG_EVENT_CATEGORIES[7] = [
     "c": 7,
     "t": "Seasonal Machinery Promotion",
     "template": "The dealer has released a seasonal discount on new machinery.\n\nOPPORTUNITY: Apply up to £{amount} off one new machine purchase.",
-    "p": "tractor-lineup",
+    "p": "category-7",
     "optionalOffer": true,
     "amounts": [
       3000,
