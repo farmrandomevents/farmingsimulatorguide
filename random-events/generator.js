@@ -923,6 +923,7 @@ const tractorSettings=document.createElement('section');
 tractorSettings.className='crop-settings';
 const tractorSettingsStyle=document.createElement('style');
 tractorSettingsStyle.textContent='#recallTractorBrand,#recallTractorSize{color-scheme:light;background:#123d2d;color:#fff9e8;border:1px solid #d7b56c;border-radius:8px;padding:8px;font:inherit;accent-color:#d7b56c}#recallTractorBrand option,#recallTractorSize option{background:#123d2d;color:#fff9e8}#recallTractorBrand:focus-visible,#recallTractorSize:focus-visible{outline:2px solid #f3cf7e;outline-offset:2px}';
+tractorSettingsStyle.textContent+='#recallTractors .tractor-remove{background:#123d2d;color:#f3cf7e;border:1px solid #d7b56c;border-radius:8px;padding:6px 12px;margin:3px 0 3px 6px;font:inherit;cursor:pointer}#recallTractors .tractor-remove:hover{background:#20523d}#recallTractors .tractor-remove:focus-visible{outline:2px solid #f3cf7e;outline-offset:2px}';
 document.head.append(tractorSettingsStyle);
 tractorSettings.innerHTML='<h3>Tractor Brands</h3><p>Add the brands and sizes you own to receive fictional manufacturer recalls and matching machinery faults.</p><label>Brand <select id="recallTractorBrand"></select></label> <label>Size <select id="recallTractorSize"></select></label> <button type="button" class="select-all" id="addRecallTractor">Add tractor</button><ul id="recallTractors"></ul>';
 cropSettings.section.after(tractorSettings);
@@ -939,6 +940,7 @@ function renderTractorSettings(){
   const row=document.createElement('li');
   const remove=document.createElement('button');
   remove.type='button';
+  remove.className='tractor-remove';
   remove.textContent='Remove';
   remove.setAttribute('aria-label','Remove '+tractor.brand+' '+tractor.size+' tractor');
   remove.onclick=()=>{state.tractorsOwned=state.tractorsOwned.filter(item=>item!==tractor);persist();renderTractorSettings();tractorBrand.focus()};
