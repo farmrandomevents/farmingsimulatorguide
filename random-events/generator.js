@@ -20,11 +20,15 @@ const categorySlugs=["weather", "crops-fields", "machinery", "animals", "supplie
 const cats=['Weather','Crops & Fields','Machinery','Animals','Supplies & Storage','Finance','Contracts & Neighbours','Dealership','Challenges','Community'];
 // Test content only; revised website events will replace these entries.
 const events=Object.keys(window.FSG_EVENT_CATEGORIES).sort((a,b)=>Number(a)-Number(b)).flatMap(k=>window.FSG_EVENT_CATEGORIES[k]);
+const dealershipOffers=(window.FSG_EVENT_CATEGORIES[7]||[]).find(event=>event.brandOffers)?.brandOffers||[];
+const tractorBrands=['Case IH','CLAAS','Fendt','John Deere','Kubota','Massey Ferguson','New Holland','Valtra','Ford','Mercedes-Benz'];
+const tractorSizes=['Small','Medium','Large'];
+const dealershipPacks=[...new Set(dealershipOffers.map(offer=>offer.pack).filter(Boolean))];
 const animalNames=['Cattle','Sheep','Pigs','Chickens','Goats','Horses','Water Buffalo','Bees','Alpacas'];
 const cropNames=['Wheat', 'Barley', 'Oats', 'Canola', 'Soybeans', 'Corn', 'Sorghum', 'Sunflowers', 'Potatoes', 'Sugar Beet', 'Cotton', 'Rice', 'Long Grain Rice', 'Grapes', 'Olives', 'Sugarcane', 'Poplar', 'Grass', 'Onions', 'Coffee', 'Bananas'];
 const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
 const KEY='fsg-first-events-test-v1';
-let state={selected:cats.map((_,i)=>i),current:null,used:[],active:[],categoriesOpen:true,tracking:false,calendar:null,frequency:'manual',count:'1',periodKey:null,periodEvents:[],scheduleAnchor:null,monthSeen:{},lastGenerated:null,sequence:0,animalsOwned:[],cropsOwned:[],areaUnit:'acres',currency:'GBP',minEvents:null,maxEvents:null};
+let state={selected:cats.map((_,i)=>i),current:null,used:[],active:[],categoriesOpen:true,tracking:false,calendar:null,frequency:'manual',count:'1',periodKey:null,periodEvents:[],scheduleAnchor:null,monthSeen:{},lastGenerated:null,sequence:0,animalsOwned:[],cropsOwned:[],tractorsOwned:[],dealershipPacks:[],areaUnit:'acres',currency:'GBP',minEvents:null,maxEvents:null};
 try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&typeof s==='object')state={...state,...s}}catch(e){}
 if(!Array.isArray(state.selected))state.selected=cats.map((_,i)=>i);
 if(!Array.isArray(state.active))state.active=[];
@@ -32,6 +36,11 @@ if(!Array.isArray(state.completionNotices))state.completionNotices=[];
 if(!Array.isArray(state.periodEvents))state.periodEvents=[];
 if(!Array.isArray(state.used))state.used=[];
 if(!Array.isArray(state.cropsOwned))state.cropsOwned=[];
+state.tractorsOwned=Array.isArray(state.tractorsOwned)
+ ?state.tractorsOwned.filter(tractor=>tractorBrands.includes(tractor?.brand)&&tractorSizes.includes(tractor?.size)):[];
+state.dealershipPacks=Array.isArray(state.dealershipPacks)
+ ?state.dealershipPacks.filter(pack=>dealershipPacks.includes(pack)):[];
+
 if(!Array.isArray(state.animalsOwned))state.animalsOwned=[];
 if(!['acres','hectares'].includes(state.areaUnit))state.areaUnit='acres';
 if(!['GBP','EUR','USD'].includes(state.currency))state.currency='GBP';
@@ -117,6 +126,7 @@ function durationFor(e){
 function isPendingOffer(e){
  if(e.c===3 && e.optionalOffer)return true;
  if(e.c!==7)return false;
+ if(typeof e.optionalOffer==='boolean')return e.optionalOffer;
  const t=(e.t+' '+e.template).toLowerCase();
  return /next (tractor|machine|vehicle|implement|purchase|repair|upgrade|used|new)|towards (your|one|a|any)|discount on (one|your|the next)|voucher|trade-in bonus|customer reward|loyalty reward|free (repair|repaint|tune-up|fuel)|tyre upgrade|engine upgrade|parts voucher|dealer discount|seasonal promotion|attachment offer|used machinery deal/.test(t);
 }
@@ -226,7 +236,7 @@ function completeFarmAction(item,finished){
 // require a click. All timed machinery faults need the player to arrange repairs.
 function requiresActionBeforeWaiting(item){
  if(!item.total || item.pendingOffer || item.eventType==='info')return false;
- if(item.category===2)return true;
+ if(item.category===2||item.eventId?.startsWith('dealer-recall-'))return true;
  const text=(item.description||'').toLowerCase();
  return /\b(pay|purchase|buy|repair|replace|arrange|take (?:it|the|your)|transport|deliver|move|park|remove|sell|dispose|treat|isolate|clean|restock|feed|call (?:the|a)|contact (?:the|a)|hire|lease|order|collect|provide|inspect|apply|store|secure|relocate)\b/.test(text)
    && !/\b(?:no action required|no repairs required)\b/.test(text);
@@ -305,7 +315,19 @@ function animalBannerSpecies(event){
  const matches=Object.keys(animalBannerTerms).filter(species=>animalBannerTerms[species].test(wording));
  return matches.length===1?matches[0]:null;
 }
-function instantiate(e){const crop=e.c===1?cropEventDescription(e):null;const dur=isPendingOffer(e)?null:durationFor(e);const amount=e.amounts?randomFrom(e.amounts):null;const animal=e.id==='weather-2026-20'?randomFrom(state.animalsOwned):null;const variant=e.weatherAddition?weatherVariant(e):null;const species=e.c===3?animalEventSpecies(e):null;const claim=e.id==='weather-2026-29'?availableInsuranceClaim():null;const description=crop?crop.description:(e.c===3?animalEventDescription(e,species):(claim?(claim.large?'Following a further inspection of the recent weather damage, your insurer has identified additional damage and approved a higher settlement than originally anticipated.':'Your insurer has completed its assessment of the recent weather damage and approved a partial settlement towards the repair costs.')+'\n\nGOOD NEWS: Your farm has received £'+claim.amount.toLocaleString('en-GB')+'.':(variant?.description||e.template))).replace('{animal}',animal?animal.toLowerCase():'livestock');if(claim)claim.claimed=true;return {id:`event-${Date.now()}-${++state.sequence}`,eventId:e.id,title:claim?'Insurance Claim Successful':variant?.title||e.t,category:e.c,photo:e.p,animalSpecies:e.requiresMultipleAnimalTypes?null:(species||variant?.animalSpecies||animal||null),description:naturalDurationSentence(description.replace('{duration}',dur?.label||'').replace('{amount}',amount===null?'':amount.toLocaleString('en-GB'))),duration:crop?crop.duration:dur,eventType:e.eventType||null,pendingOffer:isPendingOffer(e),completed:false,remaining:(crop?crop.duration:dur)?.total||0,total:(crop?crop.duration:dur)?.total||0,created:state.calendar?{...state.calendar}:null,finished:null,restrictedProducts:variant?.restrictedProducts||[],requiredProduct:variant?.requiredProduct||null};}
+function dealershipVariant(event){
+ if(event.recallSize){
+  const tractor=randomFrom(state.tractorsOwned.filter(item=>item.size===event.recallSize));
+  return {...event,t:event.t.replace('{brand}',tractor.brand),template:event.template.replaceAll('{brand}',tractor.brand)};
+ }
+ if(!event.brandOffers)return event;
+ const installed=event.brandOffers.filter(offer=>offer.pack&&state.dealershipPacks.includes(offer.pack));
+ const base=event.brandOffers.filter(offer=>!offer.pack);
+ const offer=randomFrom(installed.length&&Math.random()<0.1?installed:base);
+ const amount=offer.minimum+100*Math.floor(Math.random()*(1+(offer.maximum-offer.minimum)/100));
+ return {...event,t:offer.brand+' Promotion',template:event.template.replaceAll('{brand}',offer.brand).replace('{machine}',offer.machine),amounts:[amount]};
+}
+function instantiate(e){e=dealershipVariant(e);const crop=e.c===1?cropEventDescription(e):null;const dur=isPendingOffer(e)?null:durationFor(e);const amount=e.amounts?randomFrom(e.amounts):null;const animal=e.id==='weather-2026-20'?randomFrom(state.animalsOwned):null;const variant=e.weatherAddition?weatherVariant(e):null;const species=e.c===3?animalEventSpecies(e):null;const claim=e.id==='weather-2026-29'?availableInsuranceClaim():null;const description=crop?crop.description:(e.c===3?animalEventDescription(e,species):(claim?(claim.large?'Following a further inspection of the recent weather damage, your insurer has identified additional damage and approved a higher settlement than originally anticipated.':'Your insurer has completed its assessment of the recent weather damage and approved a partial settlement towards the repair costs.')+'\n\nGOOD NEWS: Your farm has received £'+claim.amount.toLocaleString('en-GB')+'.':(variant?.description||e.template))).replace('{animal}',animal?animal.toLowerCase():'livestock');if(claim)claim.claimed=true;return {id:`event-${Date.now()}-${++state.sequence}`,eventId:e.id,title:claim?'Insurance Claim Successful':variant?.title||e.t,category:e.c,photo:e.p,animalSpecies:e.requiresMultipleAnimalTypes?null:(species||variant?.animalSpecies||animal||null),description:naturalDurationSentence(description.replace('{duration}',dur?.label||'').replace('{amount}',amount===null?'':amount.toLocaleString('en-GB'))),duration:crop?crop.duration:dur,eventType:e.eventType||null,pendingOffer:isPendingOffer(e),completed:false,remaining:(crop?crop.duration:dur)?.total||0,total:(crop?crop.duration:dur)?.total||0,created:state.calendar?{...state.calendar}:null,finished:null,restrictedProducts:variant?.restrictedProducts||[],requiredProduct:variant?.requiredProduct||null};}
 
 // FS25 standard seasonal-growth calendar (month indices, Jan=0).
 // Approximate planting and harvest windows: use the active crop selections rather
@@ -370,7 +392,7 @@ function recordWeatherIncident(e){
  state.weatherHistory.push({family:weatherCooldownFamily(e),month:now,id:e.id});
  state.weatherHistory=state.weatherHistory.filter(h=>now-h.month<24).slice(-200);
 }
-function eligible(){return events.filter(e=>!weatherCoolingDown(e)&&(!e.seasonMonths||!state.calendar||e.seasonMonths.includes(state.calendar.month))&&(!e.requiresStrawCompatibleAnimals||state.animalsOwned.some(a=>['Cattle','Pigs','Horses'].includes(a)))&&state.selected.includes(e.c)&&(e.c!==1||state.cropsOwned.length>0)&&(e.c!==3||state.animalsOwned.length>0)&&(!e.requiresAnimals||state.animalsOwned.length>=e.requiresAnimals)&&(!e.requiresMultipleAnimalTypes||state.animalsOwned.filter(a=>(e.animals||[]).includes(a)).length>=2)&&(!e.followUp||(e.id==='weather-2026-28'?previousWeatherEvent('weather-2026-03'):!!availableInsuranceClaim()))&&(!e.animals||e.animals.some(a=>state.animalsOwned.includes(a==='Cows'?'Cattle':a)))&&cropEventEligible(e)&&(!state.tracking||!state.active.some(a=>!a.completed&&a.eventId===e.id)))}
+function eligible(){return events.filter(e=>(!e.recallSize||state.tractorsOwned.some(tractor=>tractor.size===e.recallSize))&&!weatherCoolingDown(e)&&(!e.seasonMonths||!state.calendar||e.seasonMonths.includes(state.calendar.month))&&(!e.requiresStrawCompatibleAnimals||state.animalsOwned.some(a=>['Cattle','Pigs','Horses'].includes(a)))&&state.selected.includes(e.c)&&(e.c!==1||state.cropsOwned.length>0)&&(e.c!==3||state.animalsOwned.length>0)&&(!e.requiresAnimals||state.animalsOwned.length>=e.requiresAnimals)&&(!e.requiresMultipleAnimalTypes||state.animalsOwned.filter(a=>(e.animals||[]).includes(a)).length>=2)&&(!e.followUp||(e.id==='weather-2026-28'?previousWeatherEvent('weather-2026-03'):!!availableInsuranceClaim()))&&(!e.animals||e.animals.some(a=>state.animalsOwned.includes(a==='Cows'?'Cattle':a)))&&cropEventEligible(e)&&(!state.tracking||!state.active.some(a=>!a.completed&&a.eventId===e.id)))}
 function chooseUnique(pool,used){const a=pool.filter(e=>!used.includes(e.id));return a.length?randomFrom(a):null}
 function drawCats(){
  $('all').textContent=state.selected.length===cats.length?'✕ Deselect All':'✓ Select All';
@@ -470,6 +492,10 @@ function showEvent(v){if(!v)return;state.current=v;$('cat').textContent=cats[v.c
   photo.src='images/contracts-neighbours/wheat-contract.webp';
  }else if(v.eventId==='book-02-057'){
   photo.src='images/machinery/baler-breakdown.webp';
+ }else if(v.category===7){
+  const banner=events.find(e=>e.id===v.eventId)?.p;
+  photo.src=['tractor-demo','harvester-demo','dealer-workshop','tractor-lineup'].includes(banner)
+   ?folder+banner+'.webp':fallback;
  }else if([3,4,5,6].includes(v.category)){
   const specificBanners={
    'feed-bale-store':[96,97,115,116],
@@ -717,6 +743,7 @@ function completionMessage(item){
  if(item.eventId==='weather-2026-11')return 'The power outage restriction has ended. Production can resume.';
  if(item.eventId==='weather-2026-14')return 'The drought-related cultivation restriction has ended. Cultivation can resume.';
  if(item.category===0)return 'This weather-related event has finished.';
+ if(item.eventId?.startsWith('dealer-recall-'))return 'The recall work is complete. Your tractor is ready to collect from the dealership.';
  if(item.category===2)return 'Repairs are complete. Your machinery is ready to collect or return to service.';
  return 'The event has finished. Any temporary restriction has now been lifted.';
 }
@@ -815,7 +842,7 @@ newFarmButton.addEventListener('click',()=>{
    selected:[...state.selected],current:null,used:[],active:[],categoriesOpen:state.categoriesOpen,
    tracking:state.tracking,calendar:null,frequency:state.frequency,count:state.count,minEvents:state.minEvents,maxEvents:state.maxEvents,currency:state.currency,areaUnit:state.areaUnit,
    periodKey:null,periodEvents:[],scheduleAnchor:null,monthSeen:{},monthGenerated:{},weatherHistory:[],insuranceClaims:[],
-   lastGenerated:null,sequence:0,animalsOwned:[...state.animalsOwned],cropsOwned:[...state.cropsOwned],ongoingOpen:false
+   lastGenerated:null,sequence:0,animalsOwned:[...state.animalsOwned],cropsOwned:[...state.cropsOwned],tractorsOwned:[...state.tractorsOwned],dealershipPacks:[...state.dealershipPacks],ongoingOpen:false
  };
  try{localStorage.setItem(KEY,JSON.stringify(fresh))}catch(e){}
  window.location.reload();
@@ -881,19 +908,61 @@ const animalSettings=makeFarmSelectionSection('Your Animals','Select the animals
 const cropSettings=makeFarmSelectionSection('Your Crops','Select the crops you grow. Events about any crop or field remain available whenever you grow at least one crop.',cropNames,'cropsOwned','cropOptions');
 $('setupMount').prepend(animalSettings.section);
 $('setupMount').prepend(cropSettings.section);
+const tractorSettings=document.createElement('section');
+tractorSettings.className='crop-settings';
+tractorSettings.innerHTML='<h3>Tractor Brands</h3><p>Add the brands and sizes you own to receive fictional manufacturer recalls.</p><label>Brand <select id="recallTractorBrand"></select></label> <label>Size <select id="recallTractorSize"></select></label> <button type="button" class="select-all" id="addRecallTractor">Add tractor</button><ul id="recallTractors"></ul>';
+cropSettings.section.after(tractorSettings);
+const tractorBrand=$('recallTractorBrand');
+const tractorSize=$('recallTractorSize');
+tractorBrand.add(new Option('Select a brand',''));
+tractorBrands.forEach(brand=>tractorBrand.add(new Option(brand,brand)));
+tractorSize.add(new Option('Select a size',''));
+tractorSizes.forEach(size=>tractorSize.add(new Option(size,size)));
+function renderTractorSettings(){
+ const list=$('recallTractors');
+ list.replaceChildren();
+ state.tractorsOwned.forEach(tractor=>{
+  const row=document.createElement('li');
+  const remove=document.createElement('button');
+  remove.type='button';
+  remove.textContent='Remove';
+  remove.setAttribute('aria-label','Remove '+tractor.brand+' '+tractor.size+' tractor');
+  remove.onclick=()=>{state.tractorsOwned=state.tractorsOwned.filter(item=>item!==tractor);persist();renderTractorSettings();tractorBrand.focus()};
+  row.append(tractor.brand+' · '+tractor.size+' ',remove);
+  list.append(row);
+ });
+ const brand=tractorBrand.value;
+ const size=tractorSize.value;
+ $('addRecallTractor').disabled=!brand||!size||state.tractorsOwned.some(item=>item.brand===brand&&item.size===size);
+}
+tractorBrand.onchange=renderTractorSettings;
+tractorSize.onchange=renderTractorSettings;
+$('addRecallTractor').onclick=()=>{
+ state.tractorsOwned.push({brand:tractorBrand.value,size:tractorSize.value});
+ tractorBrand.value='';
+ tractorSize.value='';
+ persist();
+ renderTractorSettings();
+ tractorBrand.focus();
+};
+renderTractorSettings();
+const packSettings=makeFarmSelectionSection('Installed DLC','Select packs you own to receive occasional dealership offers for their machines.',dealershipPacks,'dealershipPacks','dealershipPackOptions');
+tractorSettings.after(packSettings.section);
+
 const resetFarmSettings=document.createElement('button');
 resetFarmSettings.type='button';resetFarmSettings.className='bulk-complete';
 resetFarmSettings.textContent='Reset Farm Settings';
 resetFarmSettings.style.cssText='margin:12px 0 16px;padding:9px 14px;';
-resetFarmSettings.title='Deselect every animal and crop; keep your existing farm events and calendar';
+resetFarmSettings.title='Clear animal, crop, tractor and DLC selections while keeping farm progress';
 resetFarmSettings.addEventListener('click',()=>{
- farmDialog('Deselect all crops and animals? Your event history and calendar will be kept.',{title:'Reset Farm Settings',confirm:true,confirmLabel:'Yes, Reset',onConfirm:()=>{
- state.animalsOwned=[];state.cropsOwned=[];
- [...animalSettings.checks,...cropSettings.checks].forEach(check=>{check.checked=false});
- animalSettings.syncAll();cropSettings.syncAll();persist();renderSchedule();
+ farmDialog('Clear your crop, animal, tractor and DLC selections? Your event history and calendar will be kept.',{title:'Reset Farm Settings',confirm:true,confirmLabel:'Yes, Reset',onConfirm:()=>{
+ state.animalsOwned=[];state.cropsOwned=[];state.tractorsOwned=[];state.dealershipPacks=[];
+ tractorBrand.value='';tractorSize.value='';renderTractorSettings();
+ [...animalSettings.checks,...cropSettings.checks,...packSettings.checks].forEach(check=>{check.checked=false});
+ animalSettings.syncAll();cropSettings.syncAll();packSettings.syncAll();persist();renderSchedule();
 }});
 });
-cropSettings.section.after(resetFarmSettings);
+packSettings.section.after(resetFarmSettings);
 // The calendar, tracking toggle, and frequency controls live in one setup panel.
 $('setupMount').append($('tracking-optin-placeholder')||$('enableTracking').closest('.tracking-optin'),$('calendarSettings'),$('frequencyPanel'));
 $('calendarEdit').onclick=showSetup;
