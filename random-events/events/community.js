@@ -206,5 +206,13 @@ window.FSG_EVENT_CATEGORIES[9] = [
     "template": "No fieldwork between 10 a.m. and 4 p.m.",
     "p": "category-9",
     "eventType": "action"
+  },
+  {
+    "id": "book-08-262",
+    "c": 9,
+    "t": "Early Finish",
+    "template": "You’ve promised to be at a family gathering this evening, so you need to leave the farm on time.\n\nACTION REQUIRED: Finish fieldwork by 4 pm today. Park up and carry any unfinished work over to tomorrow.",
+    "p": "early-finish",
+    "eventType": "action"
   }
 ];

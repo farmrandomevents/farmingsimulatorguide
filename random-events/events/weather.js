@@ -399,5 +399,13 @@ window.FSG_EVENT_CATEGORIES[0] = [
     "eventType": "action",
     "weatherAddition": "followup",
     "followUp": true
+  },
+  {
+    "id": "book-08-261",
+    "c": 0,
+    "t": "Late Start",
+    "template": "Heavy dew has left the ground damp. Give it time to dry before starting fieldwork.\n\nACTION REQUIRED: Start fieldwork at 10 am or later today.",
+    "p": "late-start",
+    "eventType": "action"
   }
 ];

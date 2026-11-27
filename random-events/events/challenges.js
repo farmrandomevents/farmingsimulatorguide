@@ -181,22 +181,6 @@ window.FSG_EVENT_CATEGORIES[8] = [
     "eventType": "timed"
   },
   {
-    "id": "book-08-261",
-    "c": 8,
-    "t": "Late Start",
-    "template": "Heavy dew has left the ground damp. Give it time to dry before starting fieldwork.\n\nACTION REQUIRED: Start fieldwork at 10 am or later today.",
-    "p": "late-start",
-    "eventType": "action"
-  },
-  {
-    "id": "book-08-262",
-    "c": 8,
-    "t": "Early Finish",
-    "template": "The evening is already spoken for, so the fieldwork needs a firm finishing time.\n\nACTION REQUIRED: Finish fieldwork by 4 pm today. Park up and carry any unfinished work over to tomorrow.",
-    "p": "early-finish",
-    "eventType": "action"
-  },
-  {
     "id": "book-08-263",
     "c": 8,
     "t": "One Field at a Time",
