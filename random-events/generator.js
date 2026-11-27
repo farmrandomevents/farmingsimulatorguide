@@ -315,7 +315,13 @@ function animalBannerSpecies(event){
  const matches=Object.keys(animalBannerTerms).filter(species=>animalBannerTerms[species].test(wording));
  return matches.length===1?matches[0]:null;
 }
-function dealershipVariant(event){
+const brandedRepairs=new Set(['book-02-048','book-02-050','book-02-051','book-02-052','book-02-053','book-02-054']);
+function tractorEventVariant(event){
+ if(brandedRepairs.has(event.id) && state.tractorsOwned.length){
+  const tractor=randomFrom(state.tractorsOwned);
+  const name=tractor.brand+' '+tractor.size.toLowerCase()+' tractor';
+  return {...event,t:tractor.brand+' '+event.t,template:event.template.replace(/\byour (?:largest|oldest|newest) tractor\b/gi,match=>(match[0]==='Y'?'Your ':'your ')+name)};
+ }
  if(event.recallSize){
   const tractor=randomFrom(state.tractorsOwned.filter(item=>item.size===event.recallSize));
   return {...event,t:event.t.replace('{brand}',tractor.brand),template:event.template.replaceAll('{brand}',tractor.brand)};
@@ -327,7 +333,7 @@ function dealershipVariant(event){
  const amount=offer.minimum+100*Math.floor(Math.random()*(1+(offer.maximum-offer.minimum)/100));
  return {...event,t:offer.brand+' Promotion',template:event.template.replaceAll('{brand}',offer.brand).replace('{machine}',offer.machine),amounts:[amount]};
 }
-function instantiate(e){e=dealershipVariant(e);const crop=e.c===1?cropEventDescription(e):null;const dur=isPendingOffer(e)?null:durationFor(e);const amount=e.amounts?randomFrom(e.amounts):null;const animal=e.id==='weather-2026-20'?randomFrom(state.animalsOwned):null;const variant=e.weatherAddition?weatherVariant(e):null;const species=e.c===3?animalEventSpecies(e):null;const claim=e.id==='weather-2026-29'?availableInsuranceClaim():null;const description=crop?crop.description:(e.c===3?animalEventDescription(e,species):(claim?(claim.large?'Following a further inspection of the recent weather damage, your insurer has identified additional damage and approved a higher settlement than originally anticipated.':'Your insurer has completed its assessment of the recent weather damage and approved a partial settlement towards the repair costs.')+'\n\nGOOD NEWS: Your farm has received £'+claim.amount.toLocaleString('en-GB')+'.':(variant?.description||e.template))).replace('{animal}',animal?animal.toLowerCase():'livestock');if(claim)claim.claimed=true;return {id:`event-${Date.now()}-${++state.sequence}`,eventId:e.id,title:claim?'Insurance Claim Successful':variant?.title||e.t,category:e.c,photo:e.p,animalSpecies:e.requiresMultipleAnimalTypes?null:(species||variant?.animalSpecies||animal||null),description:naturalDurationSentence(description.replace('{duration}',dur?.label||'').replace('{amount}',amount===null?'':amount.toLocaleString('en-GB'))),duration:crop?crop.duration:dur,eventType:e.eventType||null,pendingOffer:isPendingOffer(e),completed:false,remaining:(crop?crop.duration:dur)?.total||0,total:(crop?crop.duration:dur)?.total||0,created:state.calendar?{...state.calendar}:null,finished:null,restrictedProducts:variant?.restrictedProducts||[],requiredProduct:variant?.requiredProduct||null};}
+function instantiate(e){e=tractorEventVariant(e);const crop=e.c===1?cropEventDescription(e):null;const dur=isPendingOffer(e)?null:durationFor(e);const amount=e.amounts?randomFrom(e.amounts):null;const animal=e.id==='weather-2026-20'?randomFrom(state.animalsOwned):null;const variant=e.weatherAddition?weatherVariant(e):null;const species=e.c===3?animalEventSpecies(e):null;const claim=e.id==='weather-2026-29'?availableInsuranceClaim():null;const description=crop?crop.description:(e.c===3?animalEventDescription(e,species):(claim?(claim.large?'Following a further inspection of the recent weather damage, your insurer has identified additional damage and approved a higher settlement than originally anticipated.':'Your insurer has completed its assessment of the recent weather damage and approved a partial settlement towards the repair costs.')+'\n\nGOOD NEWS: Your farm has received £'+claim.amount.toLocaleString('en-GB')+'.':(variant?.description||e.template))).replace('{animal}',animal?animal.toLowerCase():'livestock');if(claim)claim.claimed=true;return {id:`event-${Date.now()}-${++state.sequence}`,eventId:e.id,title:claim?'Insurance Claim Successful':variant?.title||e.t,category:e.c,photo:e.p,animalSpecies:e.requiresMultipleAnimalTypes?null:(species||variant?.animalSpecies||animal||null),description:naturalDurationSentence(description.replace('{duration}',dur?.label||'').replace('{amount}',amount===null?'':amount.toLocaleString('en-GB'))),duration:crop?crop.duration:dur,eventType:e.eventType||null,pendingOffer:isPendingOffer(e),completed:false,remaining:(crop?crop.duration:dur)?.total||0,total:(crop?crop.duration:dur)?.total||0,created:state.calendar?{...state.calendar}:null,finished:null,restrictedProducts:variant?.restrictedProducts||[],requiredProduct:variant?.requiredProduct||null};}
 
 // FS25 standard seasonal-growth calendar (month indices, Jan=0).
 // Approximate planting and harvest windows: use the active crop selections rather
@@ -493,9 +499,8 @@ function showEvent(v){if(!v)return;state.current=v;$('cat').textContent=cats[v.c
  }else if(v.eventId==='book-02-057'){
   photo.src='images/machinery/baler-breakdown.webp';
  }else if(v.category===7){
-  const banner=events.find(e=>e.id===v.eventId)?.p;
-  photo.src=['tractor-demo','harvester-demo','dealer-workshop','tractor-lineup'].includes(banner)
-   ?folder+banner+'.webp':fallback;
+  const banner=events.find(e=>e.id===v.eventId)?.p||v.photo;
+  photo.src=banner&&banner!=='category-7'?folder+banner+'.webp':fallback;
  }else if([3,4,5,6].includes(v.category)){
   const specificBanners={
    'feed-bale-store':[96,97,115,116],
@@ -653,7 +658,11 @@ function generate(){
    // Prefer a variety of event categories. Do not fill the month with weather.
    const unrepresented=candidates.filter(e=>!chosen.some(c=>c.c===e.c));
    const preferred=unrepresented.length?unrepresented:candidates;
-   const next=chooseUnique(preferred,[...seen,...chosen.map(e=>e.id)]);
+   const used=[...seen,...chosen.map(e=>e.id)];
+   const available=preferred.filter(e=>!used.includes(e.id));
+   const brandFocus=state.tractorsOwned.length && state.selected.every(category=>category===2||category===7);
+   const branded=brandFocus ? available.filter(e=>e.recallSize||brandedRepairs.has(e.id)) : [];
+   const next=chooseUnique(branded.length&&Math.random()<0.5?branded:available,[]);
    if(!next)break;
    chosen.push(next);
  }
@@ -910,7 +919,10 @@ $('setupMount').prepend(animalSettings.section);
 $('setupMount').prepend(cropSettings.section);
 const tractorSettings=document.createElement('section');
 tractorSettings.className='crop-settings';
-tractorSettings.innerHTML='<h3>Tractor Brands</h3><p>Add the brands and sizes you own to receive fictional manufacturer recalls.</p><label>Brand <select id="recallTractorBrand"></select></label> <label>Size <select id="recallTractorSize"></select></label> <button type="button" class="select-all" id="addRecallTractor">Add tractor</button><ul id="recallTractors"></ul>';
+const tractorSettingsStyle=document.createElement('style');
+tractorSettingsStyle.textContent='#recallTractorBrand,#recallTractorSize{color-scheme:light;background:#123d2d;color:#fff9e8;border:1px solid #d7b56c;border-radius:8px;padding:8px;font:inherit;accent-color:#d7b56c}#recallTractorBrand option,#recallTractorSize option{background:#123d2d;color:#fff9e8}#recallTractorBrand:focus-visible,#recallTractorSize:focus-visible{outline:2px solid #f3cf7e;outline-offset:2px}';
+document.head.append(tractorSettingsStyle);
+tractorSettings.innerHTML='<h3>Tractor Brands</h3><p>Add the brands and sizes you own to receive fictional manufacturer recalls and matching machinery faults.</p><label>Brand <select id="recallTractorBrand"></select></label> <label>Size <select id="recallTractorSize"></select></label> <button type="button" class="select-all" id="addRecallTractor">Add tractor</button><ul id="recallTractors"></ul>';
 cropSettings.section.after(tractorSettings);
 const tractorBrand=$('recallTractorBrand');
 const tractorSize=$('recallTractorSize');
